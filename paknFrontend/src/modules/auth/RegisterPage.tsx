@@ -15,8 +15,14 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+      <img
+        src="./src/images/background_login.jpg"
+        alt="background"
+        className="absolute inset-0 w-full h-full object-cover blur-sm scale-105"
+      />
+      <div className="absolute inset-0 bg-black/50" />
+      <div className="relative z-10 bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Đăng ký tài khoản</h2>
 
         {success ? (
