@@ -1,39 +1,42 @@
+// AppRouter.tsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import UserLayout from "../layouts/UserLayout";      // import layout của bạn
 import AdminLayout from "../layouts/AdminLayout";
 
 import DashboardPage from "../modules/admin/dashboard/DashboardPage";
-
-// Import các component mới (điều chỉnh đường dẫn nếu folder khác)
 import DonViList from "../modules/admin/donvi/DonViList";
 import DonViCreate from "../modules/admin/donvi/DonViCreate";
 import DonViEdit from "../modules/admin/donvi/DonViEdit";
 import LoginPage from "@/modules/auth/LoginPage";
 import RegisterPage from "@/modules/auth/RegisterPage";
-import Dashboard from "@/modules/pages/Dashboard";  // Trang dashboard chính sau khi login
+import Dashboard from "@/modules/pages/Dashboard";
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Dashboard />} /> 
+        {/* Các route public không cần layout */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<DashboardPage />} />
 
-          {/* Quản lý đơn vị - tách thành 3 route */}
-          <Route path="donvi">
-            <Route index element={<DonViList />} />           {/* /admin/donvi */}
-            <Route path="create" element={<DonViCreate />} />  {/* /admin/donvi/create */}
-            <Route path=":id/edit" element={<DonViEdit />} />  {/* /admin/donvi/5/edit */}
-          </Route>
-
-          {/* Các route khác của admin sẽ thêm ở đây sau */}
+        {/* Các route user bọc bởi UserLayout */}
+        <Route element={<UserLayout />}>
+          <Route path="/" element={<Dashboard />} />
+          {/* Thêm các route user khác ở đây */}
         </Route>
 
-        {/* Nếu có route public hoặc login/logout thì thêm ở ngoài /admin */}
-        {/* Ví dụ: <Route path="/login" element={<LoginPage />} /> */}
-      {/* <Route path="*" element={<h1>404 - Không tìm thấy trang bro!</h1>} /> */}
+        {/* Admin routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<DashboardPage />} />
+          <Route path="donvi">
+            <Route index element={<DonViList />} />
+            <Route path="create" element={<DonViCreate />} />
+            <Route path=":id/edit" element={<DonViEdit />} />
+          </Route>
+        </Route>
+
+        {/* 404 */}
+        <Route path="*" element={<h1>404 - Không tìm thấy trang</h1>} />
       </Routes>
     </BrowserRouter>
   );
