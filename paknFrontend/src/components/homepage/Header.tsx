@@ -18,22 +18,17 @@ export default function Header() {
                     </div>
 
                     {/* Auth phải */}
-                    <div className="flex items-center space-x-4">
-                        <Link
-                            to="/dang-ky"
-                            className="px-4 py-2 text-white hover:bg-[#1D4ED8] rounded-md transition"
-                        >
-                            Đăng ký
-                        </Link>
-
-                        <Link
-                            to="/dang-nhap"
-                            className="px-5 py-2 bg-white text-[#003A8F] hover:bg-gray-100 rounded-md font-medium transition"
-                        >
+                    <div className="flex items-center space-x-6">
+                        <Link to="/dang-nhap" className="text-[#0C4396] font-medium hover:underline">
                             Đăng nhập
                         </Link>
+                        <Link
+                            to="/dang-ky"
+                            className="px-6 py-2 bg-[#1e54a4] text-white rounded-md font-medium hover:bg-[#1E40AF] transition shadow-sm"
+                        >
+                            Đăng ký ngay
+                        </Link>
                     </div>
-
                 </div>
             </div>
         </header>
