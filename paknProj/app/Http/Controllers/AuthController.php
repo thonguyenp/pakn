@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\NguoiDung;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -37,29 +37,14 @@ class AuthController extends Controller
             'IdNguoiDung' => $user->IdNguoiDung,
             'IdVaiTro' => 1,
         ]);
+        // Gửi email xác thực
+        // $user->sendEmailVerificationNotification();
+        $user->notify(new VerifyEmail());
 
         $token = JWTAuth::fromUser($user);
 
         return response()->json(['token' => $token], 201);
     }
-
-    // public function login(Request $request)
-    // {
-    //     $credentials = $request->validate([
-    //         'Email' => 'required|email',
-    //         'MatKhau' => 'required|string',
-    //     ]);
-
-    //     try {
-    //         if (!$token = JWTAuth::attempt(['Email' => $credentials['Email'], 'password' => $credentials['MatKhau']])) {
-    //             return response()->json(['error' => 'Thông tin đăng nhập không đúng'], 401);
-    //         }
-    //     } catch (JWTException $e) {
-    //         return response()->json(['error' => 'Không tạo được token'], 500);
-    //     }
-
-    //     return response()->json(['token' => $token]);
-    // }
 
     public function login(Request $request)
     {
@@ -73,6 +58,11 @@ class AuthController extends Controller
         }
 
         $user = JWTAuth::setToken($token)->authenticate();
+
+        if (is_null($user->email_verified_at)) {
+            return response()->json(['error' => 'Vui lòng xác thực email trước'], 403);
+        }
+
         if ($user->TrangThai !== 1) {
             JWTAuth::invalidate($token); // Hủy token nếu tài khoản bị khóa
 

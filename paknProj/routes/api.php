@@ -3,7 +3,10 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DonViController;
+use App\Models\NguoiDung;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 Route::get('donvi', [DonViController::class, 'index']);
 Route::post('donvi', [DonViController::class, 'store']);
@@ -14,7 +17,28 @@ Route::delete('donvi/{id}', [DonViController::class, 'destroy']);
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
+Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+
+    $user = NguoiDung::findOrFail($id);
+
+    if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+        return response()->json(['message' => 'Invalid verification link'], 403);
+    }
+
+    if ($user->hasVerifiedEmail()) {
+        return response()->json(['message' => 'Email already verified']);
+    }
+
+    $user->markEmailAsVerified();
+
+    return response()->json([
+        'message' => 'Email verified successfully'
+    ]);
+
+})->middleware('signed')->name('verification.verify');
+
 Route::middleware('auth:api')->post('/logout', function () {
     auth('api')->logout();
     return response()->json(['message' => 'Đăng xuất thành công']);
 });
+
