@@ -22,18 +22,14 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
     $user = NguoiDung::findOrFail($id);
 
     if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-        return response()->json(['message' => 'Invalid verification link'], 403);
+        return redirect('http://localhost:5173/login?verify=invalid');
     }
 
-    if ($user->hasVerifiedEmail()) {
-        return response()->json(['message' => 'Email already verified']);
+    if (! $user->hasVerifiedEmail()) {
+        $user->markEmailAsVerified();
     }
 
-    $user->markEmailAsVerified();
-
-    return response()->json([
-        'message' => 'Email verified successfully'
-    ]);
+    return redirect('http://localhost:5173/login?verify=success');
 
 })->middleware('signed')->name('verification.verify');
 
