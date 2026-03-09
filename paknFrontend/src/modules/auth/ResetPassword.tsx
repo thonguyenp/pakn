@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { resetPassword } from '@/api/authApi';
+import AuthLayout from '@/layouts/AuthLayout';
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -27,38 +28,47 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h2 className="text-2xl mb-6">Đặt lại mật khẩu</h2>
+    <AuthLayout title="Đặt lại mật khẩu">
       <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          placeholder="Email"
-          className="w-full p-3 border rounded mb-4"
-          required
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          placeholder="Mật khẩu mới"
-          className="w-full p-3 border rounded mb-4"
-          required
-        />
-        <input
-          type="password"
-          value={password_confirmation}
-          onChange={e => setPasswordConfirmation(e.target.value)}
-          placeholder="Nhập lại mật khẩu"
-          className="w-full p-3 border rounded mb-4"
-          required
-        />
+        <div className="relative mb-3 ">
+          <i className="fa-solid fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+          <input
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="Email"
+            className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            required
+          />
+        </div>
+        <div className="relative mb-3">
+          <i className="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+
+          <input
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            placeholder="Mật khẩu mới"
+            className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            required
+          />
+        </div>
+        <div className="relative mb-3">
+          <i className="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+          <input
+            type="password"
+            value={password_confirmation}
+            onChange={e => setPasswordConfirmation(e.target.value)}
+            placeholder="Nhập lại mật khẩu"
+            className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            required
+          />
+        </div>
         <button type="submit" className="w-full bg-green-600 text-white p-3 rounded">
           Cập nhật mật khẩu
         </button>
       </form>
       {message && <p className="mt-4 text-center">{message}</p>}
-    </div>
+    </AuthLayout>
   );
 }
