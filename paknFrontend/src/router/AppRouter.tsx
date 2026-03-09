@@ -10,6 +10,8 @@ import DonViEdit from "../modules/admin/donvi/DonViEdit";
 import LoginPage from "@/modules/auth/LoginPage";
 import RegisterPage from "@/modules/auth/RegisterPage";
 import Dashboard from "@/modules/pages/Dashboard";
+import ResetPassword from "@/modules/auth/ResetPassword";
+import ForgotPassword from "@/modules/auth/ForgotPassword";
 
 export default function AppRouter() {
   return (
@@ -18,7 +20,9 @@ export default function AppRouter() {
         {/* Các route public không cần layout */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        
         {/* Các route user bọc bởi UserLayout */}
         <Route element={<UserLayout />}>
           <Route path="/" element={<Dashboard />} />

@@ -15,7 +15,7 @@ return [
 
     'defaults' => [
         'guard' => 'api',
-        'passwords' => 'users',
+        'passwords' => 'nguoidung',
     ],
 
     /*
@@ -85,9 +85,9 @@ return [
     */
 
     'passwords' => [
-        'users' => [
+        'nguoidung' => [
             'provider' => 'nguoidung',
-            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ],

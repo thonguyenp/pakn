@@ -38,3 +38,9 @@ Route::middleware('auth:api')->post('/logout', function () {
     return response()->json(['message' => 'Đăng xuất thành công']);
 });
 
+Route::post('password/email',  [AuthController::class, 'sendResetLinkEmail']);
+Route::post('password/reset',  [AuthController::class, 'resetPassword']);
+
+Route::get('/reset-password/{token}', function ($token) {
+    return redirect("http://localhost:5173/reset-password?token=$token");
+})->name('password.reset');

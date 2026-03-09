@@ -22,3 +22,20 @@ export const setAuthToken = (token: string | null) => {
     delete api.defaults.headers.common['Authorization'];
   }
 };
+
+export const sendResetLink = async (email: string) => {
+  const res = await api.post('/password/email', {
+    Email: email,
+  });
+  return res.data;
+};
+
+export const resetPassword = async (data: {
+  Email: string;
+  token: string;
+  MatKhau: string;
+  MatKhau_confirmation: string;
+}) => {
+  const res = await api.post('/password/reset', data);
+  return res.data;
+};
