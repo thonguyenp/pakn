@@ -72,7 +72,15 @@ export default function LoginForm({ onSuccess }: Props) {
           <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
         </button>
       </div>
-
+      <div className="flex justify-between items-center text-sm mt-2">
+        <label className="flex items-center text-gray-600">
+          <input type="checkbox" className="mr-2 accent-cyan-500" />
+          Nhớ tài khoản
+        </label>
+        <a href="/forgot-password" className="text-cyan-600">
+          Quên mật khẩu?
+        </a>
+      </div>
       {error && <p className="text-red-500">{error}</p>}
       <button type="submit" className="w-full bg-blue-600 text-white p-3 rounded-lg font-medium">
         Đăng nhập

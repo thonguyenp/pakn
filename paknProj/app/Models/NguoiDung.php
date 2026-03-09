@@ -4,17 +4,17 @@ namespace App\Models;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use Illuminate\Auth\Passwords\CanResetPassword;
 
-class NguoiDung extends Model implements AuthenticatableContract, JWTSubject, MustVerifyEmail, CanResetPasswordContract
+class NguoiDung extends Model implements AuthenticatableContract, CanResetPasswordContract, JWTSubject, MustVerifyEmail
 {
-    use Authenticatable, MustVerifyEmailTrait, Notifiable, CanResetPassword;
+    use Authenticatable, CanResetPassword, MustVerifyEmailTrait, Notifiable;
 
     protected $table = 'NguoiDung';
 
@@ -23,7 +23,7 @@ class NguoiDung extends Model implements AuthenticatableContract, JWTSubject, Mu
     public $timestamps = false;
 
     protected $fillable = [
-        'HoTen','Email','SoDienThoai','MatKhau','MaSo','TrangThai','NgayTao','IdDonVi'
+        'HoTen', 'Email', 'SoDienThoai', 'MatKhau', 'MaSo', 'TrangThai', 'NgayTao', 'IdDonVi',
     ];
 
     protected $hidden = ['MatKhau'];
@@ -58,4 +58,23 @@ class NguoiDung extends Model implements AuthenticatableContract, JWTSubject, Mu
         return [];
     }
 
+    public function vaiTros()
+    {
+        return $this->belongsToMany(
+            VaiTro::class,
+            'NguoiDungVaiTro',
+            'IdNguoiDung',
+            'IdVaiTro'
+        );
+    }
+
+    public function quyens()
+    {
+        return $this->belongsToMany(
+            Quyen::class,
+            'NguoiDungQuyen',
+            'IdNguoiDung',
+            'IdQuyen'
+        )->withPivot('TrangThai', 'NgayGanQuyen');
+    }
 }

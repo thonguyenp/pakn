@@ -38,6 +38,26 @@ class AuthController extends Controller
             'IdNguoiDung' => $user->IdNguoiDung,
             'IdVaiTro' => 1,
         ]);
+        DB::table('NguoiDungQuyen')->insert([
+            [
+                'IdNguoiDung' => $user->IdNguoiDung,
+                'IdQuyen' => 1,
+                'TrangThai' => 1,
+                'NgayGanQuyen' => now(),
+            ],
+            [
+                'IdNguoiDung' => $user->IdNguoiDung,
+                'IdQuyen' => 2,
+                'TrangThai' => 1,
+                'NgayGanQuyen' => now(),
+            ],
+            [
+                'IdNguoiDung' => $user->IdNguoiDung,
+                'IdQuyen' => 3,
+                'TrangThai' => 1,
+                'NgayGanQuyen' => now(),
+            ]
+        ]);
         // Gửi email xác thực
         // $user->sendEmailVerificationNotification();
         $user->notify(new VerifyEmail);
