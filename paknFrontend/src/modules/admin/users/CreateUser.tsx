@@ -20,7 +20,7 @@ export default function CreateUser(){
 
     await userApi.create(form)
 
-    navigate("/users")
+    navigate("/admin/nguoidung")
   }
 
   return(

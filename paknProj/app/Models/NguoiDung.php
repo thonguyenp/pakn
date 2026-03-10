@@ -58,16 +58,6 @@ class NguoiDung extends Model implements AuthenticatableContract, CanResetPasswo
         return [];
     }
 
-    public function vaiTros()
-    {
-        return $this->belongsToMany(
-            VaiTro::class,
-            'NguoiDungVaiTro',
-            'IdNguoiDung',
-            'IdVaiTro'
-        );
-    }
-
     public function quyens()
     {
         return $this->belongsToMany(

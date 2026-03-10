@@ -56,7 +56,7 @@ class AuthController extends Controller
                 'IdQuyen' => 3,
                 'TrangThai' => 1,
                 'NgayGanQuyen' => now(),
-            ]
+            ],
         ]);
         // Gửi email xác thực
         // $user->sendEmailVerificationNotification();
@@ -74,23 +74,40 @@ class AuthController extends Controller
             'MatKhau' => 'required|string',
         ]);
 
-        if (! $token = JWTAuth::attempt(['Email' => $credentials['Email'], 'password' => $credentials['MatKhau']])) {
-            return response()->json(['error' => 'Thông tin đăng nhập không đúng'], 401);
+        if (!$token = JWTAuth::attempt([
+            'Email' => $credentials['Email'],
+            'password' => $credentials['MatKhau'],
+        ])) {
+            return response()->json([
+                'error' => 'Thông tin đăng nhập không đúng',
+            ], 401);
         }
 
         $user = JWTAuth::setToken($token)->authenticate();
 
         if (is_null($user->email_verified_at)) {
-            return response()->json(['error' => 'Vui lòng xác thực email trước'], 403);
+            return response()->json([
+                'error' => 'Vui lòng xác thực email trước',
+            ], 403);
         }
 
         if ($user->TrangThai !== 1) {
-            JWTAuth::invalidate($token); // Hủy token nếu tài khoản bị khóa
+            JWTAuth::invalidate($token);
 
-            return response()->json(['error' => 'Tài khoản bị khóa'], 403);
+            return response()->json([
+                'error' => 'Tài khoản bị khóa',
+            ], 403);
         }
 
-        return response()->json(['token' => $token]);
+        // LẤY QUYỀN CỦA USER
+        $permissions = $user->quyens()
+            ->pluck('TenQuyen');
+
+        return response()->json([
+            'token' => $token,
+            'user' => $user,
+            'permissions' => $permissions,
+        ]);
     }
 
     public function sendResetLinkEmail(Request $request)

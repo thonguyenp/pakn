@@ -16,17 +16,7 @@ class Quyen extends Model
         'TenQuyen',
         'MoTa'
     ];
-
-    public function vaiTros()
-    {
-        return $this->belongsToMany(
-            VaiTro::class,
-            'VaiTroQuyen',
-            'IdQuyen',
-            'IdVaiTro'
-        );
-    }
-
+    
     public function nguoiDungs()
     {
         return $this->belongsToMany(
