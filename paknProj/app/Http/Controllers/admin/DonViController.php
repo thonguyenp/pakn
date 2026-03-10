@@ -8,6 +8,11 @@ use App\Models\DonVi;
 
 class DonViController extends Controller
 {
+    public function list()
+    {
+        $data = DonVi::orderByDesc('IdDonVi')->where('TrangThai',1)->get();
+        return response()->json($data);
+    }
     /**
      * GET /api/donvi
      * Danh sách đơn vị (pagination)

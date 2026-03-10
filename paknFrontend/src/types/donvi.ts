@@ -1,6 +1,6 @@
 // types/donvi.ts
 export type DonVi = {
-  IdDonVi?: number;
+  IdDonVi: number;
   TenDonVi: string;
   MoTa?: string;
   EmailLienHe?: string;

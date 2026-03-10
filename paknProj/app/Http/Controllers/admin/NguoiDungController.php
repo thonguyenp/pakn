@@ -5,9 +5,9 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\NguoiDung;
 use App\Models\Quyen;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class NguoiDungController extends Controller
 {
@@ -15,10 +15,11 @@ class NguoiDungController extends Controller
     public function index()
     {
         $users = NguoiDung::orderByDesc('IdNguoiDung')
-                    ->paginate(10);
+            ->paginate(10);
 
         return response()->json($users);
     }
+
     public function detail($id)
     {
         $user = NguoiDung::findOrFail($id);
@@ -37,21 +38,14 @@ class NguoiDungController extends Controller
             ->where('IdNguoiDung', $id)
             ->pluck('IdVaiTro');
 
-        // lấy quyền từ role
-        $rolePermissions = DB::table('VaiTroQuyen')
-            ->whereIn('IdVaiTro', $userRoles)
-            ->pluck('IdQuyen')
-            ->unique()
-            ->values();
-
         return response()->json([
             'user' => $user,
             'roles' => $userRoles,
             'permissions' => $allPermissions,
-            'rolePermissions' => $rolePermissions,
             'userPermissions' => $userPermissions,
         ]);
     }
+
     public function delete($id)
     {
         $user = NguoiDung::findOrFail($id);
@@ -88,6 +82,39 @@ class NguoiDungController extends Controller
 
         return response()->json([
             'message' => 'Updated permissions',
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = NguoiDung::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'HoTen' => 'required|string|max:255',
+            'Email' => 'required|email|max:255|unique:NguoiDung,Email,'.$id.',IdNguoiDung',
+            'SoDienThoai' => 'nullable|string|max:20',
+            'MaSo' => 'nullable|string|max:50',
+            'IdDonVi' => 'nullable|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $user->HoTen = $request->HoTen;
+        $user->Email = $request->Email;
+        $user->SoDienThoai = $request->SoDienThoai;
+        $user->MaSo = $request->MaSo;
+        $user->IdDonVi = $request->IdDonVi;
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Cập nhật người dùng thành công',
+            'user' => $user,
         ]);
     }
 }

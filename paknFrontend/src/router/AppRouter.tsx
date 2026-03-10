@@ -12,7 +12,10 @@ import RegisterPage from "@/modules/auth/RegisterPage";
 import Dashboard from "@/modules/pages/Dashboard";
 import ResetPassword from "@/modules/auth/ResetPassword";
 import ForgotPassword from "@/modules/auth/ForgotPassword";
-
+import UserList from "@/modules/admin/users/UserList";
+import UserCreate from "@/modules/admin/users/CreateUser";
+import UserEdit from "@/modules/admin/users/EditUser";
+import UserPermissions from "@/modules/admin/users/UserPermissions";
 export default function AppRouter() {
   return (
     <BrowserRouter>
@@ -35,8 +38,15 @@ export default function AppRouter() {
           <Route path="donvi">
             <Route index element={<DonViList />} />
             <Route path="create" element={<DonViCreate />} />
-            <Route path=":id/edit" element={<DonViEdit />} />
+            <Route path="edit/:id" element={<DonViEdit />} />
           </Route>
+          <Route path="nguoidung">
+            <Route index element={<UserList />} />
+            <Route path="create" element={<UserCreate />} />
+            <Route path="edit/:id" element={<UserEdit />} />
+            <Route path="permissions/:id" element={<UserPermissions/>}/>
+          </Route>
+
         </Route>
 
         {/* 404 */}

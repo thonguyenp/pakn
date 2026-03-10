@@ -10,6 +10,8 @@ const api = axios.create({
 })
 
 export const donViApi = {
+  getList: ()=>
+    api.get(`/donvi/list`),
 
   getAll: (page: number = 1) =>
     api.get<Pagination<DonVi>>(`/donvi?page=${page}`),
