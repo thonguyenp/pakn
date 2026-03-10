@@ -77,9 +77,7 @@ export default function Header() {
                         <div className="flex items-center space-x-6">
 
                             {/* Chuông */}
-                            <button className="text-xl">
-                                🔔
-                            </button>
+                            <i className="fa-regular fa-bell text-xl"></i>
 
                             {/* User menu */}
                             <div className="relative" ref={dropdownRef}>

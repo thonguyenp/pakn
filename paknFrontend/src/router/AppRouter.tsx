@@ -18,6 +18,7 @@ import UserEdit from "@/modules/admin/users/EditUser";
 import UserPermissions from "@/modules/admin/users/UserPermissions";
 import PermissionGuard from "@/components/admin/PermissionGuard";
 import ProtectedRoute from "@/components/admin/ProtectedRoute";
+import Profile from "@/modules/pages/profile/Profile";
 export default function AppRouter() {
   return (
     <BrowserRouter>
@@ -32,6 +33,7 @@ export default function AppRouter() {
         <Route element={<UserLayout />}>
           <Route path="/" element={<Dashboard />} />
           {/* Thêm các route user khác ở đây */}
+          <Route path="/profile" element={<Profile />} />
         </Route>
 
         {/* Admin routes */}

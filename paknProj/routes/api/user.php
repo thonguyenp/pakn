@@ -1,19 +1,28 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
+use App\Http\Controllers\ProfileController;
 use App\Models\NguoiDung;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
+Route::get('/profile', [ProfileController::class, 'getProfile']);   //checked
+
+Route::put('/profile', [ProfileController::class, 'updateProfile']);    //checked
+
+Route::post('/change-password', [ProfileController::class, 'changePassword']);  //checked
+
+// Đăng nhập và đăng ký
 Route::post('register', [AuthController::class, 'register']);
-Route::post('login',    [AuthController::class, 'login']);
+Route::post('login', [AuthController::class, 'login']);
 
+// Đăng xuất
 Route::middleware('auth:api')->post('/logout', function () {
     auth('api')->logout();
+
     return response()->json(['message' => 'Đăng xuất thành công']);
 });
-
+// Quên mật khẩu
 Route::post('password/email', [AuthController::class, 'sendResetLinkEmail']);
 Route::post('password/reset', [AuthController::class, 'resetPassword']);
 

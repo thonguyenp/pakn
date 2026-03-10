@@ -141,8 +141,8 @@ export default function Sidebar() {
           {/* Quản lý người dùng */}
           <li>
             <Link
-              to="/admin/users"
-              style={getItemStyle(isActive("/admin/users"))}
+              to="/admin/nguoidung"
+              style={getItemStyle(isActive("/admin/nguoidung"))}
             >
               <Users size={20} style={iconStyle} />
               {!isCollapsed && <span>Quản lý người dùng</span>}
