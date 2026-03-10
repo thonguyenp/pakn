@@ -1,30 +1,23 @@
-import axios from "axios"
 import { type DonVi } from "../types/donvi"
 import type { Pagination } from "../types/pagination"
-
-const api = axios.create({
-  baseURL: "http://localhost:8000/api",
-  headers: {
-    "Content-Type": "application/json"
-  }
-})
+import { api } from "./api"
 
 export const donViApi = {
   getList: ()=>
-    api.get(`/donvi/list`),
+    api.get(`/admin/donvi/list`),
 
   getAll: (page: number = 1) =>
-    api.get<Pagination<DonVi>>(`/donvi?page=${page}`),
+    api.get<Pagination<DonVi>>(`/admin/donvi?page=${page}`),
 
   getById: (id: number) =>
-    api.get<DonVi>(`/donvi/${id}`),
+    api.get<DonVi>(`/admin/donvi/${id}`),
 
   create: (data: DonVi) =>
-    api.post("/donvi", data),
+    api.post("/admin/donvi", data),
 
   update: (id: number, data: DonVi) =>
-    api.put(`/donvi/${id}`, data),
+    api.put(`/admin/donvi/${id}`, data),
 
   delete: (id: number) =>
-    api.delete(`/donvi/${id}`)
+    api.delete(`/admin/donvi/${id}`)
 }

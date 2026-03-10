@@ -22,7 +22,7 @@ class CheckPermission
             return response()->json(['message' => 'Unauthenticated'], 401);
         }
 
-        $hasPermission = $user->quyen()
+        $hasPermission = $user->quyens()
             ->where('TenQuyen', $permission)
             ->exists();
 

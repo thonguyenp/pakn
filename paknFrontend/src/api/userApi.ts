@@ -1,33 +1,26 @@
-import axios from "axios"
 import type { User, UserDetail } from "../types/user"
 import type { Pagination } from "../types/pagination"
-
-const api = axios.create({
-  baseURL: "http://localhost:8000/api",
-  headers: {
-    "Content-Type": "application/json"
-  }
-})
+import { api } from "./api"
 
 export const userApi = {
 
   getAll: (page: number = 1) =>
-    api.get<Pagination<User>>(`/nguoidung?page=${page}`),
+    api.get<Pagination<User>>(`/admin/nguoidung?page=${page}`),
 
   getById: (id: number) =>
-    api.get<UserDetail>(`/nguoidung/${id}`),
+    api.get<UserDetail>(`/admin/nguoidung/${id}`),
 
   create: (data: Partial<User>) =>
-    api.post("/nguoidung", data),
+    api.post("/admin/nguoidung", data),
 
   update: (id: number, data: Partial<User>) =>
-    api.post(`/nguoidung/update/${id}`, data),
+    api.post(`/admin/nguoidung/update/${id}`, data),
 
   delete: (id: number) =>
-    api.delete(`/nguoidung/${id}`),
+    api.delete(`/admin/nguoidung/${id}`),
 
   updatePermissions: (id: number, permissions: number[]) =>
-    api.post(`/nguoidung/permissions/${id}`, {
+    api.post(`/admin/nguoidung/permissions/${id}`, {
       permissions
     })
 }

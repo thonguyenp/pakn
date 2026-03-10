@@ -4,7 +4,7 @@ import { type LoginPayload } from '@/types/auth';
 import { useSearchParams } from 'react-router-dom';
 
 interface Props {
-  onSuccess: (token: string) => void;
+  onSuccess: (string: any) => void;
 }
 
 export default function LoginForm({ onSuccess }: Props) {
@@ -28,8 +28,8 @@ export default function LoginForm({ onSuccess }: Props) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { token } = await login(form);
-      onSuccess(token);
+      const data = await login(form);
+      onSuccess(data);
     } catch (err: any) {
       setError(err.response?.data?.error || 'Đăng nhập thất bại');
     }
