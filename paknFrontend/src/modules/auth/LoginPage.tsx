@@ -14,6 +14,10 @@ export default function LoginPage() {
       'permissions',
       JSON.stringify(data.permissions)
     )
+    localStorage.setItem(
+      'user',
+      JSON.stringify(data.user)
+    )
 
     setAuthToken(data.token)
 

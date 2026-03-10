@@ -1,15 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import LogoutButton from '@/components/homepage/LogoutButton';
 
 export default function DashboardPage() {
     const navigate = useNavigate();
-    const isLoggedIn = !!localStorage.getItem('token');
     return (
         <div className="min-h-screen bg-gray-100 p-6">
             <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold">Phản ánh - Kiến nghị</h1>
-                    {isLoggedIn ? <LogoutButton /> : null}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
