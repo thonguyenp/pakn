@@ -85,7 +85,9 @@ export default function Profile() {
 
                     <div className="flex flex-col gap-3">
 
-                        <button className="w-full bg-[#1e54a4] text-white py-2 rounded hover:bg-blue-700">
+                        <button 
+                        onClick={() => setTab("profile")}
+                        className="w-full bg-[#1e54a4] text-white py-2 rounded hover:bg-blue-700">
                             Thông tin tài khoản
                         </button>
 
