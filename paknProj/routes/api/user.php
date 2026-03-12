@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\admin\DonViController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MetaController;
 use App\Http\Controllers\PhanAnhController;
 use App\Http\Controllers\ProfileController;
 use App\Models\NguoiDung;
@@ -36,6 +37,9 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
 
     return redirect('http://localhost:5173/login?verify=success');
 })->middleware('signed')->name('verification.verify');
+Route::get('/linhvuc',[MetaController::class,'getLinhVuc']);
+
+Route::get('/donvi',[MetaController::class,'getDonVi']);
 
 Route::middleware('auth:api')->group(function () {
     // Các route cần xác thực ở đây
