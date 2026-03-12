@@ -1,6 +1,6 @@
 // ForgotPassword.tsx
 import AuthLayout from '@/layouts/AuthLayout';
-import { sendResetLink } from '@/api/authApi';
+import { sendResetLink } from '@/api/user/authApi';
 import { useState } from 'react';
 
 export default function ForgotPassword() {

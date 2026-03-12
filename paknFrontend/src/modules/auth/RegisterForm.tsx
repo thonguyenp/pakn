@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { register } from '@/api/authApi';
+import { register } from '@/api/user/authApi';
 import { type RegisterPayload } from '@/types/auth';
 
 interface Props {

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { guiPhanAnh } from "@/services/phanAnhService";
+import { guiPhanAnh } from "@/api/user/phanAnhService";
 import { api } from "@/api/api";
 import ToggleSwitch from "../ToogleSwitch";
+import FileDropzone from "@/components/homepage/guiPhanAnh/FileDropzone";
 
 const GuiPhanAnh = () => {
 
@@ -37,11 +38,11 @@ const GuiPhanAnh = () => {
     }, []);
 
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            setFiles(Array.from(e.target.files));
-        }
-    };
+    // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     if (e.target.files) {
+    //         setFiles(Array.from(e.target.files));
+    //     }
+    // };
 
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -175,12 +176,7 @@ const GuiPhanAnh = () => {
 
                 {/* Upload file */}
 
-                <input
-                    type="file"
-                    multiple
-                    onChange={handleFileChange}
-                    className="w-full"
-                />
+                <FileDropzone setFiles={setFiles} files={files} />
 
 
                 <button

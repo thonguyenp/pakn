@@ -1,5 +1,5 @@
 import { type LoginPayload, type RegisterPayload, type AuthResponse } from '@/types/auth';
-import { api } from './api';
+import { api } from '../api';
 
 export const login = async (data: LoginPayload): Promise<AuthResponse> => {
   const res = await api.post<AuthResponse>('/login', data);

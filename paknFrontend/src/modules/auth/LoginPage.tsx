@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import LoginForm from './LoginForm';
-import { setAuthToken } from '@/api/authApi';
+import { setAuthToken } from '@/api/user/authApi';
 import AuthLayout from '@/layouts/AuthLayout';
 
 export default function LoginPage() {

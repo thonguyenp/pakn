@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { resetPassword } from '@/api/authApi';
+import { resetPassword } from '@/api/user/authApi';
 import AuthLayout from '@/layouts/AuthLayout';
 
 export default function ResetPassword() {

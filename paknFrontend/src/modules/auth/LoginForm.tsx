@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { login } from '@/api/authApi';
+import { login } from '@/api/user/authApi';
 import { type LoginPayload } from '@/types/auth';
 import { useSearchParams } from 'react-router-dom';
 
