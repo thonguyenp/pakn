@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\DonViController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PhanAnhController;
 use App\Http\Controllers\ProfileController;
@@ -7,11 +8,7 @@ use App\Models\NguoiDung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/profile', [ProfileController::class, 'getProfile']);   // checked
-
-Route::put('/profile', [ProfileController::class, 'updateProfile']);    // checked
-
-Route::post('/change-password', [ProfileController::class, 'changePassword']);  // checked
+Route::get('donvi', [DonViController::class, 'index']);  // checked
 
 // Đăng nhập và đăng ký
 Route::post('register', [AuthController::class, 'register']);
@@ -42,6 +39,11 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
 
 Route::middleware('auth:api')->group(function () {
     // Các route cần xác thực ở đây
+    Route::get('/profile', [ProfileController::class, 'getProfile']);   // checked
+
+    Route::put('/profile', [ProfileController::class, 'updateProfile']);    // checked
+
+    Route::post('/change-password', [ProfileController::class, 'changePassword']);  // checked
 
     // Đăng xuất
     Route::post('/logout', function () {
@@ -51,5 +53,5 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::post('/phananh', [PhanAnhController::class, 'store'])
-        ->middleware('permission:GuiPhanAnh');  //checked
+        ->middleware('permission:GuiPhanAnh');  // checked
 });

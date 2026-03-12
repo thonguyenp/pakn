@@ -1,11 +1,7 @@
-import { Navigate } from "react-router-dom"
+import { Navigate, Outlet } from "react-router-dom"
 import { getToken } from "@/services/authService"
 
-interface Props {
-  children: React.ReactNode
-}
-
-export default function ProtectedRoute({ children }: Props) {
+export default function ProtectedRoute() {
 
   const token = getToken()
 
@@ -13,5 +9,5 @@ export default function ProtectedRoute({ children }: Props) {
     return <Navigate to="/login" replace />
   }
 
-  return <>{children}</>
+  return <Outlet />
 }
