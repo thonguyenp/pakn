@@ -1,27 +1,22 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PhanAnhController;
 use App\Http\Controllers\ProfileController;
 use App\Models\NguoiDung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/profile', [ProfileController::class, 'getProfile']);   //checked
+Route::get('/profile', [ProfileController::class, 'getProfile']);   // checked
 
-Route::put('/profile', [ProfileController::class, 'updateProfile']);    //checked
+Route::put('/profile', [ProfileController::class, 'updateProfile']);    // checked
 
-Route::post('/change-password', [ProfileController::class, 'changePassword']);  //checked
+Route::post('/change-password', [ProfileController::class, 'changePassword']);  // checked
 
 // Đăng nhập và đăng ký
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
-// Đăng xuất
-Route::middleware('auth:api')->post('/logout', function () {
-    auth('api')->logout();
-
-    return response()->json(['message' => 'Đăng xuất thành công']);
-});
 // Quên mật khẩu
 Route::post('password/email', [AuthController::class, 'sendResetLinkEmail']);
 Route::post('password/reset', [AuthController::class, 'resetPassword']);
@@ -44,3 +39,17 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
 
     return redirect('http://localhost:5173/login?verify=success');
 })->middleware('signed')->name('verification.verify');
+
+Route::middleware('auth:api')->group(function () {
+    // Các route cần xác thực ở đây
+
+    // Đăng xuất
+    Route::post('/logout', function () {
+        auth('api')->logout();
+
+        return response()->json(['message' => 'Đăng xuất thành công']);
+    });
+
+    Route::post('/phananh', [PhanAnhController::class, 'store'])
+        ->middleware('permission:GuiPhanAnh');  //checked
+});
