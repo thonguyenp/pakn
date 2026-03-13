@@ -47,13 +47,6 @@ export default function PhanAnhList() {
           Quản lý phản ánh
         </h1>
 
-        <Link
-          to="/admin/phananh/create"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Thêm phản ánh
-        </Link>
-
       </div>
 
       <table className="w-full border">
