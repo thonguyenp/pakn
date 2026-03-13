@@ -3,9 +3,6 @@ import type { Pagination } from "../types/pagination"
 import { api } from "./api"
 
 export const donViApi = {
-  getList: ()=>
-    api.get(`/admin/donvi/list`),
-
   getAll: (page: number = 1) =>
     api.get<Pagination<DonVi>>(`/admin/donvi?page=${page}`),
 

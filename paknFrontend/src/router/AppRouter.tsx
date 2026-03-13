@@ -16,7 +16,7 @@ import ResetPassword from "@/modules/auth/ResetPassword";
 
 import Dashboard from "@/modules/pages/Dashboard";
 import Profile from "@/modules/pages/profile/Profile";
-import GuiPhanAnh from "@/components/homepage/guiPhanAnh/guiPhanAnh";
+import GuiPhanAnh from "@/modules/pages/GuiPhanAnh/guiPhanAnh";
 
 import UserList from "@/modules/admin/users/UserList";
 import UserCreate from "@/modules/admin/users/CreateUser";
