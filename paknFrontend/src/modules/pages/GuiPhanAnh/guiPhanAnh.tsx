@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { guiPhanAnh } from "@/api/user/phanAnhService"
-import { getLinhVucList } from "@/api/meta/linhVucService"
-import { getDonViList } from "@/api/meta/donViService"
+import { getMeta } from "@/api/meta/metaService"
 
 import ToggleSwitch from "@/components/homepage/ToogleSwitch"
 import FileDropzone from "@/components/homepage/guiPhanAnh/FileDropzone"
@@ -34,13 +33,10 @@ const GuiPhanAnh = () => {
 
       try {
 
-        const [linhVucData, donViData] = await Promise.all([
-          getLinhVucList(),
-          getDonViList()
-        ])
+        const meta = await getMeta("linhvuc,donvi")
 
-        setDsLinhVuc(linhVucData)
-        setDsDonVi(donViData)
+        setDsLinhVuc(meta.linhvuc)
+        setDsDonVi(meta.donvi)
 
       } catch (error) {
 

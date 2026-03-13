@@ -9,7 +9,13 @@ use App\Models\NguoiDung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('donvi', [DonViController::class, 'index']);  // checked
+// Các meta data như lĩnh vực, đơn vị, trạng thái phản ánh
+// Route::get('/linhvuc',[MetaController::class,'getLinhVuc']);
+// Route::get('/donvi',[MetaController::class,'getDonVi']);
+// Route::get('/trangthaiphananh',[MetaController::class,'getTrangThaiPhanAnh']);
+Route::get('/meta', [MetaController::class, 'index']);
+
+// Route::get('donvi', [DonViController::class, 'index']);  // checked
 
 // Đăng nhập và đăng ký
 Route::post('register', [AuthController::class, 'register']);
@@ -37,9 +43,7 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
 
     return redirect('http://localhost:5173/login?verify=success');
 })->middleware('signed')->name('verification.verify');
-Route::get('/linhvuc',[MetaController::class,'getLinhVuc']);
 
-Route::get('/donvi',[MetaController::class,'getDonVi']);
 
 Route::middleware('auth:api')->group(function () {
     // Các route cần xác thực ở đây

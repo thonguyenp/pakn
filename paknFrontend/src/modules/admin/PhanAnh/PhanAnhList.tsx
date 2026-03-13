@@ -4,8 +4,8 @@ import { getPhanAnhList } from "@/api/phanAnhApi"
 import { type Pagination } from "@/types/pagination"
 import type { LinhVuc } from "@/types/linhvuc"
 import type { DonVi } from "@/types/donvi"
-import { getLinhVucList } from "@/api/meta/linhVucService"
-import { getDonViList } from "@/api/meta/donViService"
+import type { TrangThaiPhanAnh } from "@/types/trangThaiPhanAnh"
+import { getMeta } from "@/api/meta/metaService"
 
 export default function PhanAnhList() {
   const [data, setData] = useState<Pagination<PhanAnh>>()
@@ -18,6 +18,7 @@ export default function PhanAnhList() {
 
   const [dsLinhVuc, setDsLinhVuc] = useState<LinhVuc[]>([])
   const [dsDonVi, setDsDonVi] = useState<DonVi[]>([])
+  const [dsTrangThai, setDsTrangThai] = useState<TrangThaiPhanAnh[]>([])
 
 
   const fetchData = async () => {
@@ -34,12 +35,11 @@ export default function PhanAnhList() {
   }
 
   const fetchMeta = async () => {
-    const [linhVucData, donViData] = await Promise.all([
-      getLinhVucList(),
-      getDonViList()
-    ])
-    setDsLinhVuc(linhVucData)
-    setDsDonVi(donViData)
+    const meta = await getMeta("linhvuc,donvi,trangthai")
+
+    setDsLinhVuc(meta.linhvuc)
+    setDsDonVi(meta.donvi)
+    setDsTrangThai(meta.trangthai)
   }
 
 
@@ -75,7 +75,7 @@ export default function PhanAnhList() {
           />
           Ẩn danh
         </label>
-
+        {/* Trạng thái */}
         <select
           className="border p-2"
           onChange={(e) =>
@@ -83,9 +83,11 @@ export default function PhanAnhList() {
           }
         >
           <option value="">Trạng thái</option>
-          <option value="1">Chờ xử lý</option>
-          <option value="2">Đang xử lý</option>
-          <option value="3">Đã xử lý</option>
+          {dsTrangThai.map((tt) => (
+            <option key={tt.IdTrangThaiPhanAnh} value={tt.IdTrangThaiPhanAnh}>
+              {tt.TenTrangThai}
+            </option>
+          ))}
         </select>
         {/* Lĩnh vực */}
         <select
@@ -102,7 +104,7 @@ export default function PhanAnhList() {
             </option>
           ))}
         </select>
-
+        {/* Đơn vị */}
         <select
           className="border p-2"
           value={donVi ?? ""}

@@ -25,9 +25,10 @@ import UserPermissions from "@/modules/admin/users/UserPermissions";
 
 import PermissionGuard from "@/components/admin/PermissionGuard";
 import ProtectedRoute from "@/components/admin/ProtectedRoute";
-import PhanAnhList from "@/modules/admin/PhanAnh/PhanAnhList";
+// import PhanAnhList from "@/modules/admin/PhanAnh/PhanAnhList";
 import PhanAnhEdit from "@/modules/admin/PhanAnh/PhanAnhEdit";
 import PhanAnhForm from "@/modules/admin/PhanAnh/PhanAnhForm";
+import PhanAnhList from "@/modules/admin/PhanAnh/PhanAnhList";
 
 export default function AppRouter() {
   return (
