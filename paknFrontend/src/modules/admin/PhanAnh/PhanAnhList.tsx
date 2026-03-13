@@ -1,129 +1,160 @@
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
-import { phanAnhApi } from "../../../api/phanAnhApi"
-import type { PhanAnh } from "../../../types/phanAnh"
+import { type PhanAnh } from "@/types/phanAnh"
+import { getPhanAnhList } from "@/api/phanAnhApi"
+import { type Pagination } from "@/types/pagination"
+import type { LinhVuc } from "@/types/linhvuc"
+import type { DonVi } from "@/types/donvi"
+import { getLinhVucList } from "@/api/meta/linhVucService"
+import { getDonViList } from "@/api/meta/donViService"
 
 export default function PhanAnhList() {
+  const [data, setData] = useState<Pagination<PhanAnh>>()
+  const [keyword, setKeyword] = useState("")
+  const [anDanh, setAnDanh] = useState<number | undefined>()
+  const [linhVuc, setLinhVuc] = useState<number | undefined>()
+  const [donVi, setDonVi] = useState<number | undefined>()
+  const [trangThai, setTrangThai] = useState<number | undefined>()
+  const [page, setPage] = useState(1)
 
-  const [data,setData] = useState<PhanAnh[]>([])
-  const [page,setPage] = useState(1)
-  const [lastPage,setLastPage] = useState(1)
+  const [dsLinhVuc, setDsLinhVuc] = useState<LinhVuc[]>([])
+  const [dsDonVi, setDsDonVi] = useState<DonVi[]>([])
+
 
   const fetchData = async () => {
-    try{
-      const res = await phanAnhApi.getAll(page)
+    const res = await getPhanAnhList({
+      keyword,
+      AnDanh: anDanh,
+      IdLinhVuc: linhVuc,
+      IdDonVi: donVi,
+      IdTrangThaiPhanAnh: trangThai,
+      page,
+    })
 
-      setData(res.data.data)
-      setLastPage(res.data.last_page)
-
-    }catch(error){
-      console.error(error)
-    }
+    setData(res)
   }
 
-  useEffect(()=>{
-    fetchData()
-  },[page])
+  const fetchMeta = async () => {
+    const [linhVucData, donViData] = await Promise.all([
+      getLinhVucList(),
+      getDonViList()
+    ])
+    setDsLinhVuc(linhVucData)
+    setDsDonVi(donViData)
+  }
 
-  const handleDelete = async(id:number)=>{
 
-    if(!confirm("Bạn chắc chắn muốn xóa?")) return
+  useEffect(() => {
+    fetchMeta()
 
-    try{
-      await phanAnhApi.delete(id)
+    const delay = setTimeout(() => {
       fetchData()
-    }catch(error){
-      console.error(error)
-    }
-  }
+    }, 500)
+
+    return () => clearTimeout(delay)
+  }, [keyword, anDanh, linhVuc, donVi, trangThai, page])
 
   return (
+    <div className="p-6 space-y-4">
 
-    <div className="p-6">
+      {/* Search */}
+      <input
+        type="text"
+        placeholder="Tìm kiếm tiêu đề hoặc nội dung..."
+        className="border p-2 w-full"
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
+      />
 
-      <div className="flex justify-between mb-4">
+      {/* Filter */}
+      <div className="flex gap-4">
 
-        <h1 className="text-xl font-bold">
-          Quản lý phản ánh
-        </h1>
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            onChange={(e) => setAnDanh(e.target.checked ? 1 : undefined)}
+          />
+          Ẩn danh
+        </label>
+
+        <select
+          className="border p-2"
+          onChange={(e) =>
+            setTrangThai(Number(e.target.value) || undefined)
+          }
+        >
+          <option value="">Trạng thái</option>
+          <option value="1">Chờ xử lý</option>
+          <option value="2">Đang xử lý</option>
+          <option value="3">Đã xử lý</option>
+        </select>
+        {/* Lĩnh vực */}
+        <select
+          className="border p-2"
+          value={linhVuc ?? ""}
+          onChange={(e) =>
+            setLinhVuc(Number(e.target.value) || undefined)
+          }
+        >
+          <option value="">Lĩnh vực</option>
+          {dsLinhVuc.map((lv) => (
+            <option key={lv.IdLinhVuc} value={lv.IdLinhVuc}>
+              {lv.TenLinhVuc}
+            </option>
+          ))}
+        </select>
+
+        <select
+          className="border p-2"
+          value={donVi ?? ""}
+          onChange={(e) =>
+            setDonVi(Number(e.target.value) || undefined)
+          }
+        >
+          <option value="">Đơn vị</option>
+          {dsDonVi.map((dv) => (
+            <option key={dv.IdDonVi} value={dv.IdDonVi}>
+              {dv.TenDonVi}
+            </option>
+          ))}
+        </select>
 
       </div>
 
+      {/* Table */}
       <table className="w-full border">
-
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="border p-2">ID</th>
-            <th className="border p-2">Tiêu đề</th>
-            <th className="border p-2">Nội dung</th>
-            <th className="border p-2">Hành động</th>
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="p-2">Tiêu đề</th>
+            <th>Nội dung</th>
+            <th>Ẩn danh</th>
+            <th>Ngày gửi</th>
           </tr>
         </thead>
 
         <tbody>
-
-          {data.map(item=>(
-            <tr key={item.IdPhanAnh}>
-
-              <td className="border p-2">
-                {item.IdPhanAnh}
-              </td>
-
-              <td className="border p-2">
-                {item.TieuDe}
-              </td>
-
-              <td className="border p-2">
-                {item.NoiDung}
-              </td>
-
-              <td className="border p-2 flex gap-2">
-
-                <Link
-                  to={`/admin/phananh/edit/${item.IdPhanAnh}`}
-                  className="bg-yellow-500 text-white px-2 py-1 rounded"
-                >
-                  Sửa
-                </Link>
-
-                <button
-                  onClick={()=>handleDelete(item.IdPhanAnh)}
-                  className="bg-red-500 text-white px-2 py-1 rounded"
-                >
-                  Xóa
-                </button>
-
-              </td>
-
+          {data?.data.map((item) => (
+            <tr key={item.IdPhanAnh} className="border-t">
+              <td className="p-2">{item.TieuDe}</td>
+              <td>{item.NoiDung}</td>
+              <td>{item.AnDanh ? "Có" : "Không"}</td>
+              <td>{item.NgayGui}</td>
             </tr>
           ))}
-
         </tbody>
-
       </table>
 
-      <div className="flex gap-2 mt-4">
-
-        <button
-          disabled={page===1}
-          onClick={()=>setPage(page-1)}
-          className="bg-gray-300 px-3 py-1 rounded"
-        >
-          Prev
-        </button>
-
-        <span>
-          Page {page} / {lastPage}
-        </span>
-
-        <button
-          disabled={page===lastPage}
-          onClick={()=>setPage(page+1)}
-          className="bg-gray-300 px-3 py-1 rounded"
-        >
-          Next
-        </button>
-
+      {/* Pagination */}
+      <div className="flex gap-2">
+        {Array.from({ length: data?.last_page || 0 }, (_, i) => (
+          <button
+            key={i}
+            className={`px-3 py-1 border ${page === i + 1 ? "bg-blue-500 text-white" : ""
+              }`}
+            onClick={() => setPage(i + 1)}
+          >
+            {i + 1}
+          </button>
+        ))}
       </div>
 
     </div>

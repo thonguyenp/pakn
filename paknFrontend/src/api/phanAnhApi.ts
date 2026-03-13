@@ -18,5 +18,20 @@ export const phanAnhApi = {
 
   delete: (id: number) =>
     api.delete(`/admin/phananh/${id}`)
+}
 
+export interface PhanAnhFilter {
+  keyword?: string
+  AnDanh?: number
+  IdTrangThaiPhanAnh?: number
+  IdLinhVuc?: number
+  IdDonVi?: number
+  page?: number
+}
+
+export const getPhanAnhList = async (
+  params: PhanAnhFilter
+): Promise<Pagination<PhanAnh>> => {
+  const res = await api.get("admin/phananh", { params })
+  return res.data
 }
