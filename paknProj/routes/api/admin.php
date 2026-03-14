@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\DonViController;
+use App\Http\Controllers\admin\FileDinhKemController;
 use App\Http\Controllers\admin\NguoiDungController;
 use App\Http\Controllers\admin\PhanAnhController;
 use Illuminate\Support\Facades\Route;
@@ -15,8 +16,8 @@ Route::middleware(['auth:api'])
             Route::get('/', [PhanAnhController::class, 'index']);
             Route::get('/{id}', [PhanAnhController::class, 'show']);
             Route::put('/{id}', [PhanAnhController::class, 'update']);
-            Route::delete('/{id}', [PhanAnhController::class, 'destroy'])->middleware('permission:XoaPhanAnh'); //checked 
-
+            Route::delete('/{id}', [PhanAnhController::class, 'destroy'])->middleware('permission:XoaPhanAnh'); // checked
+            Route::get('/files/{id}', [FileDinhKemController::class, 'getByPhanAnh']);
         })->middleware('permission:XemTatCaPhanAnh');
 
         Route::prefix('nguoidung')->group(function () {
