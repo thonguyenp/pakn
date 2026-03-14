@@ -63,6 +63,7 @@ export default function RegisterForm({ onSuccess }: Props) {
           value={form.MatKhau}
           onChange={value => setForm({ ...form, MatKhau: value })}
           placeholder="Mật khẩu"
+          className='w-full pl-10 pr-10 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 '
         />
       </div>
 
@@ -71,6 +72,7 @@ export default function RegisterForm({ onSuccess }: Props) {
           value={confirmPassword}
           onChange={setConfirmPassword}
           placeholder="Nhập lại mật khẩu"
+          className='w-full pl-10 pr-10 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 '
         />
       </div>
 

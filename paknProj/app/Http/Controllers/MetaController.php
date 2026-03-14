@@ -9,27 +9,7 @@ use Illuminate\Http\Request;
 
 class MetaController extends Controller
 {
-    // public function getLinhVuc()
-    // {
-    //     $data = LinhVuc::select('IdLinhVuc', 'TenLinhVuc')->get();
-
-    //     return response()->json($data);
-    // }
-
-    // public function getDonVi()
-    // {
-    //     $data = DonVi::select('IdDonVi', 'TenDonVi')->get();
-
-    //     return response()->json($data);
-    // }
-
-    // public function getTrangThaiPhanAnh()
-    // {
-    //     $data = TrangThaiPhanAnh::select('IdTrangThaiPhanAnh', 'TenTrangThai')->get();
-
-    //     return response()->json($data);
-    // }
-        public function index(Request $request)
+    public function index(Request $request)
     {
         // lấy query include
         $include = $request->query('include');
@@ -62,5 +42,4 @@ class MetaController extends Controller
 
         return response()->json($data);
     }
-
 }

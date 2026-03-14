@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { type PhanAnh } from "@/types/phanAnh"
 import { getPhanAnhList } from "@/api/phanAnhApi"
@@ -75,9 +76,9 @@ export default function PhanAnhList() {
           Ẩn danh
         </label> */}
         <ToggleSwitch
-        label="Ẩn danh"
-        checked={anDanh === 1}
-        onChange={(checked) => setAnDanh(checked ? 1 : undefined)}
+          label="Ẩn danh"
+          checked={anDanh === 1}
+          onChange={(checked) => setAnDanh(checked ? 1 : undefined)}
         ></ToggleSwitch>
         {/* Trạng thái */}
         <select
@@ -134,6 +135,7 @@ export default function PhanAnhList() {
             <th>Nội dung</th>
             <th>Ẩn danh</th>
             <th>Ngày gửi</th>
+            <th className="p-2 text-center">Hành động</th>
           </tr>
         </thead>
 
@@ -144,6 +146,26 @@ export default function PhanAnhList() {
               <td>{item.NoiDung}</td>
               <td>{item.AnDanh ? "Có" : "Không"}</td>
               <td>{item.NgayGui}</td>
+              <td className="p-2">
+                <div className="flex gap-2 justify-center">
+
+                  <Link
+                    to={`/admin/phananh/xem/${item.IdPhanAnh}`}
+                    className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  >
+                    Xem
+                  </Link>
+
+                  <Link
+                    to={`/admin/phananh/edit/${item.IdPhanAnh}`}
+                    className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                  >
+                    Sửa
+                  </Link>
+
+                </div>
+              </td>
+
             </tr>
           ))}
         </tbody>

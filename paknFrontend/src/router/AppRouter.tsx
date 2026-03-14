@@ -29,6 +29,7 @@ import ProtectedRoute from "@/components/admin/ProtectedRoute";
 import PhanAnhEdit from "@/modules/admin/PhanAnh/PhanAnhEdit";
 import PhanAnhForm from "@/modules/admin/PhanAnh/PhanAnhForm";
 import PhanAnhList from "@/modules/admin/PhanAnh/PhanAnhList";
+import PhanAnhDetail from "@/modules/admin/PhanAnh/PhanAnhDetail";
 
 export default function AppRouter() {
   return (
@@ -68,12 +69,22 @@ export default function AppRouter() {
           >
             {/* Dashboard */}
             <Route index element={<DashboardPage />} />
+            {/* Phản ánh */}
             <Route path="phananh">
               <Route
                 index
                 element={
                   <PermissionGuard permission="XemTatCaPhanAnh">
                     <PhanAnhList />
+                  </PermissionGuard>
+                }
+              >
+              </Route>
+              <Route
+                path="xem/:id"
+                element={
+                  <PermissionGuard permission="XemTatCaPhanAnh">
+                    <PhanAnhDetail />
                   </PermissionGuard>
                 }
               >
