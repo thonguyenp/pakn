@@ -1,171 +1,118 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+
 import {
-  LayoutDashboard,
-  Building2,
-  Users,
-  MessageSquare,
-  ChevronLeft,
-  ChevronRight,
+  User,
+  LogOut,
+  ScrollText,
+  Menu,
+  ChevronLeft
 } from "lucide-react";
 
 export default function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const navigate = useNavigate();
   const location = useLocation();
 
-  const isActive = (path: string) =>
-    location.pathname === path || location.pathname.startsWith(path + "/");
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const sidebarStyle = {
-    width: isCollapsed ? 80 : 250,
-    backgroundColor: "#0f172a", // slate-900
-    color: "white",
-    height: "100vh",
-    display: "flex",
-    flexDirection: "column" as const,
-    transition: "width 0.3s ease-in-out",
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = "/login";
   };
 
-  const headerStyle = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: "16px",
-    borderBottom: "1px solid #334155", // slate-700
-  };
-
-  const toggleButtonStyle = {
-    padding: "8px",
-    borderRadius: "9999px",
-    backgroundColor: "transparent",
-    border: "none",
-    color: "white",
-    cursor: "pointer",
-    transition: "background-color 0.2s",
-  };
-
-  const toggleHoverStyle = {
-    backgroundColor: "#334155", // slate-700 on hover
-  };
-
-  const navStyle = {
-    flex: 1,
-    overflowY: "auto" as const,
-    padding: "16px 0",
-  };
-
-  const ulStyle = {
-    listStyle: "none",
-    padding: 0,
-    margin: 0,
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "4px",
-    paddingLeft: "12px",
-    paddingRight: "12px",
-  };
-
-  const getItemStyle = (active: boolean) => ({
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-    padding: "12px 12px",
-    borderRadius: "8px",
-    textDecoration: "none",
-    color: active ? "white" : "#cbd5e1", // slate-300
-    backgroundColor: active ? "#334155" : "transparent", // slate-700 if active
-    transition: "all 0.2s ease",
-    cursor: "pointer",
-    justifyContent: isCollapsed ? "center" : "flex-start",
-    ':hover': {
-      backgroundColor: "#1e293b", // slate-800 on hover
-      color: "white",
-    },
-  });
-
-  const iconStyle = {
-    flexShrink: 0,
-  };
-
-  const footerStyle = {
-    padding: "16px",
-    borderTop: "1px solid #334155", // slate-700
-    fontSize: "0.875rem",
-    color: "#94a3b8", // slate-400
-  };
+  const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div style={sidebarStyle}>
-      {/* Header */}
-      <div style={headerStyle}>
-        {!isCollapsed && (
-          <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", letterSpacing: "-0.025em" }}>
-            PAKN Admin
-          </h2>
-        )}
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          style={toggleButtonStyle}
-          onMouseEnter={(e) => Object.assign(e.currentTarget.style, toggleHoverStyle)}
-          onMouseLeave={(e) => Object.assign(e.currentTarget.style, { backgroundColor: "transparent" })}
-        >
-          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
-        </button>
-      </div>
+    <>
+      {/* Mobile button */}
+      <button
+        onClick={() => setMobileOpen(!mobileOpen)}
+        className="md:hidden fixed top-4 left-4 z-50 bg-slate-900 p-2 rounded"
+      >
+        <Menu size={20} color="white" />
+      </button>
 
-      {/* Menu */}
-      <nav style={navStyle}>
-        <ul style={ulStyle}>
-          {/* Dashboard */}
-          <li>
-            <Link
-              to="/admin"
-              style={getItemStyle(isActive("/admin") && !isActive("/admin/"))}
+      <aside
+        className={`
+        fixed md:relative z-40
+        ${collapsed ? "w-20" : "w-64"}
+        ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
+        md:translate-x-0
+        h-screen bg-slate-900 text-white flex flex-col
+        transition-all duration-300
+        `}
+      >
+
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-slate-700">
+
+          {!collapsed && (
+            <h6
+              onClick={() => navigate("/admin")}
+              className="font-semibold cursor-pointer"
             >
-              <LayoutDashboard size={20} style={iconStyle} />
-              {!isCollapsed && <span>Dashboard</span>}
-            </Link>
-          </li>
+              {user.HoTen}
+            </h6>
+          )}
 
-          {/* Quản lý đơn vị */}
-          <li>
-            <Link
-              to="/admin/donvi"
-              style={getItemStyle(isActive("/admin/donvi"))}
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="p-1 hover:bg-slate-800 rounded"
+          >
+            <ChevronLeft
+              size={18}
+              className={`transition-transform ${collapsed ? "rotate-180" : ""}`}
+            />
+          </button>
+
+        </div>
+
+        {/* Menu */}
+        <nav className="flex-1 overflow-y-auto p-2">
+
+          <ul className="space-y-2">
+
+            {/* Quản lý người dùng */}
+            <li
+              onClick={() => navigate("/admin/nguoidung")}
+              className={`
+              flex items-center gap-3 px-3 py-2 rounded cursor-pointer
+              ${isActive("/admin/nguoidung") ? "bg-blue-800" : "hover:bg-slate-800"}
+              `}
             >
-              <Building2 size={20} style={iconStyle} />
-              {!isCollapsed && <span>Quản lý đơn vị</span>}
-            </Link>
-          </li>
+              <User size={18} />
+              {!collapsed && "Quản lý người dùng"}
+            </li>
 
-          {/* Quản lý người dùng */}
-          <li>
-            <Link
-              to="/admin/nguoidung"
-              style={getItemStyle(isActive("/admin/nguoidung"))}
+            {/* Quản lý phản ánh */}
+            <li
+              onClick={() => navigate("/admin/phananh")}
+              className={`
+              flex items-center gap-3 px-3 py-2 rounded cursor-pointer
+              ${isActive("/admin/phananh") ? "bg-blue-800" : "hover:bg-slate-800"}
+              `}
             >
-              <Users size={20} style={iconStyle} />
-              {!isCollapsed && <span>Quản lý người dùng</span>}
-            </Link>
-          </li>
+              <ScrollText size={18} />
+              {!collapsed && "Quản lý phản ánh"}
+            </li>
 
-          {/* Phản ánh */}
-          <li>
-            <Link
-              to="/admin/phananh"
-              style={getItemStyle(isActive("/admin/phananh"))}
+            {/* Logout */}
+            <li
+              onClick={handleLogout}
+              className="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800 cursor-pointer text-red-400"
             >
-              <MessageSquare size={20} style={iconStyle} />
-              {!isCollapsed && <span>Phản ánh</span>}
-            </Link>
-          </li>
-        </ul>
-      </nav>
+              <LogOut size={18} />
+              {!collapsed && "Đăng xuất"}
+            </li>
 
-      {/* Footer */}
-      <div style={footerStyle}>
-        {!isCollapsed && <>© {new Date().getFullYear()} PAKN</>}
-      </div>
-    </div>
+          </ul>
+
+        </nav>
+      </aside>
+    </>
   );
 }
