@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "@/api/api";
-import ChangePassword from "@/components/homepage/profile/ChangePassword";
+import ChangePassword from "@/modules/pages/profile/ChangePassword";
 
 interface User {
     HoTen: string;

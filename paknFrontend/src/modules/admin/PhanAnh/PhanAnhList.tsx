@@ -6,6 +6,8 @@ import type { LinhVuc } from "@/types/linhvuc"
 import type { DonVi } from "@/types/donvi"
 import type { TrangThaiPhanAnh } from "@/types/trangThaiPhanAnh"
 import { getMeta } from "@/api/meta/metaService"
+import SearchInput from "@/components/shared/SearchInput"
+import ToggleSwitch from "@/components/shared/ToogleSwitch"
 
 export default function PhanAnhList() {
   const [data, setData] = useState<Pagination<PhanAnh>>()
@@ -41,11 +43,11 @@ export default function PhanAnhList() {
     setDsDonVi(meta.donvi)
     setDsTrangThai(meta.trangthai)
   }
-
-
   useEffect(() => {
     fetchMeta()
+  }, [])
 
+  useEffect(() => {
     const delay = setTimeout(() => {
       fetchData()
     }, 500)
@@ -57,24 +59,26 @@ export default function PhanAnhList() {
     <div className="p-6 space-y-4">
 
       {/* Search */}
-      <input
-        type="text"
-        placeholder="Tìm kiếm tiêu đề hoặc nội dung..."
-        className="border p-2 w-full"
+      <SearchInput
         value={keyword}
-        onChange={(e) => setKeyword(e.target.value)}
+        onChange={setKeyword}
+        placeholder="Tìm kiếm tiêu đề hoặc nội dung..."
       />
-
       {/* Filter */}
       <div className="flex gap-4">
 
-        <label className="flex items-center gap-2">
+        {/* <label className="flex items-center gap-2">
           <input
             type="checkbox"
             onChange={(e) => setAnDanh(e.target.checked ? 1 : undefined)}
           />
           Ẩn danh
-        </label>
+        </label> */}
+        <ToggleSwitch
+        label="Ẩn danh"
+        checked={anDanh === 1}
+        onChange={(checked) => setAnDanh(checked ? 1 : undefined)}
+        ></ToggleSwitch>
         {/* Trạng thái */}
         <select
           className="border p-2"

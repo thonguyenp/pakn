@@ -2,8 +2,8 @@ import { useEffect, useState } from "react"
 import { guiPhanAnh } from "@/api/user/phanAnhService"
 import { getMeta } from "@/api/meta/metaService"
 
-import ToggleSwitch from "@/components/homepage/ToogleSwitch"
-import FileDropzone from "@/components/homepage/guiPhanAnh/FileDropzone"
+import ToggleSwitch from "@/components/shared/ToogleSwitch"
+import FileDropzone from "@/components/shared/FileDropzone"
 
 import { type LinhVuc } from "@/types/linhvuc"
 import { type DonVi } from "@/types/donvi"
