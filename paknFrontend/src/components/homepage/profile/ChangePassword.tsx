@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { api } from "@/api/api";
+import PasswordInput from "@/components/shared/PasswordInput";
 
 interface Props {
     onCancel: () => void;
@@ -12,13 +13,6 @@ export default function ChangePassword({ onCancel }: Props) {
         new_password: "",
         new_password_confirmation: ""
     });
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value
-        });
-    };
 
     const changePassword = async () => {
         try {
@@ -56,12 +50,11 @@ export default function ChangePassword({ onCancel }: Props) {
                         Mật khẩu cũ
                     </label>
 
-                    <input
-                        type="password"
-                        name="old_password"
+                    <PasswordInput
                         value={form.old_password}
-                        onChange={handleChange}
-                        className="w-full border-b border-gray-300 px-1 py-2 focus:outline-none focus:border-blue-500"
+                        onChange={value => setForm({ ...form, old_password: value })}
+                        placeholder="Mật khẩu cũ"
+                        className="w-full border-b pl-10 border-gray-300 px-1 py-2 focus:outline-none focus:border-blue-500"
                     />
                 </div>
 
@@ -70,12 +63,11 @@ export default function ChangePassword({ onCancel }: Props) {
                         Mật khẩu mới
                     </label>
 
-                    <input
-                        type="password"
-                        name="new_password"
+                    <PasswordInput
                         value={form.new_password}
-                        onChange={handleChange}
-                        className="w-full border-b border-gray-300 px-1 py-2 focus:outline-none focus:border-blue-500"
+                        onChange={value => setForm({ ...form, new_password: value })}
+                        placeholder="Mật khẩu mới"
+                        className="w-full border-b pl-10 border-gray-300 px-1 py-2 focus:outline-none focus:border-blue-500"
                     />
                 </div>
 
@@ -84,12 +76,11 @@ export default function ChangePassword({ onCancel }: Props) {
                         Xác nhận mật khẩu mới
                     </label>
 
-                    <input
-                        type="password"
-                        name="new_password_confirmation"
+                    <PasswordInput
                         value={form.new_password_confirmation}
-                        onChange={handleChange}
-                        className="w-full border-b border-gray-300 px-1 py-2 focus:outline-none focus:border-blue-500"
+                        onChange={value => setForm({ ...form, new_password_confirmation: value })}
+                        placeholder="Xác nhận mật khẩu mới"
+                        className="w-full border-b pl-10 border-gray-300 px-1 py-2 focus:outline-none focus:border-blue-500"
                     />
                 </div>
 

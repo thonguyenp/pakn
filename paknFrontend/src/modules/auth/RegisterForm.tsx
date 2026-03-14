@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { register } from '@/api/user/authApi';
 import { type RegisterPayload } from '@/types/auth';
+import PasswordInput from '@/components/shared/PasswordInput';
 
 interface Props {
   onSuccess: (token: string) => void;
@@ -14,7 +15,6 @@ export default function RegisterForm({ onSuccess }: Props) {
   });
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,21 +59,19 @@ export default function RegisterForm({ onSuccess }: Props) {
       </div>
 
       <div className="relative">
-        <i className="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-        <input type={showPassword ? 'text' : 'password'} placeholder="Mật khẩu" value={form.MatKhau} onChange={e => setForm({ ...form, MatKhau: e.target.value })} className="w-full pl-10 pr-10 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required />
-        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
-          <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
-        </button>
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500">*</span>
+        <PasswordInput
+          value={form.MatKhau}
+          onChange={value => setForm({ ...form, MatKhau: value })}
+          placeholder="Mật khẩu"
+        />
       </div>
 
       <div className="relative">
-        <i className="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-        <input type={showPassword ? 'text' : 'password'} placeholder="Nhập lại mật khẩu" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="w-full pl-10 pr-10 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required />
-        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
-          <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
-        </button>
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500">*</span>
+        <PasswordInput
+          value={confirmPassword}
+          onChange={setConfirmPassword}
+          placeholder="Nhập lại mật khẩu"
+        />
       </div>
 
       {error && <p className="text-red-500">{error}</p>}

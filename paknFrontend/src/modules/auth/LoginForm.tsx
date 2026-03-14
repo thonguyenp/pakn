@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { login } from '@/api/user/authApi';
 import { type LoginPayload } from '@/types/auth';
 import { useSearchParams } from 'react-router-dom';
+import PasswordInput from '@/components/shared/PasswordInput';
 
 interface Props {
   onSuccess: (string: any) => void;
@@ -10,7 +11,7 @@ interface Props {
 export default function LoginForm({ onSuccess }: Props) {
   const [form, setForm] = useState<LoginPayload>({ Email: '', MatKhau: '' });
   const [error, setError] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
   const [searchParams] = useSearchParams();
   const [message, setMessage] = useState('');
 
@@ -55,22 +56,13 @@ export default function LoginForm({ onSuccess }: Props) {
       </div>
 
       <div className="relative">
-        <i className="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-        <input
-          type={showPassword ? 'text' : 'password'}
-          placeholder="Mật khẩu"
+        <PasswordInput
           value={form.MatKhau}
-          onChange={e => setForm({ ...form, MatKhau: e.target.value })}
-          className="w-full pl-10 pr-10 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          required
-        />
-        <button
-          type="button"
-          onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+          onChange={value => setForm({ ...form, MatKhau: value })}
+          placeholder="Mật khẩu"
+          className='w-full pl-10 pr-10 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 '
         >
-          <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
-        </button>
+        </PasswordInput>
       </div>
       <div className="flex justify-between items-center text-sm mt-2">
         <label className="flex items-center text-gray-600">
