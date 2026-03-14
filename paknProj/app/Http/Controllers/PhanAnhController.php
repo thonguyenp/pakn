@@ -42,7 +42,7 @@ class PhanAnhController extends Controller
                 FileDinhKem::create([
                     'TenFile'=>$file->getClientOriginalName(),
                     'DuongDan'=>$path,
-                    'LoaiFile'=>$file->getClientMimeType(),
+                    'LoaiFile'=>$file->getMimeType(),
                     'KichThuoc'=>$file->getSize(),
                     'NgayTaiLen'=>now(),
                     'IdPhanAnh'=>$phanAnh->IdPhanAnh

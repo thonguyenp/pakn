@@ -3,21 +3,22 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\FileDinhKem;
+use App\Models\PhanAnh;
 
 class FileDinhKemController extends Controller
 {
     //
     public function getByPhanAnh($id)
     {
-        $files = FileDinhKem::where('IdPhanAnh', $id)->get();
+        $phanAnh = PhanAnh::with('files')->find($id);
 
-        if ($files->isEmpty()) {
+        if (!$phanAnh) {
             return response()->json([
-                'message' => 'Không có file đính kèm',
+                'message' => 'Không tìm thấy phản ánh',
             ], 404);
         }
 
-        return response()->json($files);
+        return response()->json($phanAnh->files);
+
     }
 }

@@ -2,10 +2,12 @@ import { useEffect, useState } from "react"
 import { useParams, Link } from "react-router-dom"
 import { phanAnhApi } from "@/api/phanAnhApi"
 import type { PhanAnh } from "@/types/phanAnh"
+import type { FileDinhKem } from "@/types/fileDinhKem"
 
 export default function PhanAnhDetail() {
   const { id } = useParams()
   const [phanAnh, setPhanAnh] = useState<PhanAnh | null>(null)
+  const [files, setFiles] = useState<FileDinhKem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
@@ -13,8 +15,14 @@ export default function PhanAnhDetail() {
     const fetchData = async () => {
       try {
         if (!id) return
-        const res = await phanAnhApi.getById(Number(id))
-        setPhanAnh(res.data)
+
+        const [phanAnhRes, fileRes] = await Promise.all([
+          phanAnhApi.getById(Number(id)),
+          phanAnhApi.getFiles(Number(id))
+        ])
+
+        setPhanAnh(phanAnhRes.data)
+        setFiles(fileRes.data)
       } catch (err) {
         setError("Không tải được phản ánh")
       } finally {
@@ -99,7 +107,43 @@ export default function PhanAnhDetail() {
           </div>
 
         </div>
+        <div>
+          <label className="font-semibold">File đính kèm</label>
 
+          {files.length === 0 ? (
+            <div className="text-gray-500 mt-1">Không có file</div>
+          ) : (
+            <div className="grid grid-cols-3 gap-3 mt-2">
+
+              {files.map(file => (
+                <div
+                  key={file.IdFile}
+                  className="border rounded p-2 flex flex-col items-center"
+                >
+
+                  {file.LoaiFile.startsWith("image") ? (
+                    <img
+                      src={`http://localhost:8000/storage/${file.DuongDan}`}
+                      className="h-24 object-cover rounded"
+                    />
+                  ) : (
+                    <i className="fa-solid fa-file text-3xl text-gray-500"></i>
+                  )}
+
+                  <a
+                    href={`http://localhost:8000/storage/${file.DuongDan}`}
+                    target="_blank"
+                    className="text-blue-600 text-sm mt-2 hover:underline"
+                  >
+                    {file.TenFile}
+                  </a>
+
+                </div>
+              ))}
+
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

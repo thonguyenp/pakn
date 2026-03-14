@@ -1,6 +1,7 @@
 import { type PhanAnh } from "../types/phanAnh"
 import type { Pagination } from "../types/pagination"
 import { api } from "./api"
+import type { FileDinhKem } from "@/types/fileDinhKem"
 
 export const phanAnhApi = {
 
@@ -9,6 +10,9 @@ export const phanAnhApi = {
 
   getById: (id: number) =>
     api.get<PhanAnh>(`/admin/phananh/${id}`),
+
+  getFiles: (id: number) =>
+    api.get<FileDinhKem[]>(`/admin/phananh/files/${id}`),
 
   create: (data: PhanAnh) =>
     api.post(`/admin/phananh`, data),

@@ -21,6 +21,11 @@ class PhanAnh extends Model
         'IdNguoiDung',
         'IdLinhVuc',
         'IdDonVi',
-        'IdTrangThaiPhanAnh'
+        'IdTrangThaiPhanAnh',
     ];
+
+    public function files()
+    {
+        return $this->hasMany(FileDinhKem::class, 'IdPhanAnh', 'IdPhanAnh');
+    }
 }
