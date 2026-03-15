@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { userApi } from "@/api/admin/userApi"
 import type { Permission } from "@/types/user"
+import ToggleSwitch from "@/components/shared/ToogleSwitch"
 
 export default function UserPermissions(){
 
@@ -84,12 +85,15 @@ export default function UserPermissions(){
 
             <td className="border text-center">
 
-              <input
+              {/* <input
                 type="checkbox"
                 checked={checked}
                 onChange={()=>toggle(p.IdQuyen)}
+              /> */}
+              <ToggleSwitch
+                checked={checked}
+                onChange={()=>toggle(p.IdQuyen)}
               />
-
             </td>
 
           </tr>

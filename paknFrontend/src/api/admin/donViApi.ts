@@ -1,8 +1,11 @@
-import { type DonVi } from "../types/donvi"
-import type { Pagination } from "../types/pagination"
+import { type DonVi } from "@/types/donvi"
+import type { Pagination } from "@/types/pagination"
 import { api } from "../api"
 
 export const donViApi = {
+  getList: () =>
+    api.get<DonVi[]>(`/admin/donvi/list`),
+
   getAll: (page: number = 1) =>
     api.get<Pagination<DonVi>>(`/admin/donvi?page=${page}`),
 

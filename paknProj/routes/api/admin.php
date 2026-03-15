@@ -8,10 +8,30 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:api'])
     ->prefix('admin')
+    ->middleware('permission:QuanLyHeThong')
     ->group(function () {
 
-        Route::apiResource('donvi', DonViController::class)
-            ->middleware('permission:QuanLyHeThong');
+        Route::prefix('donvi')->middleware('permission:QuanLyHeThong')->group(function () {
+            Route::get('/', [DonViController::class, 'index'])          // danh sách phân trang
+                ->name('donvi.index');
+
+            Route::get('/list', [DonViController::class, 'list'])      // toàn bộ active (no paginate)
+                ->name('donvi.list');
+
+            Route::get('/{id}', [DonViController::class, 'show'])
+                ->name('donvi.show');
+
+            Route::post('/', [DonViController::class, 'store'])
+                ->name('donvi.store');
+
+            Route::put('/{id}', [DonViController::class, 'update'])
+                ->name('donvi.update');
+
+            Route::delete('/{id}', [DonViController::class, 'destroy'])
+                ->name('donvi.destroy');
+
+        });
+
         Route::prefix('phananh')->group(function () {
             Route::get('/', [PhanAnhController::class, 'index']);
             Route::get('/{id}', [PhanAnhController::class, 'show']);
