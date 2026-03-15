@@ -16,7 +16,7 @@ import ResetPassword from "@/modules/auth/ResetPassword";
 
 import Dashboard from "@/modules/pages/Dashboard";
 import Profile from "@/modules/pages/profile/Profile";
-import GuiPhanAnh from "@/modules/pages/GuiPhanAnh/guiPhanAnh";
+import GuiPhanAnh from "@/modules/pages/PhanAnh/GuiPhanAnh";
 
 import UserList from "@/modules/admin/users/UserList";
 import UserCreate from "@/modules/admin/users/CreateUser";
@@ -30,6 +30,8 @@ import PhanAnhEdit from "@/modules/admin/PhanAnh/PhanAnhEdit";
 import PhanAnhForm from "@/modules/admin/PhanAnh/PhanAnhForm";
 import PhanAnhList from "@/modules/admin/PhanAnh/PhanAnhList";
 import PhanAnhDetail from "@/modules/admin/PhanAnh/PhanAnhDetail";
+import PhanAnhCuaToi from "@/modules/pages/PhanAnh/PhanAnhCuaToi";
+import PhanAnhDonVi from "@/modules/pages/PhanAnh/PhanAnhDonVi";
 
 export default function AppRouter() {
   return (
@@ -55,6 +57,17 @@ export default function AppRouter() {
           <Route element={<ProtectedRoute />}>
             <Route path="/thong-tin-ca-nhan" element={<Profile />} />
             <Route path="/gui-phan-anh" element={<GuiPhanAnh />} />
+            <Route path="/phananh">
+              <Route path="cuatoi" element={<PhanAnhCuaToi />} />
+              <Route
+                path="donvi"
+                element={
+                  <PermissionGuard permission="XemPhanAnhPhong">
+                    <PhanAnhDonVi />
+                  </PermissionGuard>
+                }
+              />
+            </Route>
           </Route>
         </Route>
         {/* ================= ADMIN ROUTES ================= */}
@@ -109,76 +122,76 @@ export default function AppRouter() {
               </Route>
 
             </Route>
-          {/* ================= QUẢN LÝ ĐƠN VỊ ================= */}
-          <Route path="donvi">
-            <Route
-              index
-              element={
-                <PermissionGuard permission="QuanLyHeThong">
-                  <DonViList />
-                </PermissionGuard>
-              }
-            />
-            <Route
-              path="create"
-              element={
-                <PermissionGuard permission="QuanLyHeThong">
-                  <DonViCreate />
-                </PermissionGuard>
-              }
-            />
-            <Route
-              path="edit/:id"
-              element={
-                <PermissionGuard permission="QuanLyHeThong">
-                  <DonViEdit />
-                </PermissionGuard>
-              }
-            />
+            {/* ================= QUẢN LÝ ĐƠN VỊ ================= */}
+            <Route path="donvi">
+              <Route
+                index
+                element={
+                  <PermissionGuard permission="QuanLyHeThong">
+                    <DonViList />
+                  </PermissionGuard>
+                }
+              />
+              <Route
+                path="create"
+                element={
+                  <PermissionGuard permission="QuanLyHeThong">
+                    <DonViCreate />
+                  </PermissionGuard>
+                }
+              />
+              <Route
+                path="edit/:id"
+                element={
+                  <PermissionGuard permission="QuanLyHeThong">
+                    <DonViEdit />
+                  </PermissionGuard>
+                }
+              />
+            </Route>
+            {/* ================= QUẢN LÝ NGƯỜI DÙNG ================= */}
+            <Route path="nguoidung">
+              <Route
+                index
+                element={
+                  <PermissionGuard permission="QuanLyNguoiDung">
+                    <UserList />
+                  </PermissionGuard>
+                }
+              />
+              <Route
+                path="create"
+                element={
+                  <PermissionGuard permission="QuanLyNguoiDung">
+                    <UserCreate />
+                  </PermissionGuard>
+                }
+              />
+              <Route
+                path="edit/:id"
+                element={
+                  <PermissionGuard permission="QuanLyNguoiDung">
+                    <UserEdit />
+                  </PermissionGuard>
+                }
+              />
+              <Route
+                path="permissions/:id"
+                element={
+                  <PermissionGuard permission="QuanLyQuyen">
+                    <UserPermissions />
+                  </PermissionGuard>
+                }
+              />
+            </Route>
           </Route>
-          {/* ================= QUẢN LÝ NGƯỜI DÙNG ================= */}
-          <Route path="nguoidung">
-            <Route
-              index
-              element={
-                <PermissionGuard permission="QuanLyNguoiDung">
-                  <UserList />
-                </PermissionGuard>
-              }
-            />
-            <Route
-              path="create"
-              element={
-                <PermissionGuard permission="QuanLyNguoiDung">
-                  <UserCreate />
-                </PermissionGuard>
-              }
-            />
-            <Route
-              path="edit/:id"
-              element={
-                <PermissionGuard permission="QuanLyNguoiDung">
-                  <UserEdit />
-                </PermissionGuard>
-              }
-            />
-            <Route
-              path="permissions/:id"
-              element={
-                <PermissionGuard permission="QuanLyQuyen">
-                  <UserPermissions />
-                </PermissionGuard>
-              }
-            />
-          </Route>
+
         </Route>
+        {/* ================= 404 ================= */}
 
-      </Route>
-      {/* ================= 404 ================= */}
+        <Route path="*" element={<h1>404 - Không tìm thấy trang</h1>} />
 
-      <Route path="*" element={<h1>404 - Không tìm thấy trang</h1>} />
-
-    </Routes>
+      </Routes>
     </BrowserRouter >
   );
 }

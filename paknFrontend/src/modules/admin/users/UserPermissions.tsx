@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { userApi } from "@/api/userApi"
+import { userApi } from "@/api/admin/userApi"
 import type { Permission } from "@/types/user"
 
 export default function UserPermissions(){

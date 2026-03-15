@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams, Link } from "react-router-dom"
-import { phanAnhApi } from "@/api/phanAnhApi"
+import { phanAnhApi } from "@/api/admin/phanAnhApi"
 import type { PhanAnh } from "@/types/phanAnh"
 import type { FileDinhKem } from "@/types/fileDinhKem"
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { type DonVi } from "../../../types/donvi";
-import { donViApi } from "../../../api/donViApi";
+import { donViApi } from "@/api/admin/donViApi";
 import type { Pagination } from "../../../types/pagination";  // import type này
 
 export default function DonViList() {

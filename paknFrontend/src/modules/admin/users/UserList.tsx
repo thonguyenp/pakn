@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { userApi } from "@/api/userApi"
+import { userApi } from "@/api/admin/userApi"
 import type { User } from "@/types/user"
 import { Link } from "react-router-dom"
 

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { phanAnhApi } from "../../../api/phanAnhApi"
+import { phanAnhApi } from "@/api/admin/phanAnhApi"
 import type { PhanAnh } from "../../../types/phanAnh"
 
 export default function PhanAnhForm(){

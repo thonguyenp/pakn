@@ -81,7 +81,7 @@ class NguoiDungController extends Controller
         }
 
         return response()->json([
-            'message' => 'Updated permissions',
+            'message' => 'Cập nhật quyền thành công',
         ]);
     }
 

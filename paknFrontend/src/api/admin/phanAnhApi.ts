@@ -1,6 +1,6 @@
 import { type PhanAnh } from "../types/phanAnh"
 import type { Pagination } from "../types/pagination"
-import { api } from "./api"
+import { api } from "../api"
 import type { FileDinhKem } from "@/types/fileDinhKem"
 
 export const phanAnhApi = {

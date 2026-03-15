@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useParams,useNavigate } from "react-router-dom"
-import { userApi } from "@/api/userApi"
-import { donViApi } from "@/api/donViApi"
+import { userApi } from "@/api/admin/userApi"
+import { donViApi } from "@/api/admin/donViApi"
 
 interface DonVi{
   IdDonVi:number

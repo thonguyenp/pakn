@@ -1,6 +1,6 @@
 import { type DonVi } from "../types/donvi"
 import type { Pagination } from "../types/pagination"
-import { api } from "./api"
+import { api } from "../api"
 
 export const donViApi = {
   getAll: (page: number = 1) =>

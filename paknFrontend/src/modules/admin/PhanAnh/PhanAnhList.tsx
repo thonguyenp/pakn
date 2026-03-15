@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { type PhanAnh } from "@/types/phanAnh"
-import { getPhanAnhList } from "@/api/phanAnhApi"
+import { getPhanAnhList } from "@/api/admin/phanAnhApi"
 import { type Pagination } from "@/types/pagination"
 import type { LinhVuc } from "@/types/linhvuc"
 import type { DonVi } from "@/types/donvi"

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import DonViForm from "./DonViForm";
-import { donViApi } from "../../../api/donViApi";
+import { donViApi } from "@/api/admin/donViApi";
 import { type DonVi } from "../../../types/donvi";
 
 export default function DonViEdit() {
