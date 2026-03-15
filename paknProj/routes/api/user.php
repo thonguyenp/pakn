@@ -10,9 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Các meta data như lĩnh vực, đơn vị, trạng thái phản ánh
-// Route::get('/linhvuc',[MetaController::class,'getLinhVuc']);
-// Route::get('/donvi',[MetaController::class,'getDonVi']);
-// Route::get('/trangthaiphananh',[MetaController::class,'getTrangThaiPhanAnh']);
 Route::get('/meta', [MetaController::class, 'index']);
 
 // Route::get('donvi', [DonViController::class, 'index']);  // checked
@@ -44,14 +41,18 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
     return redirect('http://localhost:5173/login?verify=success');
 })->middleware('signed')->name('verification.verify');
 
-
 Route::middleware('auth:api')->group(function () {
     // Các route cần xác thực ở đây
+
+    Route::get('/phananh/xem', [PhanAnhController::class, 'getByNguoiDung']);
+
+    Route::get('/phananh/donvi/', [PhanAnhController::class, 'getByDonVi']);
+
     Route::get('/profile', [ProfileController::class, 'getProfile']);   // checked
 
     Route::put('/profile', [ProfileController::class, 'updateProfile']);    // checked
 
-    Route::post('/change-password', [ProfileController::class, 'changePassword']);  // checked
+    Route::post('/doi-mat-khau', [ProfileController::class, 'changePassword']);  // checked
 
     // Đăng xuất
     Route::post('/logout', function () {

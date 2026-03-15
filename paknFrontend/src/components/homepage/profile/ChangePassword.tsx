@@ -17,7 +17,7 @@ export default function ChangePassword({ onCancel }: Props) {
     const changePassword = async () => {
         try {
 
-            await api.post("/change-password", form);
+            await api.post("/doi-mat-khau", form);
 
             alert("Đổi mật khẩu thành công");
 
