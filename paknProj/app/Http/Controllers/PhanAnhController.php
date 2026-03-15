@@ -54,15 +54,29 @@ class PhanAnhController extends Controller
         ], 200);
     }
 
-    // Lấy phản ánh theo IdNguoiDung
-    public function getByNguoiDung()
+    private function buildQuery(Request $request, $field, $value)
+    {
+        return PhanAnh::where($field, $value)
+            ->when($request->MucDoKhanCap, function ($query) use ($request) {
+                $query->where('MucDoKhanCap', $request->MucDoKhanCap);
+            })
+            ->when($request->IdTrangThaiPhanAnh, function ($query) use ($request) {
+                $query->where('IdTrangThaiPhanAnh', $request->IdTrangThaiPhanAnh);
+            })
+            ->when($request->AnDanh !== null, function ($query) use ($request) {
+                $query->where('AnDanh', $request->AnDanh);
+            })
+            ->with('files')
+            ->orderBy('NgayGui', 'desc');
+    }
+
+    public function getByNguoiDung(Request $request)
     {
         $user = JWTAuth::parseToken()->authenticate();
-        $idNguoiDung = $user->IdNguoiDung;
-        
-        $phanAnhs = PhanAnh::where('IdNguoiDung', $idNguoiDung)
-            ->with('files')
-            ->get();
+
+        $phanAnhs = $this
+            ->buildQuery($request, 'IdNguoiDung', $user->IdNguoiDung)
+            ->paginate(10);
 
         return response()->json([
             'success' => true,
@@ -70,24 +84,16 @@ class PhanAnhController extends Controller
         ]);
     }
 
-    // Lấy phản ánh theo IdDonVi
-    public function getByDonVi()
+    public function getByDonVi(Request $request)
     {
-        // Lấy user đang đăng nhập từ token
         $user = JWTAuth::parseToken()->authenticate();
 
-        // Lấy IdDonVi của user
-        $idDonVi = $user->IdDonVi;
-
-        // Lấy các phản ánh thuộc đơn vị đó
-        $phanAnhs = PhanAnh::where('IdDonVi', $idDonVi)
-            ->with('files')
-            ->orderBy('NgayGui', 'desc')
-            ->get();
+        $phanAnhs = $this
+            ->buildQuery($request, 'IdDonVi', $user->IdDonVi)
+            ->paginate(10);
 
         return response()->json([
             'success' => true,
-            'IdDonVi' => $idDonVi,
             'data' => $phanAnhs,
         ]);
     }

@@ -7,7 +7,7 @@ export default function PhanAnhPage() {
   const [tab,setTab] = useState<"mine"|"donvi">("mine")
 
   const permissions: string[] = JSON.parse(localStorage.getItem("permissions") || "[]")
-  const canViewDonVi = permissions.includes("XemPhanAnhPhong")
+  const viewDonVi = permissions.includes("XemPhanAnhPhong")
 
   return (
 
@@ -31,7 +31,7 @@ export default function PhanAnhPage() {
             Phản ánh của tôi
           </button>
 
-          {canViewDonVi && (
+          {viewDonVi && (
             <button
               onClick={()=>setTab("donvi")}
               className={`w-full py-2 rounded ${
@@ -53,7 +53,7 @@ export default function PhanAnhPage() {
 
         {tab === "mine" && <PhanAnhCuaToi />}
 
-        {tab === "donvi" && canViewDonVi && <PhanAnhDonVi />}
+        {tab === "donvi" && viewDonVi && <PhanAnhDonVi />}
 
       </div>
 
