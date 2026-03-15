@@ -30,8 +30,7 @@ import PhanAnhEdit from "@/modules/admin/PhanAnh/PhanAnhEdit";
 import PhanAnhForm from "@/modules/admin/PhanAnh/PhanAnhForm";
 import PhanAnhList from "@/modules/admin/PhanAnh/PhanAnhList";
 import PhanAnhDetail from "@/modules/admin/PhanAnh/PhanAnhDetail";
-import PhanAnhCuaToi from "@/modules/pages/PhanAnh/PhanAnhCuaToi";
-import PhanAnhDonVi from "@/modules/pages/PhanAnh/PhanAnhDonVi";
+import PhanAnhPage from "@/modules/pages/PhanAnh/PhanAnhPage";
 
 export default function AppRouter() {
   return (
@@ -57,17 +56,7 @@ export default function AppRouter() {
           <Route element={<ProtectedRoute />}>
             <Route path="/thong-tin-ca-nhan" element={<Profile />} />
             <Route path="/gui-phan-anh" element={<GuiPhanAnh />} />
-            <Route path="/phananh">
-              <Route path="cuatoi" element={<PhanAnhCuaToi />} />
-              <Route
-                path="donvi"
-                element={
-                  <PermissionGuard permission="XemPhanAnhPhong">
-                    <PhanAnhDonVi />
-                  </PermissionGuard>
-                }
-              />
-            </Route>
+            <Route path="/phan-anh" element={<PhanAnhPage />} />
           </Route>
         </Route>
         {/* ================= ADMIN ROUTES ================= */}
