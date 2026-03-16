@@ -1,5 +1,5 @@
-import type { User, UserDetail } from "../types/user"
-import type { Pagination } from "../types/pagination"
+import type { User, UserDetail } from "@/types/user"
+import type { Pagination } from "@/types/pagination"
 import { api } from "../api"
 
 export const userApi = {

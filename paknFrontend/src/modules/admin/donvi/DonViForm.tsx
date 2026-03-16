@@ -9,7 +9,7 @@ interface Props {
 
 export default function DonViForm({ initialData, onSubmit, onCancel }: Props) {
   const [form, setForm] = useState<DonVi>({
-    IdDonVi: initialData?.IdDonVi, // nếu edit thì có, create thì undefined
+    IdDonVi: 0,
     TenDonVi: "",
     MoTa: "",
     EmailLienHe: "",

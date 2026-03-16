@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
-import SearchInput from '../shared/SearchInput';
 
 export default function Header() {
 
