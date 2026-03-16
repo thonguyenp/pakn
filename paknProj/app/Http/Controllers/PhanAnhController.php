@@ -97,4 +97,25 @@ class PhanAnhController extends Controller
             'data' => $phanAnhs,
         ]);
     }
+
+    public function show($id)
+    {
+        $phanAnh = PhanAnh::with('files')->find($id);
+
+        if (! $phanAnh) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tìm thấy phản ánh',
+            ], 404);
+        }
+
+        foreach ($phanAnh->files as $file) {
+            $file->url = asset('storage/'.$file->DuongDan);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $phanAnh,
+        ]);
+    }
 }

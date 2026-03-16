@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export const api = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/",
+  baseURL: "http://paknproj.test/api/",
   headers: {
     "Content-Type": "application/json"
   }
@@ -18,7 +18,7 @@ api.interceptors.request.use((config) => {
 
   return config
 })
-
+// Xử lý lỗi 401 Unauthorized: khi nhận được lỗi này, sẽ xoá toàn bộ localStorage và redirect về trang login
 api.interceptors.response.use(
 
   (response) => response,
