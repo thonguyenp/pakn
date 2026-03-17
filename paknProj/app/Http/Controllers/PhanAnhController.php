@@ -100,9 +100,18 @@ class PhanAnhController extends Controller
 
     public function show($id)
     {
-        $phanAnh = PhanAnh::with('files')->find($id);
+        // Chỉ lấy phản ánh nếu user là người tạo hoặc thuộc đơn vị được giao
+        $user = JWTAuth::parseToken()->authenticate();
 
-        if (! $phanAnh) {
+        $phanAnh = PhanAnh::with('files')
+            ->where('IdPhanAnh', $id)
+            ->where(function ($query) use ($user) {
+                $query->where('IdNguoiDung', $user->IdNguoiDung)
+                    ->orWhere('IdDonVi', $user->IdDonVi);
+            })
+            ->first();
+
+        if (!$phanAnh) {
             return response()->json([
                 'success' => false,
                 'message' => 'Không tìm thấy phản ánh',
