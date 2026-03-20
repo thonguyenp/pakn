@@ -31,6 +31,7 @@ import PhanAnhForm from "@/modules/admin/PhanAnh/PhanAnhForm";
 import PhanAnhList from "@/modules/admin/PhanAnh/PhanAnhList";
 import PhanAnhDetail from "@/modules/admin/PhanAnh/PhanAnhDetail";
 import PhanAnhPage from "@/modules/pages/PhanAnh/PhanAnhPage";
+import PhanAnhChiTiet from "@/components/homepage/PhanAnh/PhanAnhChiTiet";
 
 export default function AppRouter() {
   return (
@@ -57,6 +58,7 @@ export default function AppRouter() {
             <Route path="/thong-tin-ca-nhan" element={<Profile />} />
             <Route path="/gui-phan-anh" element={<GuiPhanAnh />} />
             <Route path="/phan-anh" element={<PhanAnhPage />} />
+            <Route path="/phan-anh/:id" element={<PhanAnhChiTiet />} />            
           </Route>
         </Route>
         {/* ================= ADMIN ROUTES ================= */}

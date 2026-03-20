@@ -44,7 +44,7 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
 Route::middleware('auth:api')->group(function () {
     // Các route cần xác thực ở đây
 
-    Route::get('/phananh/xem', [PhanAnhController::class, 'getByNguoiDung']);
+    Route::get('/phananh/xem', [PhanAnhController::class, 'getByNguoiDung'])->middleware('permission:XemPhanAnhCuaMinh');  // checked
 
     Route::get('/phananh/donvi/', [PhanAnhController::class, 'getByDonVi'])->middleware('permission:XemPhanAnhPhong');  // checked
     Route::get('/phananh/{id}', [PhanAnhController::class, 'show']);

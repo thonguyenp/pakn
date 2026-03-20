@@ -2,12 +2,10 @@ import { useEffect, useState } from "react"
 import { useParams, Link } from "react-router-dom"
 import { phanAnhApi } from "@/api/admin/phanAnhApi"
 import type { PhanAnh } from "@/types/phanAnh"
-import type { FileDinhKem } from "@/types/fileDinhKem"
 
 export default function PhanAnhDetail() {
   const { id } = useParams()
   const [phanAnh, setPhanAnh] = useState<PhanAnh | null>(null)
-  const [files, setFiles] = useState<FileDinhKem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
@@ -15,14 +13,9 @@ export default function PhanAnhDetail() {
     const fetchData = async () => {
       try {
         if (!id) return
+        const res = await phanAnhApi.getById(Number(id))
+        setPhanAnh(res.data)
 
-        const [phanAnhRes, fileRes] = await Promise.all([
-          phanAnhApi.getById(Number(id)),
-          phanAnhApi.getFiles(Number(id))
-        ])
-
-        setPhanAnh(phanAnhRes.data)
-        setFiles(fileRes.data)
       } catch (err) {
         setError("Không tải được phản ánh")
       } finally {
@@ -123,7 +116,7 @@ export default function PhanAnhDetail() {
 
                   {file.LoaiFile.startsWith("image") ? (
                     <img
-                      src={`http://localhost:8000/storage/${file.DuongDan}`}
+                      src={file.url}
                       className="h-24 object-cover rounded"
                     />
                   ) : (
@@ -131,7 +124,7 @@ export default function PhanAnhDetail() {
                   )}
 
                   <a
-                    href={`http://localhost:8000/storage/${file.DuongDan}`}
+                    href={file.url}
                     target="_blank"
                     className="text-blue-600 text-sm mt-2 hover:underline"
                   >

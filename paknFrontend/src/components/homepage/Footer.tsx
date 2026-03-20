@@ -37,7 +37,7 @@ export default function Footer() {
               <a href="https://www.facebook.com/NTUedu.Fanpage" className="hover:text-blue-300"><i className="fa-brands fa-facebook"></i></a>
               <a href="https://www.youtube.com/@truongaihocnhatrang8073" className="hover:text-red-400"><i className="fa-brands fa-youtube"></i></a>
               <a href="https://zalo.me/3009201779661000223" className="hover:text-blue-200">
-                <img src="./src/images/logo-zalo-vector.png" className="h-10 w-auto" alt="Zalo" />
+                <img src="/images/logo-zalo-vector.png" className="h-10 w-auto" alt="Zalo" />
               </a>
             </div>
           </div>

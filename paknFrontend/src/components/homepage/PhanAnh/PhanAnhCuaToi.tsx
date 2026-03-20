@@ -1,7 +1,9 @@
 import { usePhanAnhCuaToi } from "@/hooks/usePhanAnh"
+import { useNavigate } from "react-router-dom"
 
 export default function PhanAnhCuaToi() {
 
+  const navigate = useNavigate();
   const {
     data,
     loading,
@@ -19,8 +21,9 @@ export default function PhanAnhCuaToi() {
   return (
 
     <div>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Phản ánh của tôi</h1>
 
-      <div className="flex gap-3 mb-6">
 
         <select
           className="border p-2 rounded"
@@ -79,6 +82,15 @@ export default function PhanAnhCuaToi() {
             <p className="text-gray-700">
               {pa.NoiDung}
             </p>
+                        {/* ACTION */}
+            <div className="flex justify-end">
+              <button
+                onClick={() => navigate(`/phan-anh/${pa.IdPhanAnh}`)}
+                className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                Xem chi tiết
+              </button>
+            </div>
 
           </div>
 

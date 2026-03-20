@@ -46,7 +46,7 @@ export default function Header() {
 
                     {/* Logo */}
                     <Link to="/" className="flex items-center">
-                        <img src="./src/images/ntu_logo.jpg" className="h-10 w-auto" />
+                        <img src="/images/ntu_logo.jpg" className="h-10 w-auto" />
                         <div className="flex flex-col ml-2">
                             <span className="text-xs sm:text-sm text-[#4B6CB7]">
                                 Hệ thống phản ánh

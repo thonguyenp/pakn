@@ -7,4 +7,6 @@ export interface FileDinhKem {
   NgayTaiLen: string
   IdPhanAnh: number
   IdPhanHoi?: number
+
+  url?: string  //lấy từ backend
 }

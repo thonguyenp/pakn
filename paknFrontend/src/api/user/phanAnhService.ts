@@ -40,3 +40,8 @@ export const getPhanAnhDonVi = async (
 
   return response.data.data
 }
+
+export const getPhanAnhChiTiet = async (id: number): Promise<PhanAnh & { files?: any[] }> => {
+  const response = await api.get(`/phananh/${id}`);
+  return response.data.data;
+};
