@@ -4,7 +4,7 @@ export interface PhanAnh {
   IdPhanAnh: number
   TieuDe: string
   NoiDung: string
-  MucDoKhanCap: number
+  MucDoKhanCap: string
   AnDanh: number
   NgayGui: string
   IdNguoiDung: number

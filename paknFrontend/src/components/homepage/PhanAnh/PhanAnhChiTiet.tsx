@@ -8,6 +8,14 @@ const PhanAnhDetail = () => {
   const { id } = useParams();
   const [data, setData] = useState<PhanAnh | null>(null);
   const [loading, setLoading] = useState(true);
+  const getUrgency = (value: string) => {
+    if (value === "THAP") return ["Thấp", "bg-gray-100 text-gray-600"];
+    if (value === "TRUNG_BINH") return ["Trung bình", "bg-yellow-100 text-yellow-600"];
+    if (value === "CAO") return ["Cao", "bg-orange-100 text-orange-600"];
+    if (value === "KHAN_CAP") return ["Khẩn cấp", "bg-red-100 text-red-600"];
+    return ["Không rõ", "bg-gray-100 text-gray-500"];
+  };
+
   const getFileIcon = (fileName: string) => {
     const ext = fileName.split(".").pop()?.toLowerCase();
 
@@ -40,6 +48,7 @@ const PhanAnhDetail = () => {
   if (loading) return <div className="p-6">Đang tải...</div>;
 
   if (!data) return <div className="p-6 text-red-500">Không tìm thấy dữ liệu</div>;
+  const [label, color] = getUrgency(data.MucDoKhanCap);
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white shadow rounded-2xl p-6 space-y-6">
@@ -58,10 +67,9 @@ const PhanAnhDetail = () => {
             {data.trang_thai_phan_anh?.TenTrangThai}
           </span>
 
-          <span className="px-3 py-1 rounded-full bg-red-100 text-red-600 text-sm">
-            {data.MucDoKhanCap}
+          <span className={`px-3 py-1 rounded-full text-sm ${color}`}>
+            {label}
           </span>
-
           {data.AnDanh === 1 && (
             <span className="px-3 py-1 rounded-full bg-gray-200 text-gray-600 text-sm">
               Ẩn danh
