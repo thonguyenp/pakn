@@ -40,25 +40,6 @@ const PhanAnhDetail = () => {
   if (loading) return <div className="p-6">Đang tải...</div>;
 
   if (!data) return <div className="p-6 text-red-500">Không tìm thấy dữ liệu</div>;
-
-  const getUrgency = (level: number) => {
-    switch (level) {
-      case 1: return "Thấp";
-      case 2: return "Trung bình";
-      case 3: return "Cao";
-      default: return "Không rõ";
-    }
-  };
-
-  const getStatus = (status: number) => {
-    switch (status) {
-      case 1: return "Chờ xử lý";
-      case 2: return "Đang xử lý";
-      case 3: return "Đã xử lý";
-      default: return "Không rõ";
-    }
-  };
-
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white shadow rounded-2xl p-6 space-y-6">
@@ -74,11 +55,11 @@ const PhanAnhDetail = () => {
         {/* Trạng thái + mức độ */}
         <div className="flex gap-4">
           <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-sm">
-            {getStatus(data.IdTrangThaiPhanAnh)}
+            {data.trang_thai_phan_anh?.TenTrangThai}
           </span>
 
           <span className="px-3 py-1 rounded-full bg-red-100 text-red-600 text-sm">
-            {getUrgency(data.MucDoKhanCap)}
+            {data.MucDoKhanCap}
           </span>
 
           {data.AnDanh === 1 && (

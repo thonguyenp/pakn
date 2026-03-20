@@ -59,7 +59,7 @@ export const usePhanAnhDonVi = () => {
   const [data, setData] = useState<PhanAnh[]>([])
   const [loading, setLoading] = useState(true)
 
-  const [filter, setFilter] = useState({})
+  const [filter, setFilter] = useState<PhanAnhFilter>({})
 
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)

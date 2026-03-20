@@ -1,7 +1,9 @@
+import ToggleSwitch from "@/components/shared/ToogleSwitch"
 import { usePhanAnhDonVi } from "@/hooks/usePhanAnh"
+import { useNavigate } from "react-router-dom";
 
 export default function PhanAnhDonVi() {
-
+  const navigate = useNavigate();
   const {
     data,
     loading,
@@ -19,8 +21,9 @@ export default function PhanAnhDonVi() {
   return (
 
     <div>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Phản ánh đơn vị</h1>
 
-      <div className="flex gap-3 mb-6">
 
         <select
           className="border p-2 rounded"
@@ -43,15 +46,18 @@ export default function PhanAnhDonVi() {
           <option value="3">Đã xử lý</option>
         </select>
 
-        <select
-          className="border p-2 rounded"
-          onChange={e => setFilter({ ...filter, AnDanh: parseInt(e.target.value) })}
-        >
-          <option value="">Loại</option>
-          <option value="1">Ẩn danh</option>
-          <option value="0">Không ẩn danh</option>
-        </select>
-
+        <ToggleSwitch
+          checked={filter.AnDanh === 1}
+          onChange={(checked) => {
+            if (checked) {
+              setFilter({ ...filter, AnDanh: 1 })
+            } else {
+              const { AnDanh, ...rest } = filter
+              setFilter(rest)
+            }
+          }}
+          label="Ẩn danh"
+        />
       </div>
 
 
@@ -79,6 +85,15 @@ export default function PhanAnhDonVi() {
             <p className="text-gray-700">
               {pa.NoiDung}
             </p>
+            {/* ACTION */}
+            <div className="flex justify-end">
+              <button
+                onClick={() => navigate(`/phan-anh/${pa.IdPhanAnh}`)}
+                className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                Xem chi tiết
+              </button>
+            </div>
 
           </div>
 

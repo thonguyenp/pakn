@@ -4,7 +4,7 @@ import PhanAnhDonVi from "@/components/homepage/PhanAnh/PhanAnhDonVi"
 
 export default function PhanAnhPage() {
 
-  const [tab,setTab] = useState<"mine"|"donvi">("mine")
+  const [tab,setTab] = useState<"cuatoi"|"donvi">("cuatoi")
 
   const permissions: string[] = JSON.parse(localStorage.getItem("permissions") || "[]")
   const viewDonVi = permissions.includes("XemPhanAnhPhong")
@@ -21,9 +21,9 @@ export default function PhanAnhPage() {
         <div className="flex flex-col gap-3">
 
           <button
-            onClick={()=>setTab("mine")}
+            onClick={()=>setTab("cuatoi")}
             className={`w-full py-2 rounded ${
-              tab==="mine"
+              tab==="cuatoi"
                 ? "bg-[#1e54a4] text-white"
                 : "border border-gray-300 hover:bg-gray-100"
             }`}
@@ -51,7 +51,7 @@ export default function PhanAnhPage() {
       {/* RIGHT */}
       <div className="md:col-span-7 bg-white shadow rounded-lg p-6 md:p-8">
 
-        {tab === "mine" && <PhanAnhCuaToi />}
+        {tab === "cuatoi" && <PhanAnhCuaToi />}
 
         {tab === "donvi" && viewDonVi && <PhanAnhDonVi />}
 

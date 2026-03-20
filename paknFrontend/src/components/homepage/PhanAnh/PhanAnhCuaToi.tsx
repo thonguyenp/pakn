@@ -1,3 +1,4 @@
+import ToggleSwitch from "@/components/shared/ToogleSwitch";
 import { usePhanAnhCuaToi } from "@/hooks/usePhanAnh"
 import { useNavigate } from "react-router-dom"
 
@@ -46,15 +47,18 @@ export default function PhanAnhCuaToi() {
           <option value="3">Đã xử lý</option>
         </select>
 
-        <select
-          className="border p-2 rounded"
-          onChange={e => setFilter({ ...filter, AnDanh: parseInt(e.target.value) })}
-        >
-          <option value="">Loại</option>
-          <option value="1">Ẩn danh</option>
-          <option value="0">Không ẩn danh</option>
-        </select>
-
+        <ToggleSwitch
+          checked={filter.AnDanh === 1}
+          onChange={(checked) => {
+            if (checked) {
+              setFilter({ ...filter, AnDanh: 1 })
+            } else {
+              const { AnDanh, ...rest } = filter
+              setFilter(rest)
+            }
+          }}
+          label="Ẩn danh"
+        />
       </div>
 
 
@@ -82,7 +86,7 @@ export default function PhanAnhCuaToi() {
             <p className="text-gray-700">
               {pa.NoiDung}
             </p>
-                        {/* ACTION */}
+            {/* ACTION */}
             <div className="flex justify-end">
               <button
                 onClick={() => navigate(`/phan-anh/${pa.IdPhanAnh}`)}
