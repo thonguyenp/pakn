@@ -12,4 +12,18 @@ export interface PhanAnh {
   IdDonVi: number
   IdTrangThaiPhanAnh: number
   files?: FileDinhKem[];
+
+  linh_vuc?: {
+    IdLinhVuc: number
+    TenLinhVuc: string
+  }
+
+  don_vi?: {
+    IdDonVi: number
+    TenDonVi: string
+  }
+  trang_thai_phan_anh?: {
+    IdTrangThaiPhanAnh: number
+    TenTrangThai: string
+  }
 }

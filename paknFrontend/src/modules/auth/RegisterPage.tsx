@@ -17,7 +17,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
       <img
-        src="./src/images/background_login.jpg"
+        src="/images/background_login.jpg"
         alt="background"
         className="absolute inset-0 w-full h-full object-cover blur-sm scale-105"
       />

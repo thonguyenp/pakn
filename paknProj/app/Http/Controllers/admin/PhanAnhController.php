@@ -55,15 +55,14 @@ class PhanAnhController extends Controller
     public function show($id)
     {
 
-        $phanAnh = PhanAnh::with('files')
+        $phanAnh = PhanAnh::with(['files', 'linhVuc', 'donVi', 'trangThaiPhanAnh'])
             ->where('IdPhanAnh', $id)->first();
-        if (!$phanAnh) {
+        if (! $phanAnh) {
             return response()->json([
                 'success' => false,
                 'message' => 'Không tìm thấy phản ánh',
             ], 404);
         }
-
         foreach ($phanAnh->files as $file) {
             $file->url = asset('storage/'.$file->DuongDan);
         }

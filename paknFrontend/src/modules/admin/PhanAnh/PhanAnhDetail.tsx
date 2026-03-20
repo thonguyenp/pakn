@@ -14,7 +14,7 @@ export default function PhanAnhDetail() {
       try {
         if (!id) return
         const res = await phanAnhApi.getById(Number(id))
-        setPhanAnh(res.data)
+        setPhanAnh(res.data.data)
 
       } catch (err) {
         setError("Không tải được phản ánh")
@@ -85,59 +85,73 @@ export default function PhanAnhDetail() {
           <div>
             <label className="font-semibold">Trạng thái</label>
             <div className="mt-1">
-              {phanAnh.IdTrangThaiPhanAnh}
+              {phanAnh.trang_thai_phan_anh?.TenTrangThai || "Không rõ"}
             </div>
           </div>
 
           <div>
             <label className="font-semibold">Lĩnh vực</label>
-            <div className="mt-1">{phanAnh.IdLinhVuc}</div>
+            <div className="mt-1">{phanAnh.linh_vuc?.TenLinhVuc}</div>
           </div>
 
           <div>
             <label className="font-semibold">Đơn vị</label>
-            <div className="mt-1">{phanAnh.IdDonVi}</div>
+            <div className="mt-1">{phanAnh.don_vi?.TenDonVi}</div>
           </div>
 
         </div>
-        <div>
-          <label className="font-semibold">File đính kèm</label>
 
-          {files.length === 0 ? (
-            <div className="text-gray-500 mt-1">Không có file</div>
-          ) : (
-            <div className="grid grid-cols-3 gap-3 mt-2">
+          <div>
+            <label className="font-semibold">File đính kèm</label>
 
-              {files.map(file => (
-                <div
-                  key={file.IdFile}
-                  className="border rounded p-2 flex flex-col items-center"
-                >
+            {(!phanAnh.files || phanAnh.files.length === 0) ? (
+              <div className="text-gray-500 mt-1">Không có file</div>
+            ) : (
+              <div className="space-y-3 mt-2">
 
-                  {file.LoaiFile.startsWith("image") ? (
-                    <img
-                      src={file.url}
-                      className="h-24 object-cover rounded"
-                    />
-                  ) : (
-                    <i className="fa-solid fa-file text-3xl text-gray-500"></i>
-                  )}
+                {phanAnh.files.map(file => {
 
-                  <a
-                    href={file.url}
-                    target="_blank"
-                    className="text-blue-600 text-sm mt-2 hover:underline"
-                  >
-                    {file.TenFile}
-                  </a>
+                  const fileUrl = file.url;
+                  return (
+                    <div
+                      key={file.IdFile}
+                      className="flex items-center border rounded-xl p-3 hover:bg-gray-50 transition"
+                    >
 
-                </div>
-              ))}
+                      {/* ICON / IMAGE */}
+                      {file.LoaiFile.startsWith("image") ? (
+                        <img
+                          src={fileUrl}
+                          className="w-10 h-10 object-cover rounded"
+                        />
+                      ) : (
+                        <div className="text-2xl">📄</div>
+                      )}
 
-            </div>
-          )}
+                      {/* FILE NAME */}
+                      <div className="ml-3 text-sm font-medium text-gray-700 truncate max-w-[250px]">
+                        {file.TenFile}
+                      </div>
+
+                      {/* DOWNLOAD */}
+                      <a
+                        href={fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        download
+                        className="ml-auto text-gray-500 hover:text-blue-600"
+                      >
+                        ⬇️
+                      </a>
+
+                    </div>
+                  )
+                })}
+
+              </div>
+            )}
+          </div>
         </div>
-      </div>
     </div>
   )
 }
