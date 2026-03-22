@@ -1,5 +1,11 @@
 import { type LoginPayload, type RegisterPayload, type AuthResponse } from '@/types/auth';
 import { api } from '../api';
+import { jwtDecode } from "jwt-decode";
+
+export const guestLogin = async () => {
+    const res = await api.post<AuthResponse>("/login/guest");
+    return res.data;
+};
 
 export const login = async (data: LoginPayload): Promise<AuthResponse> => {
   const res = await api.post<AuthResponse>('/login', data);
@@ -34,4 +40,23 @@ export const resetPassword = async (data: {
 }) => {
   const res = await api.post('/password/reset', data);
   return res.data;
+};
+
+
+export const parseUserFromToken = (token: string) => {
+    try {
+        const decoded: any = jwtDecode(token);
+
+        if (decoded.type === "guest") {
+            return {
+                HoTen: "Khách"
+            };
+        }
+
+        return {
+            HoTen: decoded.name || "User"
+        };
+    } catch {
+        return null;
+    }
 };

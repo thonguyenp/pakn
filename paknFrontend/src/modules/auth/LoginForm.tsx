@@ -6,12 +6,12 @@ import PasswordInput from '@/components/shared/PasswordInput';
 
 interface Props {
   onSuccess: (string: any) => void;
+  onGuestLogin: (string: any) => void;
 }
 
-export default function LoginForm({ onSuccess }: Props) {
+export default function LoginForm({ onSuccess, onGuestLogin }: Props) {
   const [form, setForm] = useState<LoginPayload>({ Email: '', MatKhau: '' });
   const [error, setError] = useState('');
-  // const [showPassword, setShowPassword] = useState(false);
   const [searchParams] = useSearchParams();
   const [message, setMessage] = useState('');
 
@@ -76,6 +76,13 @@ export default function LoginForm({ onSuccess }: Props) {
       {error && <p className="text-red-500">{error}</p>}
       <button type="submit" className="w-full bg-blue-600 text-white p-3 rounded-lg font-medium">
         Đăng nhập
+      </button>
+      <button
+        type="button"
+        onClick={onGuestLogin}
+        className="w-full border p-3 rounded-lg font-medium hover:bg-gray-100"
+      >
+        Vào với tư cách khách
       </button>
     </form>
   );
