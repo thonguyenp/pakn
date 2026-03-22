@@ -17,6 +17,8 @@ Route::get('/meta', [MetaController::class, 'index']);
 // Đăng nhập và đăng ký
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+// Đăng nhập khách
+Route::post('login/guest', [AuthController::class, 'guestLogin']);  // checked
 
 // Quên mật khẩu
 Route::post('password/email', [AuthController::class, 'sendResetLinkEmail']);
@@ -41,6 +43,9 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
     return redirect('http://localhost:5173/login?verify=success');
 })->middleware('signed')->name('verification.verify');
 
+// Theo dõi phản ánh mà không cần đăng nhập
+Route::get('/phananh/theodoi/{maTheoDoi}', [PhanAnhController::class, 'theoDoi'])->middleware('guest.auth');
+
 Route::middleware('auth:api')->group(function () {
     // Các route cần xác thực ở đây
 
@@ -63,5 +68,5 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::post('/phananh', [PhanAnhController::class, 'store'])
-        ->middleware('permission:GuiPhanAnh');  // checked
+        ->middleware(['permission:GuiPhanAnh', 'guest.auth']);  // checked
 });

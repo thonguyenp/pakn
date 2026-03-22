@@ -12,9 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        //Đăng ký middleware tùy chỉnh
         $middleware->alias([
             'permission' => \App\Http\Middleware\CheckPermission::class,
+        ]);
+        $middleware->alias([
+            'guest.auth' => \App\Http\Middleware\GuestAuth::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

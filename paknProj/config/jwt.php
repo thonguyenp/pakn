@@ -149,8 +149,8 @@ return [
         'iat',
         'exp',
         'nbf',
-        'sub',
-        'jti',
+        // 'sub',
+        // 'jti',
     ],
 
     /*

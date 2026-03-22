@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\NguoiDung;
+use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Facades\JWTFactory;
 
 class AuthController extends Controller
 {
@@ -74,7 +77,7 @@ class AuthController extends Controller
             'MatKhau' => 'required|string',
         ]);
 
-        if (!$token = JWTAuth::attempt([
+        if (! $token = JWTAuth::attempt([
             'Email' => $credentials['Email'],
             'password' => $credentials['MatKhau'],
         ])) {
@@ -150,5 +153,29 @@ class AuthController extends Controller
         return $status === Password::PASSWORD_RESET
             ? response()->json(['message' => 'Đặt lại mật khẩu thành công'], 200)
             : response()->json(['error' => __($status)], 400);
+    }
+
+    public function guestLogin()
+    {
+        $guestId = Str::uuid()->toString();
+
+        // Build payload với đầy đủ claim cần thiết
+        $payload = JWTFactory::customClaims([
+            'type' => 'guest',
+            'guest_id' => $guestId,
+        ])
+            ->sub($guestId)                // dùng guestId làm subject tạm
+            ->iat(Carbon::now()->timestamp)
+            ->nbf(Carbon::now()->timestamp)
+            ->exp(Carbon::now()->addDays(7)->timestamp)
+            ->jti(Str::random(32))         // hoặc Str::uuid()
+            ->iss(config('app.url'))       // optional, issuer
+            ->make();
+
+        $token = JWTAuth::encode($payload);
+
+        return response()->json([
+            'token' => $token->get(),
+        ]);
     }
 }

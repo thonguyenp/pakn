@@ -22,6 +22,7 @@ class PhanAnh extends Model
         'IdLinhVuc',
         'IdDonVi',
         'IdTrangThaiPhanAnh',
+        'MaTheoDoi',
     ];
 
     public function files()

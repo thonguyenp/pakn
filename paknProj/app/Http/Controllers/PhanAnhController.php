@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FileDinhKem;
 use App\Models\PhanAnh;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PhanAnhController extends Controller
@@ -20,16 +20,22 @@ class PhanAnhController extends Controller
             'IdDonVi' => 'required',
         ]);
 
+        // Tạo mã theo dõi
+        do {
+            $maTheoDoi = strtoupper(Str::random(12));
+        } while (PhanAnh::where('MaTheoDoi', $maTheoDoi)->exists());
+
         $phanAnh = PhanAnh::create([
             'TieuDe' => $request->TieuDe,
             'NoiDung' => $request->NoiDung,
             'MucDoKhanCap' => $request->MucDoKhanCap ?? 'THAP',
             'AnDanh' => $request->AnDanh ?? 0,
             'NgayGui' => now(),
-            'IdNguoiDung' => Auth::id(),
+            'IdNguoiDung' => null,  // Nếu user đã đăng nhập thì gán IdNguoiDung, nếu không thì để null
             'IdLinhVuc' => $request->IdLinhVuc,
             'IdDonVi' => $request->IdDonVi,
             'IdTrangThaiPhanAnh' => 1,
+            'MaTheoDoi' => $maTheoDoi,
         ]);
 
         if ($request->hasFile('files')) {
@@ -103,7 +109,7 @@ class PhanAnhController extends Controller
         // Chỉ lấy phản ánh nếu user là người tạo hoặc thuộc đơn vị được giao
         $user = JWTAuth::parseToken()->authenticate();
 
-        $phanAnh = PhanAnh::with(['files', 'linhVuc', 'donVi','trangThaiPhanAnh'])
+        $phanAnh = PhanAnh::with(['files', 'linhVuc', 'donVi', 'trangThaiPhanAnh'])
             ->where('IdPhanAnh', $id)
             ->where(function ($query) use ($user) {
                 $query->where('IdNguoiDung', $user->IdNguoiDung)
@@ -111,7 +117,7 @@ class PhanAnhController extends Controller
             })
             ->first();
 
-        if (!$phanAnh) {
+        if (! $phanAnh) {
             return response()->json([
                 'success' => false,
                 'message' => 'Không tìm thấy phản ánh',
@@ -126,5 +132,18 @@ class PhanAnhController extends Controller
             'success' => true,
             'data' => $phanAnh,
         ]);
+    }
+
+    public function theoDoi($ma)
+    {
+        $phanAnh = PhanAnh::where('MaTheoDoi', $ma)->first();
+
+        if (!$phanAnh) {
+            return response()->json([
+                'message' => 'Mã không hợp lệ',
+            ], 404);
+        }
+
+        return response()->json($phanAnh);
     }
 }
