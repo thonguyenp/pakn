@@ -148,8 +148,8 @@ export default function Header() {
                             <Link to="/" className="hover:text-blue-600">
                                 Trang chủ
                             </Link>
-                            <Link to="/danh-muc" className="hover:text-blue-600">
-                                Danh mục phản ánh
+                            <Link to="/gui-phan-anh" className="hover:text-blue-600">
+                                Gửi phản ánh
                             </Link>
                             <Link to="/huong-dan" className="hover:text-blue-600">
                                 Hướng dẫn

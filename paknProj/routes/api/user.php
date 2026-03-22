@@ -67,6 +67,7 @@ Route::middleware('auth:api')->group(function () {
         return response()->json(['message' => 'Đăng xuất thành công']);
     });
 
-    Route::post('/phananh', [PhanAnhController::class, 'store'])
-        ->middleware(['permission:GuiPhanAnh', 'guest.auth']);  // checked
 });
+
+Route::post('/phananh', [PhanAnhController::class, 'store'])
+    ->middleware('guest.auth');  // checked

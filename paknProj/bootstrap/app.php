@@ -14,9 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         //Đăng ký middleware tùy chỉnh
         $middleware->alias([
+            // Sau này có thêm thì thêm trực tiếp trong đây
             'permission' => \App\Http\Middleware\CheckPermission::class,
-        ]);
-        $middleware->alias([
             'guest.auth' => \App\Http\Middleware\GuestAuth::class,
         ]);
     })

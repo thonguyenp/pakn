@@ -19,6 +19,11 @@ class PhanAnhController extends Controller
             'IdLinhVuc' => 'required',
             'IdDonVi' => 'required',
         ]);
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+        } catch (\Exception $e) {
+            $user = null;
+        }
 
         // Tạo mã theo dõi
         do {
@@ -31,7 +36,7 @@ class PhanAnhController extends Controller
             'MucDoKhanCap' => $request->MucDoKhanCap ?? 'THAP',
             'AnDanh' => $request->AnDanh ?? 0,
             'NgayGui' => now(),
-            'IdNguoiDung' => null,  // Nếu user đã đăng nhập thì gán IdNguoiDung, nếu không thì để null
+            'IdNguoiDung' => $user ? $user->IdNguoiDung : null,  // Nếu user đã đăng nhập thì gán IdNguoiDung, nếu không thì để null
             'IdLinhVuc' => $request->IdLinhVuc,
             'IdDonVi' => $request->IdDonVi,
             'IdTrangThaiPhanAnh' => 1,
@@ -104,13 +109,13 @@ class PhanAnhController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show($maTheoDoi)
     {
         // Chỉ lấy phản ánh nếu user là người tạo hoặc thuộc đơn vị được giao
         $user = JWTAuth::parseToken()->authenticate();
 
         $phanAnh = PhanAnh::with(['files', 'linhVuc', 'donVi', 'trangThaiPhanAnh'])
-            ->where('IdPhanAnh', $id)
+            ->where('MaTheoDoi', $maTheoDoi)
             ->where(function ($query) use ($user) {
                 $query->where('IdNguoiDung', $user->IdNguoiDung)
                     ->orWhere('IdDonVi', $user->IdDonVi);
@@ -138,7 +143,7 @@ class PhanAnhController extends Controller
     {
         $phanAnh = PhanAnh::where('MaTheoDoi', $ma)->first();
 
-        if (!$phanAnh) {
+        if (! $phanAnh) {
             return response()->json([
                 'message' => 'Mã không hợp lệ',
             ], 404);

@@ -19,13 +19,20 @@ class GuestAuth
         try {
             $payload = JWTAuth::parseToken()->getPayload();
 
-            if ($payload->get('type') !== 'guest') {
-                return response()->json(['message' => 'Token không hợp lệ'], 401);
-            }
+            if ($payload->get('type') === 'guest') {
+                $request->merge([
+                    'guest_id' => $payload->get('guest_id'),
+                    'auth_type' => 'guest'
+                ]);
+            } else {
+                // user thật
+                $user = JWTAuth::parseToken()->authenticate();
 
-            $request->merge([
-                'guest_id' => $payload->get('guest_id'),
-            ]);
+                $request->merge([
+                    'user' => $user,
+                    'auth_type' => 'user'
+                ]);
+            }
 
         } catch (\Exception $e) {
             return response()->json(['message' => 'Unauthorized'], 401);
