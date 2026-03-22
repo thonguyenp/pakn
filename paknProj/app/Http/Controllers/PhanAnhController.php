@@ -143,7 +143,7 @@ class PhanAnhController extends Controller
     {
         $phanAnh = PhanAnh::where('MaTheoDoi', $ma)->first();
 
-        if (! $phanAnh) {
+        if (!$phanAnh) {
             return response()->json([
                 'message' => 'Mã không hợp lệ',
             ], 404);

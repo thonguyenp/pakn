@@ -11,6 +11,7 @@ export interface PhanAnh {
   IdLinhVuc: number
   IdDonVi: number
   IdTrangThaiPhanAnh: number
+  MaTheoDoi?: string
   files?: FileDinhKem[];
 
   linh_vuc?: {

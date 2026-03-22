@@ -5,7 +5,7 @@ import { getPhanAnhChiTiet } from "@/api/user/phanAnhService";
 import type { PhanAnh } from "@/types/phanAnh";
 
 const PhanAnhDetail = () => {
-  const { id } = useParams();
+  const { MaTheoDoi } = useParams();
   const [data, setData] = useState<PhanAnh | null>(null);
   const [loading, setLoading] = useState(true);
   const getUrgency = (value: string) => {
@@ -32,8 +32,8 @@ const PhanAnhDetail = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (!id) return;
-        const res = await getPhanAnhChiTiet(Number(id));
+        if (!MaTheoDoi) return;
+        const res = await getPhanAnhChiTiet(MaTheoDoi);
         setData(res);
       } catch (error) {
         console.error("Lỗi khi load chi tiết:", error);
@@ -43,7 +43,7 @@ const PhanAnhDetail = () => {
     };
 
     fetchData();
-  }, [id]);
+  }, [MaTheoDoi]);
 
   if (loading) return <div className="p-6">Đang tải...</div>;
 

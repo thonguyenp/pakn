@@ -41,7 +41,7 @@ export const getPhanAnhDonVi = async (
   return response.data.data
 }
 
-export const getPhanAnhChiTiet = async (id: number): Promise<PhanAnh & { files?: any[] }> => {
-  const response = await api.get(`/phananh/${id}`);
+export const getPhanAnhChiTiet = async (MaTheoDoi: string) => {
+  const response = await api.get(`/phananh/${MaTheoDoi}`);
   return response.data.data;
 };

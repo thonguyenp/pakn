@@ -12,8 +12,6 @@ use Illuminate\Support\Facades\Route;
 // Các meta data như lĩnh vực, đơn vị, trạng thái phản ánh
 Route::get('/meta', [MetaController::class, 'index']);
 
-// Route::get('donvi', [DonViController::class, 'index']);  // checked
-
 // Đăng nhập và đăng ký
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
@@ -52,7 +50,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/phananh/xem', [PhanAnhController::class, 'getByNguoiDung'])->middleware('permission:XemPhanAnhCuaMinh');  // checked
 
     Route::get('/phananh/donvi/', [PhanAnhController::class, 'getByDonVi'])->middleware('permission:XemPhanAnhPhong');  // checked
-    Route::get('/phananh/{id}', [PhanAnhController::class, 'show']);
+    Route::get('/phananh/{maTheoDoi}', [PhanAnhController::class, 'show']);
 
     Route::get('/profile', [ProfileController::class, 'getProfile']);   // checked
 

@@ -58,7 +58,7 @@ export default function AppRouter() {
             <Route path="/thong-tin-ca-nhan" element={<Profile />} />
             <Route path="/gui-phan-anh" element={<GuiPhanAnh />} />
             <Route path="/phan-anh" element={<PhanAnhPage />} />
-            <Route path="/phan-anh/:id" element={<PhanAnhChiTiet />} />            
+            <Route path="/phan-anh/:MaTheoDoi" element={<PhanAnhChiTiet />} />            
           </Route>
         </Route>
         {/* ================= ADMIN ROUTES ================= */}
