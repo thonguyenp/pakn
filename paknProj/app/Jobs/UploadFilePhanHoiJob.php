@@ -2,52 +2,57 @@
 
 namespace App\Jobs;
 
-use App\Models\FileDinhKem;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\File;
-
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class UploadFilePhanHoiJob implements ShouldQueue
 {
-    use Queueable;
+use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $files;
+    public $tries = 3;
+    public $timeout = 120;
+    public $backoff = [10, 30, 60];
+
     protected $idPhanHoi;
+    protected $filesData;   // mảng thông tin file đã lưu
 
-    public function __construct($idPhanHoi, $files)
+    public function __construct($idPhanHoi, array $filesData)
     {
         $this->idPhanHoi = $idPhanHoi;
-        $this->files = $files;
+        $this->filesData = $filesData;
     }
 
     public function handle()
     {
-        $dataFiles = [];
+        $dataToInsert = [];
 
-        foreach ($this->files as $path) {
-
-            $fullPath = storage_path('app/' . $path);
-
-            $newPath = Storage::disk('public')->putFile(
-                'uploads/phanhoi',
-                new File($fullPath)
-            );
-
-            $dataFiles[] = [
-                'TenFile' => basename($path),
-                'DuongDan' => $newPath,
-                'LoaiFile' => mime_content_type($fullPath),
-                'KichThuoc' => filesize($fullPath),
+        foreach ($this->filesData as $file) {
+            $dataToInsert[] = [
+                'TenFile'    => $file['TenFile'],
+                'DuongDan'   => $file['DuongDan'],
+                'LoaiFile'   => $file['LoaiFile'],
+                'KichThuoc'  => $file['KichThuoc'],
                 'NgayTaiLen' => now(),
-                'IdPhanHoi' => $this->idPhanHoi,
+                'IdPhanHoi'  => $this->idPhanHoi,
             ];
-
-            // xoá file temp
-            unlink($fullPath);
         }
 
-        FileDinhKem::insert($dataFiles);
+        if (!empty($dataToInsert)) {
+            \App\Models\FileDinhKem::insert($dataToInsert);
+            Log::info("Đã lưu thông tin " . count($dataToInsert) . " file cho PhanHoi ID: " . $this->idPhanHoi);
+        }
+    }
+
+    public function failed(\Throwable $exception)
+    {
+        Log::error("SaveFilePhanHoiJob thất bại cho IdPhanHoi: " . $this->idPhanHoi, [
+            'error' => $exception->getMessage()
+        ]);
     }
 }
