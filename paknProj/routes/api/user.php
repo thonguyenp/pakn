@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\admin\DonViController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MetaController;
 use App\Http\Controllers\PhanAnhController;
+use App\Http\Controllers\PhanHoiController;
 use App\Http\Controllers\ProfileController;
 use App\Models\NguoiDung;
 use Illuminate\Http\Request;
@@ -51,6 +51,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/phananh/donvi/', [PhanAnhController::class, 'getByDonVi'])->middleware('permission:XemPhanAnhPhong');  // checked
     Route::get('/phananh/{maTheoDoi}', [PhanAnhController::class, 'show']);
+
+    Route::post('/phanhoi', [PhanHoiController::class, 'store'])->middleware('permission:CapNhatPhanAnh');
 
     Route::get('/profile', [ProfileController::class, 'getProfile']);   // checked
 

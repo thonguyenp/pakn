@@ -19,6 +19,16 @@ class FileDinhKem extends Model
         'KichThuoc',
         'NgayTaiLen',
         'IdPhanAnh',
-        'IdPhanHoi'
+        'IdPhanHoi',
     ];
+
+    public function phanHoi()
+    {
+        return $this->belongsTo(PhanHoi::class, 'IdPhanHoi');
+    }
+
+    public function phanAnh()
+    {
+        return $this->belongsTo(PhanAnh::class, 'IdPhanAnh');
+    }
 }
