@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class UploadFilePhanHoiJob implements ShouldQueue
+class UploadFilePhanAnhJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -20,24 +20,24 @@ class UploadFilePhanHoiJob implements ShouldQueue
 
     public $backoff = [10, 30, 60];
 
-    protected $idPhanHoi;
+    protected $idPhanAnh;
 
     protected $filesData;   // mảng thông tin file đã lưu
 
-    public function __construct($idPhanHoi, array $filesData)
+    public function __construct($idPhanAnh, array $filesData)
     {
-        $this->idPhanHoi = $idPhanHoi;
+        $this->idPhanAnh = $idPhanAnh;
         $this->filesData = $filesData;
     }
 
     public function handle(ServicesFileUploadService $service)
     {
-        $service->handle('PhanHoi', $this->idPhanHoi, $this->filesData);
+        $service->handle('PhanAnh', $this->idPhanAnh, $this->filesData);
     }
 
     public function failed(\Throwable $exception)
     {
-        Log::error('SaveFilePhanHoiJob thất bại cho IdPhanHoi: '.$this->idPhanHoi, [
+        Log::error('SaveFilePhanAnhJob thất bại cho IdPhanAnh: '.$this->idPhanAnh, [
             'error' => $exception->getMessage(),
         ]);
     }
