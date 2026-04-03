@@ -12,66 +12,6 @@ use App\Jobs\UploadFilePhanAnhJob;
 
 class PhanAnhController extends Controller
 {
-    // public function store(Request $request)
-    // {
-
-    //     $request->validate([
-    //         'TieuDe' => 'required|max:300',
-    //         'NoiDung' => 'required',
-    //         'IdLinhVuc' => 'required',
-    //         'IdDonVi' => 'required',
-    //         'files' => 'array|max:5',
-    //         'files.*' => 'file|max:10240',
-    //     ]);
-    //     DB::beginTransaction();
-
-    //     try {
-    //         $user = JWTAuth::parseToken()->authenticate();
-    //     } catch (\Exception $e) {
-    //         $user = null;
-    //         DB::rollBack();
-    //     }
-
-    //     // Tạo mã theo dõi
-    //     do {
-    //         $maTheoDoi = strtoupper(Str::random(12));
-    //     } while (PhanAnh::where('MaTheoDoi', $maTheoDoi)->exists());
-
-    //     $phanAnh = PhanAnh::create([
-    //         'TieuDe' => $request->TieuDe,
-    //         'NoiDung' => $request->NoiDung,
-    //         'MucDoKhanCap' => $request->MucDoKhanCap ?? 'THAP',
-    //         'AnDanh' => $request->AnDanh ?? 0,
-    //         'NgayGui' => now(),
-    //         'IdNguoiDung' => $user ? $user->IdNguoiDung : null,  // Nếu user đã đăng nhập thì gán IdNguoiDung, nếu không thì để null
-    //         'IdLinhVuc' => $request->IdLinhVuc,
-    //         'IdDonVi' => $request->IdDonVi,
-    //         'IdTrangThaiPhanAnh' => 1,
-    //         'MaTheoDoi' => $maTheoDoi,
-    //     ]);
-    //     DB::commit();
-
-    //     if ($request->hasFile('files')) {
-    //         foreach ($request->file('files') as $file) {
-
-    //             $path = $file->store('phananh', 'public');
-
-    //             FileDinhKem::create([
-    //                 'TenFile' => $file->getClientOriginalName(),
-    //                 'DuongDan' => $path,
-    //                 'LoaiFile' => $file->getMimeType(),
-    //                 'KichThuoc' => $file->getSize(),
-    //                 'NgayTaiLen' => now(),
-    //                 'IdPhanAnh' => $phanAnh->IdPhanAnh,
-    //             ]);
-    //         }
-    //     }
-
-    //     return response()->json([
-    //         'message' => 'Gửi phản ánh thành công',
-    //         'data' => $phanAnh,
-    //     ], 200);
-    // }
     public function store(Request $request)
     {
         $request->validate([
@@ -110,7 +50,6 @@ class PhanAnhController extends Controller
                 'MaTheoDoi' => $maTheoDoi,
             ]);
 
-            DB::commit();
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -134,10 +73,11 @@ class PhanAnhController extends Controller
         }
 
         // Dispatch job (CHỈ 1 LẦN)
-        if (! empty($tempFiles)) {
+        if (!empty($tempFiles)) {
             UploadFilePhanAnhJob::dispatch($phanAnh->IdPhanAnh, $tempFiles)
                 ->onQueue('uploads');
         }
+        DB::commit();
 
         return response()->json([
             'message' => 'Gửi phản ánh thành công'.(!empty($tempFiles) ? ' (file đang xử lý nền)' : ''),

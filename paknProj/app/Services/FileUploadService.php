@@ -8,31 +8,30 @@ use Illuminate\Support\Str;
 
 class FileUploadService
 {
+    protected $modelColumnMap = ['phanhoi' => 'IdPhanHoi', 'phananh' => 'IdPhanAnh'];
+
     public function handle($modelType, $modelId, $filesData)
     {
         $dataToInsert = [];
-
+        $modelType = strtolower($modelType);
+        if (! isset($this->modelColumnMap[$modelType])) {
+            throw new \Exception("Model type không hợp lệ: $modelType");
+        } $column = $this->modelColumnMap[$modelType];
         foreach ($filesData as $file) {
-
             $extension = pathinfo($file['original_name'], PATHINFO_EXTENSION);
             $newName = Str::uuid().'.'.$extension;
-
-            $newPath = strtolower($modelType).'/'.$modelId.'/'.$newName;
-
-            // move từ temp → chính
+            $newPath = $modelType.'/'.$modelId.'/'.$newName; // move từ temp → chính
             Storage::disk('public')->move($file['temp_path'], $newPath);
-
-            $dataToInsert[] = 
+            $row = 
             [
-                'TenFile'    => $file['original_name'],
-                'DuongDan'   => $newPath,
-                'LoaiFile'   => $extension,
-                'KichThuoc'  => $file['size'] ?? null,
-                'NgayTaiLen' => now(), 
-                'IdPhanHoi' => $modelId,
+                'TenFile' => $file['original_name'],
+                'DuongDan' => $newPath,
+                'LoaiFile' => $extension,
+                'KichThuoc' => $file['size'] ?? null,
+                'NgayTaiLen' => now()
             ];
-        }
-
-        FileDinhKem::insert($dataToInsert);
+            $row[$column] = $modelId;
+            $dataToInsert[] = $row;
+        } FileDinhKem::insert($dataToInsert);
     }
 }
