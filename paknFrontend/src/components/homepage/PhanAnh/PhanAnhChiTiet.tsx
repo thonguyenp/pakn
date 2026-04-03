@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Download } from "lucide-react";
 import { getPhanAnhChiTiet } from "@/api/user/phanAnhService";
 import type { PhanAnh } from "@/types/phanAnh";
@@ -8,6 +8,7 @@ const PhanAnhDetail = () => {
   const { MaTheoDoi } = useParams();
   const [data, setData] = useState<PhanAnh | null>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const getUrgency = (value: string) => {
     if (value === "THAP") return ["Thấp", "bg-gray-100 text-gray-600"];
     if (value === "TRUNG_BINH") return ["Trung bình", "bg-yellow-100 text-yellow-600"];
@@ -134,6 +135,14 @@ const PhanAnhDetail = () => {
             </div>
           </div>
         )}
+        <div className="flex justify-end">
+          <button
+            onClick={() => navigate(`/phan-hoi/${data.MaTheoDoi}`)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
+          >
+            Phản hồi
+          </button>
+        </div>
       </div>
     </div>
   );
