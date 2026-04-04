@@ -2,6 +2,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { createPhanHoi } from "@/api/user/phanHoiService";
 import { getPhanAnhChiTiet } from "@/api/user/phanAnhService";
+import FileDropzone from "@/components/shared/FileDropzone";
+import ReactQuill from "react-quill-new";
 
 const PhanHoiCreate = () => {
   const { maTheoDoi } = useParams();
@@ -10,18 +12,31 @@ const PhanHoiCreate = () => {
   const [noiDung, setNoiDung] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
-
   const [idPhanAnh, setIdPhanAnh] = useState<number | null>(null);
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
 
-  // 🔥 Lấy IdPhanAnh từ MaTheoDoi
+      ["bold", "italic", "underline", "strike"],
+
+      [{ color: [] }, { background: [] }],
+
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ indent: "-1" }, { indent: "+1" }],
+
+      ["blockquote", "code-block"],
+
+      ["clean"],
+    ],
+  };
+
+  // Lấy thông tin phản ánh
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (!maTheoDoi) return;
-
         const res = await getPhanAnhChiTiet(maTheoDoi);
         setIdPhanAnh(res.IdPhanAnh);
-
       } catch (error) {
         console.error("Không lấy được phản ánh", error);
       }
@@ -31,8 +46,8 @@ const PhanHoiCreate = () => {
   }, [maTheoDoi]);
 
   const handleSubmit = async () => {
-    if (!noiDung.trim()) {
-      alert("Vui lòng nhập nội dung");
+    if (!noiDung.trim() || noiDung === "<p></p>") {
+      alert("Vui lòng nhập nội dung phản hồi");
       return;
     }
 
@@ -43,21 +58,17 @@ const PhanHoiCreate = () => {
 
     try {
       setLoading(true);
-
       await createPhanHoi({
         NoiDung: noiDung,
         IdPhanAnh: idPhanAnh,
         files: files,
       });
 
-      alert("Phản hồi thành công");
-
-      // quay lại trang detail
+      alert("Phản hồi đã được gửi thành công!");
       navigate(`/phan-anh/${maTheoDoi}`);
-
     } catch (error) {
       console.error(error);
-      alert("Lỗi khi gửi phản hồi");
+      alert("Có lỗi xảy ra khi gửi phản hồi");
     } finally {
       setLoading(false);
     }
@@ -65,47 +76,31 @@ const PhanHoiCreate = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <div className="bg-white p-6 rounded-2xl shadow space-y-4">
-
-        <h1 className="text-xl font-bold">
+      <div className="bg-white p-6 rounded-2xl shadow space-y-6">
+        <h1 className="text-2xl font-bold text-gray-800">
           Gửi phản hồi - #{maTheoDoi}
         </h1>
 
-        {/* Nội dung */}
-        <textarea
-          value={noiDung}
-          onChange={(e) => setNoiDung(e.target.value)}
-          placeholder="Nhập nội dung phản hồi..."
-          className="w-full border rounded-xl p-3 h-32"
-        />
-
-        {/* Upload */}
-        <input
-          type="file"
-          multiple
-          onChange={(e) => {
-            if (e.target.files) {
-              setFiles(Array.from(e.target.files));
-            }
-          }}
-        />
-
-        {/* Preview */}
-        {files.map((file, i) => (
-          <div key={i} className="text-sm text-gray-600">
-            {file.name}
+        <div className="border rounded-xl bg-white shadow-sm">
+          <div className="max-h-[250px] overflow-hidden">
+            <ReactQuill
+              value={noiDung}
+              onChange={setNoiDung}
+              modules={modules}
+              className="bg-white rounded-xl"
+            />
           </div>
-        ))}
+        </div>        {/* Upload file */}
+        <FileDropzone setFiles={setFiles} files={files} />
 
-        {/* Button */}
+        {/* Nút gửi */}
         <button
           onClick={handleSubmit}
           disabled={loading || !idPhanAnh}
-          className="px-4 py-2 bg-green-600 text-white rounded-xl"
+          className="w-full py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium rounded-xl transition-colors"
         >
-          {loading ? "Đang gửi..." : "Gửi phản hồi"}
+          {loading ? "Đang gửi phản hồi..." : "Gửi phản hồi"}
         </button>
-
       </div>
     </div>
   );

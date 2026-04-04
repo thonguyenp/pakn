@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Password Input */
 input[type=password]::-ms-reveal,
 input[type=password]::-ms-clear
 {
