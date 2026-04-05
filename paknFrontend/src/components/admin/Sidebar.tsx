@@ -6,7 +6,8 @@ import {
   LogOut,
   ScrollText,
   Menu,
-  ChevronLeft
+  ChevronLeft,
+  Bolt,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -98,6 +99,17 @@ export default function Sidebar() {
             >
               <ScrollText size={18} />
               {!collapsed && "Quản lý phản ánh"}
+            </li>
+            {/* Quản lý cấu hình SMTP */}
+            <li
+              onClick={() => navigate("/admin/smtp")}
+              className={`
+              flex items-center gap-3 px-3 py-2 rounded cursor-pointer
+              ${isActive("/admin/smtp") ? "bg-blue-800" : "hover:bg-slate-800"}
+              `}
+            >
+              <Bolt size={18} />
+              {!collapsed && "Cấu hình SMTP"}
             </li>
 
             {/* Logout */}
