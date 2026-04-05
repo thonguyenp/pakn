@@ -4,6 +4,7 @@ use App\Http\Controllers\admin\DonViController;
 use App\Http\Controllers\admin\FileDinhKemController;
 use App\Http\Controllers\admin\NguoiDungController;
 use App\Http\Controllers\admin\PhanAnhController;
+use App\Http\Controllers\admin\SmtpController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:api'])
@@ -51,5 +52,9 @@ Route::middleware(['auth:api'])
                 )->middleware('permission:QuanLyQuyen');
 
             });
-
-    });
+        Route::prefix('smtp')->group(function () {
+            Route::post('/save', [SmtpController::class, 'save']);
+            Route::get('/', [SmtpController::class, 'get']);
+            Route::post('/test', [SmtpController::class, 'sendTest']);
+        })->middleware('permission:QuanLyHeThong');
+});
