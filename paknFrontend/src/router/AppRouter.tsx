@@ -33,6 +33,7 @@ import PhanAnhDetail from "@/modules/admin/PhanAnh/PhanAnhDetail";
 import PhanAnhPage from "@/modules/pages/PhanAnh/PhanAnhPage";
 import PhanAnhChiTiet from "@/components/homepage/PhanAnh/PhanAnhChiTiet";
 import PhanHoiCreate from "@/modules/pages/PhanHoi/PhanHoiCreate";
+import SmtpConfigPage from "@/modules/admin/SmtpConfig/SmtpConfigPage";
 
 export default function AppRouter() {
   return (
@@ -79,6 +80,8 @@ export default function AppRouter() {
               </PermissionGuard>
             }
           >
+            {/* smtp config */}
+            <Route path="smtp" element={<SmtpConfigPage />} />
             {/* Dashboard */}
             <Route index element={<DashboardPage />} />
             {/* Phản ánh */}
