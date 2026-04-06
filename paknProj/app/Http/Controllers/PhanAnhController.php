@@ -6,6 +6,7 @@ use App\Jobs\UploadFilePhanAnhJob;
 use App\Jobs\UploadFilePhanHoiJob;
 use App\Models\PhanAnh;
 use App\Models\PhanHoi;
+use App\Services\PhanAnhService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -14,6 +15,14 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PhanAnhController extends Controller
 {
+    // inject service để tái sử dụng logic từ chối phản ánh
+    protected $phanAnhService;
+
+    public function __construct(PhanAnhService $phanAnhService)
+    {
+        $this->phanAnhService = $phanAnhService;
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -161,18 +170,6 @@ class PhanAnhController extends Controller
         ]);
     }
 
-    // public function theoDoi($ma)
-    // {
-    //     $phanAnh = PhanAnh::where('MaTheoDoi', $ma)->first();
-
-    //     if (! $phanAnh) {
-    //         return response()->json([
-    //             'message' => 'Mã không hợp lệ',
-    //         ], 404);
-    //     }
-
-    //     return response()->json($phanAnh);
-    // }
     public function phanHoi(Request $request)
     {
         $request->validate([
@@ -229,5 +226,36 @@ class PhanAnhController extends Controller
             'message' => 'Tạo phản hồi thành công'.(! empty($tempFiles) ? ' (file đang xử lý nền)' : ''),
             'data' => $phanHoi,
         ]);
+    }
+
+    public function tuChoi(Request $request, $maTheoDoi)
+    {
+        $request->validate([
+            'NoiDung' => 'required|string',
+            'IdNguoiDung' => 'required|integer',
+            'LaNoiBo' => 'nullable|boolean',
+            'files' => 'array|max:5',
+            'files.*' => 'file|max:10240',
+        ]);
+
+        try {
+            $result = $this->phanAnhService->tuChoi(
+                $maTheoDoi,
+                $request->all(),
+                $request->file('files') ?? []
+            );
+
+            return response()->json([
+                'message' => 'Từ chối phản ánh thành công'
+                    .($result['hasFiles'] ? ' (file đang xử lý nền)' : ''),
+                'data' => $result['phanHoi'],
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Từ chối thất bại',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

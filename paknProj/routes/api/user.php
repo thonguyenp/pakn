@@ -51,6 +51,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/phananh/donvi/', [PhanAnhController::class, 'getByDonVi'])->middleware('permission:XemPhanAnhPhong');  // checked
     Route::get('/phananh/{maTheoDoi}', [PhanAnhController::class, 'show']);
 
+    //Nhóm service xử lý phản ánh
+    Route::post('/phananh/tuchoi/{maTheoDoi}', [PhanAnhController::class, 'tuChoi']);
     Route::post('/phanhoi', [PhanAnhController::class, 'phanHoi'])->middleware('permission:CapNhatPhanAnh');
 
     Route::get('/profile', [ProfileController::class, 'getProfile']);   // checked
