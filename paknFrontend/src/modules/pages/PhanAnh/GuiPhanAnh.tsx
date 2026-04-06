@@ -7,6 +7,7 @@ import FileDropzone from "@/components/shared/FileDropzone"
 
 import { type LinhVuc } from "@/types/linhvuc"
 import { type DonVi } from "@/types/donvi"
+import SuccessModal from "@/components/shared/SuccessModal"
 
 const GuiPhanAnh = () => {
 
@@ -26,7 +27,9 @@ const GuiPhanAnh = () => {
   const [dsDonVi, setDsDonVi] = useState<DonVi[]>([])
 
   const [loading, setLoading] = useState(true)
-
+  const [showModal, setShowModal] = useState(false)
+  const [message, setMessage] = useState("")
+  const [maTheoDoi, setMaTheoDoi] = useState("")
   useEffect(() => {
 
     const fetchData = async () => {
@@ -73,9 +76,10 @@ const GuiPhanAnh = () => {
 
     try {
 
-      await guiPhanAnh(formData)
-
-      alert("Gửi phản ánh thành công")
+      const res = await guiPhanAnh(formData)
+      setMessage(res.message)
+      setMaTheoDoi(res.data.MaTheoDoi)
+      setShowModal(true)
 
       setTieuDe("")
       setNoiDung("")
@@ -197,7 +201,12 @@ const GuiPhanAnh = () => {
         </button>
 
       </form>
-
+      <SuccessModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        message={message}
+        maTheoDoi={maTheoDoi}
+      />
     </div>
 
   )

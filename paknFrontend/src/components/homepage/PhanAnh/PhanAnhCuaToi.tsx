@@ -108,7 +108,7 @@ export default function PhanAnhCuaToi() {
         <button
           disabled={page === 1}
           onClick={() => setPage(page - 1)}
-          className="px-3 py-1 border rounded"
+          className="px-3 py-1 border rounded bg-[#E6F0FF] text-[#0C4396] hover:bg-[#D0E4FF] disabled:bg-gray-200 disabled:text-gray-400"
         >
           Prev
         </button>
@@ -120,7 +120,7 @@ export default function PhanAnhCuaToi() {
         <button
           disabled={page === lastPage}
           onClick={() => setPage(page + 1)}
-          className="px-3 py-1 border rounded"
+          className="px-3 py-1 border rounded bg-[#E6F0FF] text-[#0C4396] hover:bg-[#D0E4FF] disabled:bg-gray-200 disabled:text-gray-400"
         >
           Next
         </button>

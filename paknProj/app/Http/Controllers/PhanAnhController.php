@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\FileDinhKem;
+use App\Jobs\UploadFilePhanAnhJob;
+use App\Jobs\UploadFilePhanHoiJob;
 use App\Models\PhanAnh;
+use App\Models\PhanHoi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Jobs\UploadFilePhanAnhJob;
 
 class PhanAnhController extends Controller
 {
@@ -50,7 +52,6 @@ class PhanAnhController extends Controller
                 'MaTheoDoi' => $maTheoDoi,
             ]);
 
-
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -73,15 +74,16 @@ class PhanAnhController extends Controller
         }
 
         // Dispatch job (CHỈ 1 LẦN)
-        if (!empty($tempFiles)) {
+        if (! empty($tempFiles)) {
             UploadFilePhanAnhJob::dispatch($phanAnh->IdPhanAnh, $tempFiles)
                 ->onQueue('uploads');
         }
         DB::commit();
 
         return response()->json([
-            'message' => 'Gửi phản ánh thành công'.(!empty($tempFiles) ? ' (file đang xử lý nền)' : ''),
+            'message' => 'Gửi phản ánh thành công'.(! empty($tempFiles) ? ' (file đang xử lý nền)' : ''),
             'data' => $phanAnh,
+            'maTheoDoi' => $maTheoDoi,
         ], 200);
     }
 
@@ -159,16 +161,73 @@ class PhanAnhController extends Controller
         ]);
     }
 
-    public function theoDoi($ma)
-    {
-        $phanAnh = PhanAnh::where('MaTheoDoi', $ma)->first();
+    // public function theoDoi($ma)
+    // {
+    //     $phanAnh = PhanAnh::where('MaTheoDoi', $ma)->first();
 
-        if (! $phanAnh) {
-            return response()->json([
-                'message' => 'Mã không hợp lệ',
-            ], 404);
+    //     if (! $phanAnh) {
+    //         return response()->json([
+    //             'message' => 'Mã không hợp lệ',
+    //         ], 404);
+    //     }
+
+    //     return response()->json($phanAnh);
+    // }
+    public function phanHoi(Request $request)
+    {
+        $request->validate([
+            'NoiDung' => 'required|string',
+            'IdPhanAnh' => 'required|exists:phananh,IdPhanAnh',
+            'LaNoiBo' => 'nullable|boolean',
+            'IdNguoiDung' => 'nullable|integer',
+            'files' => 'array|max:5',
+            'files.*' => 'file|max:10240', // tối đa 10MB mỗi file
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $phanHoi = PhanHoi::create([
+                'NoiDung' => $request->NoiDung,
+                'LaNoiBo' => $request->LaNoiBo ?? 0,
+                'NgayPhanHoi' => now(),
+                'IdPhanAnh' => $request->IdPhanAnh,
+                'IdNguoiDung' => $request->IdNguoiDung ?? null,
+            ]);
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Tạo PhanHoi thất bại', ['error' => $e->getMessage()]);
+
+            return response()->json(['error' => 'Không thể tạo phản hồi'], 500);
         }
 
-        return response()->json($phanAnh);
+        // === Xử lý file trực tiếp (không temp) ===
+        $tempFiles = [];
+
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+
+                $tempPath = $file->store('temp', 'public');
+
+                $tempFiles[] = [
+                    'temp_path' => $tempPath,
+                    'original_name' => $file->getClientOriginalName(),
+                    'size' => $file->getSize(),
+                ];
+            }
+        }
+        // Dispatch job chỉ để lưu thông tin file vào database
+        if (! empty($tempFiles)) {
+            UploadFilePhanHoiJob::dispatch($phanHoi->IdPhanHoi, $tempFiles)
+                ->onQueue('uploads');
+        }
+
+        return response()->json([
+            'message' => 'Tạo phản hồi thành công'.(! empty($tempFiles) ? ' (file đang xử lý nền)' : ''),
+            'data' => $phanHoi,
+        ]);
     }
 }
