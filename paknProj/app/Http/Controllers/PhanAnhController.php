@@ -228,33 +228,59 @@ class PhanAnhController extends Controller
         ]);
     }
 
-    public function tuChoi(Request $request, $maTheoDoi)
+    // public function tuChoi(Request $request, $maTheoDoi)
+    // {
+    //     $request->validate([
+    //         'NoiDung' => 'required|string',
+    //         'IdNguoiDung' => 'required|integer',
+    //         'LaNoiBo' => 'nullable|boolean',
+    //         'files' => 'array|max:5',
+    //         'files.*' => 'file|max:10240',
+    //     ]);
+
+    //     try {
+    //         $result = $this->phanAnhService->tuChoi(
+    //             $maTheoDoi,
+    //             $request->all(),
+    //             $request->file('files') ?? []
+    //         );
+
+    //         return response()->json([
+    //             'message' => 'Từ chối phản ánh thành công'
+    //                 .($result['hasFiles'] ? ' (file đang xử lý nền)' : ''),
+    //             'data' => $result['phanHoi'],
+    //         ]);
+
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'error' => 'Từ chối thất bại',
+    //             'details' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+    public function action(Request $request, $maTheoDoi)
     {
         $request->validate([
             'NoiDung' => 'required|string',
-            'IdNguoiDung' => 'required|integer',
-            'LaNoiBo' => 'nullable|boolean',
-            'files' => 'array|max:5',
+            'action' => 'required|integer',
             'files.*' => 'file|max:10240',
         ]);
 
         try {
-            $result = $this->phanAnhService->tuChoi(
+            $result = $this->phanAnhService->handleAction(
                 $maTheoDoi,
                 $request->all(),
                 $request->file('files') ?? []
             );
 
             return response()->json([
-                'message' => 'Từ chối phản ánh thành công'
-                    .($result['hasFiles'] ? ' (file đang xử lý nền)' : ''),
-                'data' => $result['phanHoi'],
+                'message' => 'Thực hiện thành công',
+                'data' => $result,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Từ chối thất bại',
-                'details' => $e->getMessage(),
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

@@ -52,7 +52,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/phananh/{maTheoDoi}', [PhanAnhController::class, 'show']);
 
     //Nhóm service xử lý phản ánh
-    Route::post('/phananh/tuchoi/{maTheoDoi}', [PhanAnhController::class, 'tuChoi']);
+    Route::post('/phananh/action/{maTheoDoi}', [PhanAnhController::class, 'action']);
     Route::post('/phanhoi', [PhanAnhController::class, 'phanHoi'])->middleware('permission:CapNhatPhanAnh');
 
     Route::get('/profile', [ProfileController::class, 'getProfile']);   // checked

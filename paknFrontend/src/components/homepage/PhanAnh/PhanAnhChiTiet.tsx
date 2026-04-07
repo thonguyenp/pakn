@@ -9,6 +9,7 @@ const PhanAnhDetail = () => {
   const [data, setData] = useState<PhanAnh | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
   const getUrgency = (value: string) => {
     if (value === "THAP") return ["Thấp", "bg-gray-100 text-gray-600"];
     if (value === "TRUNG_BINH") return ["Trung bình", "bg-yellow-100 text-yellow-600"];
@@ -136,12 +137,13 @@ const PhanAnhDetail = () => {
           </div>
         )}
         <div className="flex justify-end">
-          {/* <button
-            onClick={() => navigate(`/phan-hoi/${data.MaTheoDoi}`)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
+          <button
+            onClick={() => navigate(`/tu-choi/${data.MaTheoDoi}`)}
+            className="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition"
           >
-            Phản hồi
-          </button> */}
+            Từ chối
+          </button>
+
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { createPhanHoi } from "@/api/user/phanHoiService";
+import { createPhanHoi } from "@/api/user/phanAnhService";
 import { getPhanAnhChiTiet } from "@/api/user/phanAnhService";
 import FileDropzone from "@/components/shared/FileDropzone";
 import ReactQuill from "react-quill-new";
