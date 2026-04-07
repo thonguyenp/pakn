@@ -76,37 +76,33 @@ export const createPhanHoi = async (data: PhanHoiCreateRequest) => {
   return response.data;
 };
 
-export const createTuChoi = async (
+export const createAction = async (
   MaTheoDoi: string,
-  data: PhanHoiCreateRequest
+  data: any
 ) => {
   const formData = new FormData();
 
   formData.append("NoiDung", data.NoiDung);
+  formData.append("action", data.action);
 
+  if (data.donVi) {
+    formData.append("DonVi", data.donVi);
+  }
   if (data.LaNoiBo !== undefined) {
     formData.append("LaNoiBo", String(data.LaNoiBo));
   }
 
-  if (data.IdNguoiDung) {
-    formData.append("IdNguoiDung", String(data.IdNguoiDung));
-  }
+
 
   if (data.files) {
-    data.files.forEach((file) => {
+    data.files.forEach((file: File) => {
       formData.append("files[]", file);
     });
   }
 
-  const response = await api.post(
-    `phananh/${MaTheoDoi}/tu-choi`,
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+  return api.post(`phananh/action/${MaTheoDoi}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
     }
-  );
-
-  return response.data;
+  });
 };

@@ -138,7 +138,7 @@ const PhanAnhDetail = () => {
         )}
         <div className="flex justify-end">
           <button
-            onClick={() => navigate(`/tu-choi/${data.MaTheoDoi}`)}
+            onClick={() => navigate(`/phan-anh/${data.MaTheoDoi}/7`)}
             className="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition"
           >
             Từ chối

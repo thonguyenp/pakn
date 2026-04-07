@@ -34,6 +34,7 @@ import PhanAnhPage from "@/modules/pages/PhanAnh/PhanAnhPage";
 import PhanAnhChiTiet from "@/components/homepage/PhanAnh/PhanAnhChiTiet";
 import PhanHoiCreate from "@/modules/pages/PhanHoi/PhanHoiCreate";
 import SmtpConfigPage from "@/modules/admin/SmtpConfig/SmtpConfigPage";
+import PhanAnhActionForm from "@/components/homepage/PhanAnh/PhanAnhActionForm";
 
 export default function AppRouter() {
   return (
@@ -68,6 +69,7 @@ export default function AppRouter() {
                   <PhanHoiCreate />
                 </PermissionGuard>
               } />
+              <Route path="/phan-anh/:MaTheoDoi/:action" element={<PhanAnhActionForm />} />
           </Route>
         </Route>
         {/* ================= ADMIN ROUTES ================= */}

@@ -6,6 +6,7 @@ use App\Jobs\UploadFilePhanHoiJob;
 use App\Models\LichSuXuLy;
 use App\Models\PhanAnh;
 use App\Models\PhanHoi;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PhanAnhService
@@ -50,7 +51,7 @@ class PhanAnhService
                 'LaNoiBo' => $data['LaNoiBo'] ?? 0,
                 'NgayPhanHoi' => now(),
                 'IdPhanAnh' => $phanAnh->IdPhanAnh,
-                'IdNguoiDung' => $data['IdNguoiDung'],
+                'IdNguoiDung' => Auth::id(),
             ]);
 
             // 3. Update trạng thái
@@ -64,7 +65,7 @@ class PhanAnhService
                 'GhiChu' => $data['NoiDung'],
                 'ThoiGian' => now(),
                 'IdPhanAnh' => $phanAnh->IdPhanAnh,
-                'IdNguoiDung' => $data['IdNguoiDung'],
+                'IdNguoiDung' => Auth::id(),
             ]);
 
             return $phanHoi;
