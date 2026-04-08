@@ -18,6 +18,7 @@ class PhanAnh extends Model
         'MucDoKhanCap',
         'AnDanh',
         'NgayGui',
+        'NgayCapNhat',
         'IdNguoiDung',
         'IdLinhVuc',
         'IdDonVi',
