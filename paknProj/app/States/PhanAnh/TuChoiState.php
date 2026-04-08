@@ -6,6 +6,7 @@ use App\Jobs\UploadFilePhanHoiJob;
 use App\Models\LichSuXuLy;
 use App\Models\PhanAnh;
 use App\Models\PhanHoi;
+use App\Models\ThongBao;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +21,7 @@ class TuChoiState implements PhanAnhStateInterface
             //     'current' => $phanAnh->IdTrangThaiPhanAnh,
             //     'allowed' => $this->allowedTransitions($phanAnh->IdTrangThaiPhanAnh),
             // ]);
-            
+
             // validate transition
             if (! in_array(7, $this->allowedTransitions($phanAnh->IdTrangThaiPhanAnh))) {
                 throw new \Exception('Không thể chuyển sang trạng thái từ chối');
@@ -45,6 +46,19 @@ class TuChoiState implements PhanAnhStateInterface
                 'ThoiGian' => now(),
                 'IdPhanAnh' => $phanAnh->IdPhanAnh,
                 'IdNguoiDung' => Auth::id(),
+            ]);
+
+            ThongBao::create([
+                'TieuDe' => 'Phản ánh của bạn đã bị từ chối',
+                'NoiDung' => 'Lý do: '.$data['NoiDung'],
+                'NgayGui' => now(),
+                'DaDoc' => 0,
+                'IdNguoiDung' => $phanAnh->IdNguoiDung,
+                'Link' => [
+                    'type' => 'phan_anh',
+                    'maTheoDoi' => $phanAnh->MaTheoDoi,
+                ],
+
             ]);
 
             return $phanHoi;
