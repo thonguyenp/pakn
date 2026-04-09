@@ -47,10 +47,18 @@ class AuthController extends Controller
             ]);
 
             DB::table('NguoiDungQuyen')->insert([
-                'IdNguoiDung' => $user->IdNguoiDung,
-                'IdQuyen' => 2,
-                'TrangThai' => 1,
-                'NgayGanQuyen' => now(),
+                [
+                    'IdNguoiDung' => $user->IdNguoiDung,
+                    'IdQuyen' => 2,
+                    'TrangThai' => 1,
+                    'NgayGanQuyen' => now(),
+                ],
+                [
+                    'IdNguoiDung' => $user->IdNguoiDung,
+                    'IdQuyen' => 3,
+                    'TrangThai' => 1,
+                    'NgayGanQuyen' => now(),
+                ],
             ]);
 
             $token = Str::random(60);
