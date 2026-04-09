@@ -151,16 +151,28 @@ class AuthController extends Controller
 
     public function sendResetLinkEmail(Request $request)
     {
-        $request->validate(['Email' => 'required|email']);
+        $request->validate([
+            'Email' => 'required|email|exists:NguoiDung,Email',
+        ]);
 
-        $status = Password::broker('nguoidung')->sendResetLink(
-            $request->only('Email')
-        );
-        // logger($request->all());
+        try {
+            $status = Password::broker('nguoidung')->sendResetLink(
+                $request->only('Email')
+            );
 
-        return $status === Password::RESET_LINK_SENT
-            ? response()->json(['message' => 'Đã gửi link đặt lại mật khẩu qua email'], 200)
-            : response()->json(['error' => __($status)], 400);
+            Log::info('Forgot password request', ['email' => $request->Email, 'status' => $status]);
+
+            return $status === Password::RESET_LINK_SENT
+                ? response()->json([
+                    'message' => 'Đã gửi link đặt lại mật khẩu đến email của bạn. Vui lòng kiểm tra hộp thư (và thư rác).',
+                ], 200)
+                : response()->json(['error' => __($status)], 400);
+
+        } catch (\Exception $e) {
+            Log::error('Forgot password error: '.$e->getMessage());
+
+            return response()->json(['error' => 'Có lỗi xảy ra, vui lòng thử lại sau.'], 500);
+        }
     }
 
     public function resetPassword(Request $request)

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\ResetPasswordQueued;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -41,6 +42,15 @@ class NguoiDung extends Model implements AuthenticatableContract, CanResetPasswo
     public function getEmailForPasswordReset()
     {
         return $this->Email;
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        // Cách sạch và ổn định nhất cho queue + Redis
+        $this->notify((new ResetPasswordQueued($token))
+            ->onQueue('emails')
+            ->afterCommit()           // Đảm bảo sau transaction (nếu có)
+        );
     }
 
     public function routeNotificationForMail($notification)

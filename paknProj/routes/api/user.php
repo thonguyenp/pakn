@@ -18,9 +18,8 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('login/guest', [AuthController::class, 'guestLogin']);  // checked
 
 // Quên mật khẩu
-Route::post('password/email', [AuthController::class, 'sendResetLinkEmail']);
-Route::post('password/reset', [AuthController::class, 'resetPassword']);
-
+Route::post('forgot-password', [AuthController::class, 'sendResetLinkEmail']);
+Route::post('reset-password', [AuthController::class, 'resetPassword']);
 Route::get('/reset-password/{token}', function ($token) {
     return redirect("http://localhost:5173/reset-password?token=$token");
 })->name('password.reset');
@@ -52,7 +51,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/phananh/donvi/', [PhanAnhController::class, 'getByDonVi'])->middleware('permission:XemPhanAnhPhong');  // checked
     Route::get('/phananh/{maTheoDoi}', [PhanAnhController::class, 'show']);
 
-    //Nhóm service xử lý phản ánh
+    // Nhóm service xử lý phản ánh
     Route::post('/phananh/action/{maTheoDoi}', [PhanAnhController::class, 'action'])->middleware('permission:CapNhatTrangThai');  // checked
 
     Route::get('/profile', [ProfileController::class, 'getProfile']);   // checked
