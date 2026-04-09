@@ -26,19 +26,20 @@ Route::get('/reset-password/{token}', function ($token) {
 })->name('password.reset');
 
 // Email verification
-Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
-    $user = NguoiDung::findOrFail($id);
+// Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+//     $user = NguoiDung::findOrFail($id);
 
-    if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-        return redirect('http://localhost:5173/login?verify=invalid');
-    }
+//     if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+//         return redirect('http://localhost:5173/login?verify=invalid');
+//     }
 
-    if (! $user->hasVerifiedEmail()) {
-        $user->markEmailAsVerified();
-    }
+//     if (! $user->hasVerifiedEmail()) {
+//         $user->markEmailAsVerified();
+//     }
 
-    return redirect('http://localhost:5173/login?verify=success');
-})->middleware('signed')->name('verification.verify');
+//     return redirect('http://localhost:5173/login?verify=success');
+// })->middleware('signed')->name('verification.verify');
+Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
 
 // Theo dõi phản ánh mà không cần đăng nhập
 Route::get('/phananh/theodoi/{maTheoDoi}', [PhanAnhController::class, 'theoDoi'])->middleware('guest.auth');
@@ -52,7 +53,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/phananh/{maTheoDoi}', [PhanAnhController::class, 'show']);
 
     //Nhóm service xử lý phản ánh
-    Route::post('/phananh/action/{maTheoDoi}', [PhanAnhController::class, 'action'])->middleware('permission:CapNhatPhanAnh');  // checked
+    Route::post('/phananh/action/{maTheoDoi}', [PhanAnhController::class, 'action'])->middleware('permission:CapNhatTrangThai');  // checked
 
     Route::get('/profile', [ProfileController::class, 'getProfile']);   // checked
 

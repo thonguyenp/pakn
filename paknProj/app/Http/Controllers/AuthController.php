@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\NguoiDung;
+use App\Notifications\VerifyEmailQueued;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -23,51 +24,86 @@ class AuthController extends Controller
             'Email' => 'required|email|unique:NguoiDung,Email',
             'MatKhau' => 'required|string|min:6',
             'MaSo' => 'nullable|string|unique:NguoiDung,MaSo',
-            'SoDienThoai' => 'nullable|string|max:15',
+            'SoDienThoai' => 'nullable|string|max:10',
         ]);
 
-        $user = NguoiDung::create([
-            'HoTen' => $validated['HoTen'],
-            'Email' => $validated['Email'],
-            'MatKhau' => Hash::make($validated['MatKhau']),
-            'MaSo' => $validated['MaSo'] ?? null,
-            'SoDienThoai' => $validated['SoDienThoai'] ?? null,
-            'TrangThai' => 1,
-            'NgayTao' => now(),
-        ]);
+        DB::beginTransaction();
 
-        // Gán role mặc định IdVaiTro = 1
-        DB::table('NguoiDungVaiTro')->insert([
-            'IdNguoiDung' => $user->IdNguoiDung,
-            'IdVaiTro' => 1,
-        ]);
-        DB::table('NguoiDungQuyen')->insert([
-            [
-                'IdNguoiDung' => $user->IdNguoiDung,
-                'IdQuyen' => 1,
+        try {
+            $user = NguoiDung::create([
+                'HoTen' => $validated['HoTen'],
+                'Email' => $validated['Email'],
+                'MatKhau' => Hash::make($validated['MatKhau']),
+                'MaSo' => $validated['MaSo'] ?? null,
+                'SoDienThoai' => $validated['SoDienThoai'] ?? null,
                 'TrangThai' => 1,
-                'NgayGanQuyen' => now(),
-            ],
-            [
+                'NgayTao' => now(),
+            ]);
+
+            // Gán role & quyền
+            DB::table('NguoiDungVaiTro')->insert([
+                'IdNguoiDung' => $user->IdNguoiDung,
+                'IdVaiTro' => 1,
+            ]);
+
+            DB::table('NguoiDungQuyen')->insert([
                 'IdNguoiDung' => $user->IdNguoiDung,
                 'IdQuyen' => 2,
                 'TrangThai' => 1,
                 'NgayGanQuyen' => now(),
-            ],
-            [
-                'IdNguoiDung' => $user->IdNguoiDung,
-                'IdQuyen' => 3,
-                'TrangThai' => 1,
-                'NgayGanQuyen' => now(),
-            ],
-        ]);
-        // Gửi email xác thực
-        // $user->sendEmailVerificationNotification();
-        $user->notify(new VerifyEmail);
+            ]);
 
-        $token = JWTAuth::fromUser($user);
+            $token = Str::random(60);
 
-        return response()->json(['token' => $token], 201);
+            DB::table('email_verifications')->insert([
+                'user_id' => $user->IdNguoiDung,
+                'token' => $token,
+                'created_at' => now(),
+            ]);
+
+            DB::commit();   // Commit trước khi dispatch notification
+
+            // Gửi email sau khi commit thành công
+            $user->notify((new VerifyEmailQueued($token))->afterCommit());  // ← afterCommit rất quan trọng
+
+            $jwtToken = JWTAuth::fromUser($user);
+
+            return response()->json([
+                'message' => 'Đăng ký thành công. Vui lòng kiểm tra email để xác thực.',
+                'token' => $jwtToken,
+            ], 201);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Register error: '.$e->getMessage());
+
+            return response()->json(['message' => 'Đăng ký thất bại', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function verifyEmail(Request $request)
+    {
+        $token = $request->token;
+
+        $record = DB::table('email_verifications')
+            ->where('token', $token)
+            ->first();
+
+        if (! $record) {
+            return response()->json(['message' => 'Token không hợp lệ'], 400);
+        }
+
+        DB::table('NguoiDung')
+            ->where('IdNguoiDung', $record->user_id)
+            ->update([
+                'email_verified_at' => now(),
+            ]);
+
+        DB::table('email_verifications')
+            ->where('token', $token)
+            ->delete();
+
+        return response()->json(['message' => 'Xác thực thành công']);
     }
 
     public function login(Request $request)
