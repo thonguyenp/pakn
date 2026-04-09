@@ -10,6 +10,7 @@ class PhanAnhStateFactory
 
         return match ($action) {
             7 => new TuChoiState(),
+            4 => new BoSungThongTinState(),
             default => throw new \Exception('Action không hợp lệ'),
         };
     }

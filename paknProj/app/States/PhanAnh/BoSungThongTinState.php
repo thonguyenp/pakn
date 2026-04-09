@@ -10,7 +10,7 @@ use App\Models\ThongBao;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class TuChoiState extends BasePhanAnhState
+class BoSungThongTinState extends BasePhanAnhState
 {
     public function handle($maTheoDoi, $data, $files)
     {
@@ -19,8 +19,8 @@ class TuChoiState extends BasePhanAnhState
             $phanAnh = PhanAnh::where('MaTheoDoi', $maTheoDoi)->firstOrFail();
 
             // validate transition
-            if (! in_array(7, $this->allowedTransitions($phanAnh->IdTrangThaiPhanAnh))) {
-                throw new \Exception('Không thể chuyển sang trạng thái từ chối');
+            if (! in_array(4, $this->allowedTransitions($phanAnh->IdTrangThaiPhanAnh))) {
+                throw new \Exception('Không thể chuyển sang trạng thái bổ sung thông tin');
             }
 
             $phanHoi = PhanHoi::create([
@@ -32,12 +32,12 @@ class TuChoiState extends BasePhanAnhState
             ]);
 
             $phanAnh->update([
-                'IdTrangThaiPhanAnh' => 7,
+                'IdTrangThaiPhanAnh' => 4,
                 'NgayCapNhat' => now(),
             ]);
 
             LichSuXuLy::create([
-                'HanhDong' => 'Từ chối phản ánh',
+                'HanhDong' => 'Bổ sung thông tin phản ánh',
                 'GhiChu' => $data['NoiDung'],
                 'ThoiGian' => now(),
                 'IdPhanAnh' => $phanAnh->IdPhanAnh,
@@ -45,7 +45,7 @@ class TuChoiState extends BasePhanAnhState
             ]);
 
             ThongBao::create([
-                'TieuDe' => 'Phản ánh của bạn đã bị từ chối',
+                'TieuDe' => 'Phản ánh của bạn cần bổ sung thông tin',
                 'NoiDung' => 'Lý do: '.$data['NoiDung'],
                 'NgayGui' => now(),
                 'DaDoc' => 0,
@@ -83,5 +83,4 @@ class TuChoiState extends BasePhanAnhState
             'hasFiles' => ! empty($tempFiles),
         ];
     }
-
 }
