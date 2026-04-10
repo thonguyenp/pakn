@@ -8,6 +8,8 @@ import FileDropzone from "@/components/shared/FileDropzone"
 import { type LinhVuc } from "@/types/linhvuc"
 import { type DonVi } from "@/types/donvi"
 import SuccessModal from "@/components/shared/SuccessModal"
+import SelectSearchDropdown from "@/components/shared/SelectSearchDropdown"
+
 
 const GuiPhanAnh = () => {
 
@@ -30,6 +32,18 @@ const GuiPhanAnh = () => {
   const [showModal, setShowModal] = useState(false)
   const [message, setMessage] = useState("")
   const [maTheoDoi, setMaTheoDoi] = useState("")
+
+    const linhVucOptions = dsLinhVuc.map(lv => ({
+      label: lv.TenLinhVuc,
+      value: lv.IdLinhVuc.toString()
+    }))
+
+    const donViOptions = dsDonVi.map(dv => ({
+      label: dv.TenDonVi,
+      value: dv.IdDonVi.toString()
+    }))
+
+
   useEffect(() => {
 
     const fetchData = async () => {
@@ -130,7 +144,7 @@ const GuiPhanAnh = () => {
 
         {/* Lĩnh vực */}
 
-        <select
+        {/* <select
           value={linhVuc}
           onChange={(e) => setLinhVuc(e.target.value)}
           className="w-full border p-2 rounded"
@@ -145,26 +159,22 @@ const GuiPhanAnh = () => {
             </option>
           ))}
 
-        </select>
-
+        </select> */}
+        <SelectSearchDropdown
+          options={linhVucOptions}
+          value={linhVuc}
+          onChange={setLinhVuc}
+          placeholder="Chọn lĩnh vực"
+        />
         {/* Đơn vị */}
 
-        <select
+          <SelectSearchDropdown
+          options={donViOptions}
           value={donVi}
-          onChange={(e) => setDonVi(e.target.value)}
-          className="w-full border p-2 rounded"
-          required
-        >
+          onChange={setDonVi}
+          placeholder="Chọn đơn vị"
+        />
 
-          <option value="">Chọn đơn vị</option>
-
-          {dsDonVi.map((dv) => (
-            <option key={dv.IdDonVi} value={dv.IdDonVi}>
-              {dv.TenDonVi}
-            </option>
-          ))}
-
-        </select>
 
         {/* Mức độ khẩn cấp */}
 

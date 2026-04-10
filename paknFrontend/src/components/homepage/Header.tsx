@@ -162,7 +162,7 @@ export default function Header() {
                             <input
                                 type="text"
                                 placeholder="Tìm phản ánh..."
-                                className="w-full border rounded-md py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                className="w-full border rounded-md py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400 text-black"
                             />
                             <button className="absolute right-3 top-2.5 text-gray-500">
                                 <i className="fa-solid fa-search"></i>
