@@ -17,6 +17,13 @@ export const register = async (data: RegisterPayload): Promise<AuthResponse> => 
   return res.data;
 };
 
+export const verifyEmail = async (token: string) => {
+  const res = await api.get('/verify-email', {
+    params: { token }
+  });
+  return res.data;
+};
+
 export const setAuthToken = (token: string | null) => {
   if (token) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;

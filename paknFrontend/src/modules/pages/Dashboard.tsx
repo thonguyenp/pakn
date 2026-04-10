@@ -1,10 +1,17 @@
 import { useNavigate } from 'react-router-dom';
-
+import { useVerifyEmail } from '@/hooks/useVerifyEmail';
+import VerifyEmailModal from '@/components/shared/VerifyEmailModal';
 export default function DashboardPage() {
     const navigate = useNavigate();
+    const { token, setToken } = useVerifyEmail();
+
     return (
         <div className="min-h-screen bg-gray-100 p-6">
             <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
+                {token && (
+                    <VerifyEmailModal token={token} onClose={() => setToken(null)} />
+                )}
+
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold">Phản ánh - Kiến nghị</h1>
                 </div>

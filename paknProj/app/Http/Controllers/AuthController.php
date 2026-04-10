@@ -72,7 +72,7 @@ class AuthController extends Controller
             DB::commit();   // Commit trước khi dispatch notification
 
             // Gửi email sau khi commit thành công
-            $user->notify((new VerifyEmailQueued($token))->afterCommit());  // ← afterCommit rất quan trọng
+            $user->notify((new VerifyEmailQueued($token))->afterCommit());
 
             $jwtToken = JWTAuth::fromUser($user);
 
@@ -97,21 +97,35 @@ class AuthController extends Controller
             ->where('token', $token)
             ->first();
 
-        if (! $record) {
-            return response()->json(['message' => 'Token không hợp lệ'], 400);
+        if ($record) {
+            // verify lần đầu
+            DB::table('NguoiDung')
+                ->where('IdNguoiDung', $record->user_id)
+                ->update([
+                    'email_verified_at' => now(),
+                ]);
+
+            DB::table('email_verifications')
+                ->where('token', $token)
+                ->delete();
+
+            return response()->json(['message' => 'Xác thực thành công']);
         }
 
-        DB::table('NguoiDung')
-            ->where('IdNguoiDung', $record->user_id)
-            ->update([
-                'email_verified_at' => now(),
-            ]);
+        // fallback: token không còn → check user đã verify chưa
+        $user = DB::table('NguoiDung')
+            ->where('email_verified_at', '!=', null)
+            ->first();
 
-        DB::table('email_verifications')
-            ->where('token', $token)
-            ->delete();
+        if ($user) {
+            return response()->json([
+                'message' => 'Email đã được xác thực trước đó',
+            ], 200);
+        }
 
-        return response()->json(['message' => 'Xác thực thành công']);
+        return response()->json([
+            'message' => 'Token không hợp lệ hoặc đã hết hạn',
+        ], 400);
     }
 
     public function login(Request $request)

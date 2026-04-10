@@ -48,13 +48,13 @@ export default function AppRouter() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
-
         {/* ================= USER ROUTES ================= */}
 
         <Route element={<UserLayout />}>
 
           {/* Trang chủ */}
           <Route path="/" element={<Dashboard />} />
+          <Route path="/verify-email" element={<Dashboard />} />
 
           {/* Các route cần login */}
           <Route element={<ProtectedRoute />}>
@@ -69,7 +69,7 @@ export default function AppRouter() {
                   <PhanHoiCreate />
                 </PermissionGuard>
               } />
-              <Route path="/phan-anh/:MaTheoDoi/:action" element={<PhanAnhActionForm />} />
+            <Route path="/phan-anh/:MaTheoDoi/:action" element={<PhanAnhActionForm />} />
           </Route>
         </Route>
         {/* ================= ADMIN ROUTES ================= */}
