@@ -33,7 +33,7 @@ export const setAuthToken = (token: string | null) => {
 };
 
 export const sendResetLink = async (email: string) => {
-  const res = await api.post('/password/email', {
+  const res = await api.post('/forgot-password', {
     Email: email,
   });
   return res.data;
@@ -45,7 +45,7 @@ export const resetPassword = async (data: {
   MatKhau: string;
   MatKhau_confirmation: string;
 }) => {
-  const res = await api.post('/password/reset', data);
+  const res = await api.post('/reset-password', data);
   return res.data;
 };
 

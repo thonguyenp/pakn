@@ -12,10 +12,6 @@ class ResetPasswordQueued extends ResetPasswordNotification implements ShouldQue
 {
     use Queueable;
 
-    /**
-     * Constructor - Không cần onConnection/onQueue/afterCommit ở đây
-     * Vì chúng ta sẽ cấu hình ở sendPasswordResetNotification
-     */
     public function __construct($token)
     {
         parent::__construct($token);   // Quan trọng: gọi parent để set token
@@ -25,11 +21,11 @@ class ResetPasswordQueued extends ResetPasswordNotification implements ShouldQue
     public function toMail($notifiable)
     {
         // Tạo URL reset (mặc định của Laravel)
-        $url = $this->resetUrl($notifiable);
+        // $url = $this->resetUrl($notifiable);
 
         // === TÙY CHỈNH SAU NÀY CHO REACT ===
-        // $frontendUrl = "http://localhost:3000/reset-password?token={$this->token}&email=" . urlencode($notifiable->Email);
-        // $url = $frontendUrl;
+        $frontendUrl = "http://localhost:5173/reset-password?token={$this->token}&email=" . urlencode($notifiable->Email);
+        $url = $frontendUrl;
 
         Log::info("[ResetPasswordQueued] Dispatching reset email to: {$notifiable->Email} | Token: {$this->token}");
 

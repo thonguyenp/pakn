@@ -3,19 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\UploadFilePhanAnhJob;
-use App\Jobs\UploadFilePhanHoiJob;
 use App\Models\PhanAnh;
-use App\Models\PhanHoi;
+use App\Notifications\PhanAnhCreatedNotification;
 use App\Services\PhanAnhService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PhanAnhController extends Controller
 {
-    // inject service để tái sử dụng logic từ chối phản ánh
+    // inject service để tái sử dụng logic xử lý trạng thái phản ánh
     protected $phanAnhService;
 
     public function __construct(PhanAnhService $phanAnhService)
@@ -30,6 +29,7 @@ class PhanAnhController extends Controller
             'NoiDung' => 'required',
             'IdLinhVuc' => 'required',
             'IdDonVi' => 'required',
+            'email' => 'nullable|email',
             'files' => 'array|max:5',
             'files.*' => 'file|max:10240',
         ]);
@@ -87,6 +87,10 @@ class PhanAnhController extends Controller
             UploadFilePhanAnhJob::dispatch($phanAnh->IdPhanAnh, $tempFiles)
                 ->onQueue('uploads');
         }
+
+        Notification::route('mail', $request->email)
+            ->notify(new PhanAnhCreatedNotification($maTheoDoi));
+
         DB::commit();
 
         return response()->json([
@@ -169,7 +173,6 @@ class PhanAnhController extends Controller
             'data' => $phanAnh,
         ]);
     }
-
 
     public function action(Request $request, $maTheoDoi)
     {

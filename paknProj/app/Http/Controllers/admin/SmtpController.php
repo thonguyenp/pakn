@@ -51,7 +51,7 @@ class SmtpController extends Controller
         if (!$smtp) {
             return response()->json(['message' => 'No SMTP configuration found'], 404);
         }
-        // $smtp->password = decrypt($smtp->password);
+        $smtp->password = decrypt($smtp->password);
 
         return response()->json($smtp->makeHidden(['password']));
     }
@@ -72,9 +72,8 @@ class SmtpController extends Controller
                 'message' => 'SMTP chưa được cấu hình',
             ], 400);
         }
-        // $smtp->password = decrypt($smtp->password);
+        $smtp->password = decrypt($smtp->password);
         try {
-            // === CÁCH TỐT NHẤT: Sử dụng Mail::build() ===
             $mailer = Mail::build([
                 'transport' => 'smtp',
                 'host' => $smtp->host,
@@ -83,7 +82,6 @@ class SmtpController extends Controller
                 'password' => $smtp->password,           // nếu đã encrypt thì decrypt trước
                 'encryption' => $smtp->encryption,         // tls, ssl hoặc null
                 'timeout' => 30,
-                // 'auth_mode'  => null,                   // nếu cần
             ]);
 
             // Gửi email test
