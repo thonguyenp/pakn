@@ -25,4 +25,8 @@ class PhanHoi extends Model
     {
         return $this->hasMany(FileDinhKem::class, 'IdPhanHoi');
     }
+    public function nguoiDung()
+    {
+        return $this->belongsTo(NguoiDung::class, 'IdNguoiDung');
+    }
 }

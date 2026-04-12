@@ -77,4 +77,9 @@ class NguoiDung extends Model implements AuthenticatableContract, CanResetPasswo
             'IdQuyen'
         )->withPivot('TrangThai', 'NgayGanQuyen');
     }
+
+    public function donVi()
+    {
+        return $this->belongsTo(DonVi::class, 'IdDonVi');
+    }
 }

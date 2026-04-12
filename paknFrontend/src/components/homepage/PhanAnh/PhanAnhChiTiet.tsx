@@ -133,7 +133,9 @@ const PhanAnhDetail = () => {
       {/* PHẢN HỒI */}
       <div>
         <h2 className="font-semibold mb-3">Phản hồi</h2>
-        <PhanHoiList danhSach={data.phan_hoi || []} />
+        <PhanHoiList 
+        danhSach={data.phan_hoi || []} 
+        phanAnh={data} />
       </div>
     </div>
 
