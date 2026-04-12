@@ -31,6 +31,11 @@ class PhanAnh extends Model
         return $this->hasMany(FileDinhKem::class, 'IdPhanAnh', 'IdPhanAnh');
     }
 
+    public function phanHoi()
+    {
+        return $this->hasMany(PhanHoi::class, 'IdPhanAnh');
+    }
+
     public function linhVuc()
     {
         return $this->belongsTo(LinhVuc::class, 'IdLinhVuc');
@@ -40,6 +45,7 @@ class PhanAnh extends Model
     {
         return $this->belongsTo(DonVi::class, 'IdDonVi');
     }
+
     public function trangThaiPhanAnh()
     {
         return $this->belongsTo(TrangThaiPhanAnh::class, 'IdTrangThaiPhanAnh');

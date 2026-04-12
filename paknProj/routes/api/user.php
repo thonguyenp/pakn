@@ -25,19 +25,6 @@ Route::get('/reset-password/{token}', function ($token) {
 })->name('password.reset');
 
 // Email verification
-// Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
-//     $user = NguoiDung::findOrFail($id);
-
-//     if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-//         return redirect('http://localhost:5173/login?verify=invalid');
-//     }
-
-//     if (! $user->hasVerifiedEmail()) {
-//         $user->markEmailAsVerified();
-//     }
-
-//     return redirect('http://localhost:5173/login?verify=success');
-// })->middleware('signed')->name('verification.verify');
 Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
 
 // Theo dõi phản ánh mà không cần đăng nhập

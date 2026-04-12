@@ -149,7 +149,7 @@ class PhanAnhController extends Controller
         // Chỉ lấy phản ánh nếu user là người tạo hoặc thuộc đơn vị được giao
         $user = JWTAuth::parseToken()->authenticate();
 
-        $phanAnh = PhanAnh::with(['files', 'linhVuc', 'donVi', 'trangThaiPhanAnh'])
+        $phanAnh = PhanAnh::with(['files', 'linhVuc', 'donVi', 'trangThaiPhanAnh', 'phanHoi'])
             ->where('MaTheoDoi', $maTheoDoi)
             ->where(function ($query) use ($user) {
                 $query->where('IdNguoiDung', $user->IdNguoiDung)

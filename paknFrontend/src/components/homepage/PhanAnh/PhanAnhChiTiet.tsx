@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Download } from "lucide-react";
 import { getPhanAnhChiTiet } from "@/api/user/phanAnhService";
 import type { PhanAnh } from "@/types/phanAnh";
+import PhanHoiList from "./PhanHoiList";
 
 const PhanAnhDetail = () => {
   const { MaTheoDoi } = useParams();
@@ -18,19 +19,6 @@ const PhanAnhDetail = () => {
     return ["Không rõ", "bg-gray-100 text-gray-500"];
   };
 
-  const getFileIcon = (fileName: string) => {
-    const ext = fileName.split(".").pop()?.toLowerCase();
-
-    if (!ext) return "📁";
-
-    if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) return "🖼️";
-    if (["pdf"].includes(ext)) return "📄";
-    if (["doc", "docx"].includes(ext)) return "📝";
-    if (["xls", "xlsx"].includes(ext)) return "📊";
-    if (["zip", "rar"].includes(ext)) return "🗜️";
-    if (["mp4", "avi", "mkv"].includes(ext)) return "🎬";
-    return "📁";
-  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -106,11 +94,6 @@ const PhanAnhDetail = () => {
                     {/* LEFT */}
                     <div className="flex items-center gap-3">
 
-                      {/* ICON */}
-                      <div className="text-2xl">
-                        {getFileIcon(file.TenFile)}
-                      </div>
-
                       {/* FILE NAME */}
                       <div className="text-sm font-medium text-gray-700 truncate max-w-[220px]">
                         {file.TenFile || "Không tên"}
@@ -136,6 +119,7 @@ const PhanAnhDetail = () => {
             </div>
           </div>
         )}
+        {/* Các hành động */}
         <div className="flex justify-end">
           <button
             onClick={() => navigate(`/phan-anh/${data.MaTheoDoi}/7`)}
@@ -146,7 +130,13 @@ const PhanAnhDetail = () => {
 
         </div>
       </div>
+      {/* PHẢN HỒI */}
+      <div>
+        <h2 className="font-semibold mb-3">Phản hồi</h2>
+        <PhanHoiList danhSach={data.phan_hoi || []} />
+      </div>
     </div>
+
   );
 };
 
