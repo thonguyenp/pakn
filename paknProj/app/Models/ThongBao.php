@@ -24,6 +24,7 @@ class ThongBao extends Model
         'IdNguoiDung',
         'NgayTao',
         'Link',
+        'Loai'
     ];
 
     public function nguoiDung()

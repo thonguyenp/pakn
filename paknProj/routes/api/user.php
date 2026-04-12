@@ -4,13 +4,14 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MetaController;
 use App\Http\Controllers\PhanAnhController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ThongBaoController;
 use App\Models\NguoiDung;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 // Các meta data như lĩnh vực, đơn vị, trạng thái phản ánh
 Route::get('/meta', [MetaController::class, 'index']);
-
 // Đăng nhập và đăng ký
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
@@ -32,6 +33,11 @@ Route::get('/phananh/theodoi/{maTheoDoi}', [PhanAnhController::class, 'theoDoi']
 
 Route::middleware('auth:api')->group(function () {
     // Các route cần xác thực ở đây
+    Route::prefix('thongbao')->group(function () {
+        Route::post('/', [ThongBaoController::class, 'store']);
+        Route::get('/{userId}', [ThongBaoController::class, 'index']);
+        Route::post('/read/{id}', [ThongBaoController::class, 'markAsRead']);
+    });
 
     Route::get('/phananh/xem', [PhanAnhController::class, 'getByNguoiDung'])->middleware('permission:XemPhanAnhCuaMinh');  // checked
 
@@ -58,3 +64,4 @@ Route::middleware('auth:api')->group(function () {
 
 Route::post('/phananh', [PhanAnhController::class, 'store'])
     ->middleware('guest.auth');  // checked
+
