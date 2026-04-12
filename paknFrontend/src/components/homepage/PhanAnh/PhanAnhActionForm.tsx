@@ -5,6 +5,7 @@ import FileDropzone from "@/components/shared/FileDropzone";
 import { createAction } from "@/api/user/phanAnhService";
 import { actionConfig } from "@/constants/phanAnh/actionConfig";
 import { ActionType } from "@/constants/phanAnh/actionType";
+import ToggleSwitch from "@/components/shared/ToogleSwitch";
 
 const PhanAnhActionForm = () => {
   const { MaTheoDoi, action } = useParams();
@@ -16,6 +17,7 @@ const PhanAnhActionForm = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [donVi, setDonVi] = useState("");
+  const [laNoiBo, setLaNoiBo] = useState(false);
 
   const handleSubmit = async () => {
     if (!noiDung.trim()) {
@@ -31,7 +33,7 @@ const PhanAnhActionForm = () => {
         files,
         action: Number(action),
         donVi,
-        
+        LaNoiBo: laNoiBo ? 1 : 0,
       });
 
       navigate(`/phan-anh/${MaTheoDoi}`);
@@ -58,7 +60,11 @@ const PhanAnhActionForm = () => {
             className="w-full border p-2 rounded"
           />
         )} */}
-
+        <ToggleSwitch
+          label="Nội bộ"
+          checked={laNoiBo}
+          onChange={setLaNoiBo}
+        />
         <FileDropzone files={files} setFiles={setFiles} />
 
         <button
