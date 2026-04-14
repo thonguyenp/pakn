@@ -4,6 +4,7 @@ import AppRouter from "./router/AppRouter"
 import './index.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import "react-quill-new/dist/quill.snow.css";
+import { NotificationProvider } from "./contexts/NotificationContext";
 
 
 ReactDOM.createRoot(
@@ -11,7 +12,9 @@ ReactDOM.createRoot(
 ).render(
 
   <React.StrictMode>
-    <AppRouter />
+    <NotificationProvider>
+      <AppRouter />
+    </NotificationProvider>
   </React.StrictMode>
 
 )

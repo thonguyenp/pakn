@@ -95,7 +95,6 @@ const GuiPhanAnh = () => {
       setNoiDung("")
       setLinhVuc("")
       setFiles([])
-      setEmail("")
 
     } catch (error) {
 

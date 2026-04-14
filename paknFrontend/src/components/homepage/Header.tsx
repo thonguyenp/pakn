@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
+import NotificationDropdown from './NotificationDropdown';
 
 export default function Header() {
 
@@ -77,7 +78,7 @@ export default function Header() {
 
                         {user && (
                             <>
-                                <i className="fa-regular fa-bell text-xl"></i>
+                                        <NotificationDropdown />
 
                                 <div className="relative" ref={dropdownRef}>
 
