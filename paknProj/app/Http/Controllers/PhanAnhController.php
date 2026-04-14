@@ -28,7 +28,6 @@ class PhanAnhController extends Controller
             'TieuDe' => 'required|max:300',
             'NoiDung' => 'required',
             'IdLinhVuc' => 'required',
-            'IdDonVi' => 'required',
             'email' => 'nullable|email',
             'files' => 'array|max:5',
             'files.*' => 'file|max:10240',
@@ -56,7 +55,6 @@ class PhanAnhController extends Controller
                 'NgayGui' => now(),
                 'IdNguoiDung' => $user ? $user->IdNguoiDung : null,
                 'IdLinhVuc' => $request->IdLinhVuc,
-                'IdDonVi' => $request->IdDonVi,
                 'IdTrangThaiPhanAnh' => 1,
                 'MaTheoDoi' => $maTheoDoi,
             ]);

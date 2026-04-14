@@ -18,11 +18,7 @@ export interface PhanAnh {
     IdLinhVuc: number
     TenLinhVuc: string
   }
-
-  don_vi?: {
-    IdDonVi: number
-    TenDonVi: string
-  }
+  
   trang_thai_phan_anh?: {
     IdTrangThaiPhanAnh: number
     TenTrangThai: string

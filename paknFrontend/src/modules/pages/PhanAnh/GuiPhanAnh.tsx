@@ -6,7 +6,6 @@ import ToggleSwitch from "@/components/shared/ToogleSwitch"
 import FileDropzone from "@/components/shared/FileDropzone"
 
 import { type LinhVuc } from "@/types/linhvuc"
-import { type DonVi } from "@/types/donvi"
 import SuccessModal from "@/components/shared/SuccessModal"
 import SelectSearchDropdown from "@/components/shared/SelectSearchDropdown"
 
@@ -17,7 +16,6 @@ const GuiPhanAnh = () => {
   const [noiDung, setNoiDung] = useState("")
 
   const [linhVuc, setLinhVuc] = useState("")
-  const [donVi, setDonVi] = useState("")
 
   const [mucDoKhanCap, setMucDoKhanCap] = useState("THAP")
 
@@ -26,7 +24,6 @@ const GuiPhanAnh = () => {
   const [files, setFiles] = useState<File[]>([])
 
   const [dsLinhVuc, setDsLinhVuc] = useState<LinhVuc[]>([])
-  const [dsDonVi, setDsDonVi] = useState<DonVi[]>([])
 
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
@@ -38,11 +35,6 @@ const GuiPhanAnh = () => {
       value: lv.IdLinhVuc.toString()
     }))
 
-    const donViOptions = dsDonVi.map(dv => ({
-      label: dv.TenDonVi,
-      value: dv.IdDonVi.toString()
-    }))
-
 
   useEffect(() => {
 
@@ -50,10 +42,9 @@ const GuiPhanAnh = () => {
 
       try {
 
-        const meta = await getMeta("linhvuc,donvi")
+        const meta = await getMeta("linhvuc")
 
         setDsLinhVuc(meta.linhvuc)
-        setDsDonVi(meta.donvi)
 
       } catch (error) {
 
@@ -80,7 +71,6 @@ const GuiPhanAnh = () => {
     formData.append("TieuDe", tieuDe)
     formData.append("NoiDung", noiDung)
     formData.append("IdLinhVuc", linhVuc)
-    formData.append("IdDonVi", donVi)
     formData.append("MucDoKhanCap", mucDoKhanCap)
     formData.append("AnDanh", anDanh ? "1" : "0")
 
@@ -98,7 +88,6 @@ const GuiPhanAnh = () => {
       setTieuDe("")
       setNoiDung("")
       setLinhVuc("")
-      setDonVi("")
       setFiles([])
 
     } catch (error) {
@@ -166,15 +155,6 @@ const GuiPhanAnh = () => {
           onChange={setLinhVuc}
           placeholder="Chọn lĩnh vực"
         />
-        {/* Đơn vị */}
-
-          <SelectSearchDropdown
-          options={donViOptions}
-          value={donVi}
-          onChange={setDonVi}
-          placeholder="Chọn đơn vị"
-        />
-
 
         {/* Mức độ khẩn cấp */}
 
