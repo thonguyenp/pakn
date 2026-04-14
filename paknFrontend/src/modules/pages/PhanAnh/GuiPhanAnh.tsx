@@ -29,14 +29,19 @@ const GuiPhanAnh = () => {
   const [showModal, setShowModal] = useState(false)
   const [message, setMessage] = useState("")
   const [maTheoDoi, setMaTheoDoi] = useState("")
-
-    const linhVucOptions = dsLinhVuc.map(lv => ({
-      label: lv.TenLinhVuc,
-      value: lv.IdLinhVuc.toString()
-    }))
+  const [email, setEmail] = useState("")
+  const linhVucOptions = dsLinhVuc.map(lv => ({
+    label: lv.TenLinhVuc,
+    value: lv.IdLinhVuc.toString()
+  }))
 
 
   useEffect(() => {
+    const userStr = localStorage.getItem("user")
+    if (userStr) {
+      const user = JSON.parse(userStr)
+      setEmail(user.Email)
+    }
 
     const fetchData = async () => {
 
@@ -73,6 +78,7 @@ const GuiPhanAnh = () => {
     formData.append("IdLinhVuc", linhVuc)
     formData.append("MucDoKhanCap", mucDoKhanCap)
     formData.append("AnDanh", anDanh ? "1" : "0")
+    formData.append("email", email)
 
     files.forEach((file) => {
       formData.append("files[]", file)
@@ -89,6 +95,7 @@ const GuiPhanAnh = () => {
       setNoiDung("")
       setLinhVuc("")
       setFiles([])
+      setEmail("")
 
     } catch (error) {
 
@@ -131,24 +138,17 @@ const GuiPhanAnh = () => {
           required
         />
 
+        {/* Gửi mã theo dõi cho email */}
+        <input
+          type="email"
+          placeholder="Email (để nhận phản hồi)"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full border-b border-gray-300 px-1 py-2 focus:outline-none focus:border-blue-500"
+        />
+
         {/* Lĩnh vực */}
 
-        {/* <select
-          value={linhVuc}
-          onChange={(e) => setLinhVuc(e.target.value)}
-          className="w-full border p-2 rounded"
-          required
-        >
-
-          <option value="">Chọn lĩnh vực</option>
-
-          {dsLinhVuc.map((lv) => (
-            <option key={lv.IdLinhVuc} value={lv.IdLinhVuc}>
-              {lv.TenLinhVuc}
-            </option>
-          ))}
-
-        </select> */}
         <SelectSearchDropdown
           options={linhVucOptions}
           value={linhVuc}
