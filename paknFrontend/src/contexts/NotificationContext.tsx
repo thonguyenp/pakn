@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { createEcho } from "@/lib/echo";
-import axios from "axios";
+import { api } from "@/api/api";
 
 type Notification = {
     IdThongBao: number;
@@ -24,21 +24,22 @@ export const NotificationProvider = ({ children }: any) => {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-    const userId = user.IdNguoiDung;
+    const userId = user?.IdNguoiDung;
 
     // 📥 Load danh sách ban đầu
     useEffect(() => {
         if (!token || !userId) return;
 
-        axios
-            .get(`http://paknproj.test/api/thongbao/${userId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-            .then((res) => {
+        const fetchData = async () => {
+            try {
+                const res = await api.get(`thongbao/${userId}`);
                 setNotifications(res.data);
-            });
+            } catch (err) {
+                console.error("Load thông báo lỗi:", err);
+            }
+        };
+
+        fetchData();
     }, [token, userId]);
 
     // 🔥 Realtime
@@ -61,21 +62,17 @@ export const NotificationProvider = ({ children }: any) => {
 
     // ✅ Mark as read
     const markAsRead = async (id: number) => {
-        await axios.post(
-            `http://paknproj.test/api/thongbao/read/${id}`,
-            {},
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
+        try {
+            await api.post(`thongbao/read/${id}`);
 
-        setNotifications((prev) =>
-            prev.map((tb) =>
-                tb.IdThongBao === id ? { ...tb, DaDoc: 1 } : tb
-            )
-        );
+            setNotifications((prev) =>
+                prev.map((tb) =>
+                    tb.IdThongBao === id ? { ...tb, DaDoc: 1 } : tb
+                )
+            );
+        } catch (err) {
+            console.error("Mark as read lỗi:", err);
+        }
     };
 
     return (
@@ -87,7 +84,7 @@ export const NotificationProvider = ({ children }: any) => {
     );
 };
 
-// hook dùng cho tiện
+// hook
 export const useNotification = () => {
     const context = useContext(NotificationContext);
     if (!context) throw new Error("useNotification must be used inside Provider");

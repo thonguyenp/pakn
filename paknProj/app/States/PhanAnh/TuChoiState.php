@@ -6,12 +6,19 @@ use App\Jobs\UploadFilePhanHoiJob;
 use App\Models\LichSuXuLy;
 use App\Models\PhanAnh;
 use App\Models\PhanHoi;
-use App\Models\ThongBao;
+use App\Services\ThongBaoService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TuChoiState extends BasePhanAnhState
 {
+    protected $thongBaoService;
+
+    public function __construct(ThongBaoService $thongBaoService)
+    {
+        $this->thongBaoService = $thongBaoService;
+    }
+
     public function handle($maTheoDoi, $data, $files)
     {
         $phanHoi = DB::transaction(function () use ($maTheoDoi, $data) {
@@ -44,19 +51,6 @@ class TuChoiState extends BasePhanAnhState
                 'IdNguoiDung' => Auth::id(),
             ]);
 
-            ThongBao::create([
-                'TieuDe' => 'Phản ánh của bạn đã bị từ chối',
-                'NoiDung' => 'Lý do: '.$data['NoiDung'],
-                'NgayGui' => now(),
-                'DaDoc' => 0,
-                'IdNguoiDung' => $phanAnh->IdNguoiDung,
-                'Link' => [
-                    'type' => 'phan_anh',
-                    'maTheoDoi' => $phanAnh->MaTheoDoi,
-                ],
-
-            ]);
-
             return $phanHoi;
         });
 
@@ -77,11 +71,21 @@ class TuChoiState extends BasePhanAnhState
             UploadFilePhanHoiJob::dispatch($phanHoi->IdPhanHoi, $tempFiles)
                 ->onQueue('uploads');
         }
+        $phanAnh = $phanHoi->phanAnh;
+
+        $this->thongBaoService->create([
+            'TieuDe' => 'Phản ánh bị từ chối',
+            'NoiDung' => 'Phản ánh của bạn đã bị từ chối: '.$phanAnh->MaTheoDoi,
+            'IdNguoiDung' => $phanAnh->IdNguoiDung,
+            'Loai' => 'PHAN_ANH_TU_CHOI',
+            'Link' => [
+                'url' => '/phan-anh/'.$phanAnh->MaTheoDoi,
+            ],
+        ]);
 
         return [
             'phanHoi' => $phanHoi,
             'hasFiles' => ! empty($tempFiles),
         ];
     }
-
 }

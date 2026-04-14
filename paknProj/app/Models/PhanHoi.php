@@ -29,4 +29,8 @@ class PhanHoi extends Model
     {
         return $this->belongsTo(NguoiDung::class, 'IdNguoiDung');
     }
+    public function phanAnh()
+    {
+        return $this->belongsTo(PhanAnh::class, 'IdPhanAnh');
+    }
 }

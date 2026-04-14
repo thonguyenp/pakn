@@ -36,6 +36,7 @@ class ThongBaoController extends Controller
     {
         return ThongBao::where('IdNguoiDung', $userId)
             ->orderByDesc('NgayTao')
+            ->take(5)
             ->get();
     }
 

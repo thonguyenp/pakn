@@ -6,6 +6,7 @@ use App\Jobs\UploadFilePhanAnhJob;
 use App\Models\PhanAnh;
 use App\Notifications\PhanAnhCreatedNotification;
 use App\Services\PhanAnhService;
+use App\Services\ThongBaoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -17,9 +18,12 @@ class PhanAnhController extends Controller
     // inject service để tái sử dụng logic xử lý trạng thái phản ánh
     protected $phanAnhService;
 
-    public function __construct(PhanAnhService $phanAnhService)
+    protected $thongBaoService;
+
+    public function __construct(PhanAnhService $phanAnhService, ThongBaoService $thongBaoService)
     {
         $this->phanAnhService = $phanAnhService;
+        $this->thongBaoService = $thongBaoService;
     }
 
     public function store(Request $request)
@@ -28,6 +32,7 @@ class PhanAnhController extends Controller
             'TieuDe' => 'required|max:300',
             'NoiDung' => 'required',
             'IdLinhVuc' => 'required',
+            'IdDonVi' => 'required',
             'email' => 'nullable|email',
             'files' => 'array|max:5',
             'files.*' => 'file|max:10240',
@@ -55,6 +60,7 @@ class PhanAnhController extends Controller
                 'NgayGui' => now(),
                 'IdNguoiDung' => $user ? $user->IdNguoiDung : null,
                 'IdLinhVuc' => $request->IdLinhVuc,
+                'IdDonVi' => $request->IdDonVi,
                 'IdTrangThaiPhanAnh' => 1,
                 'MaTheoDoi' => $maTheoDoi,
             ]);
@@ -85,9 +91,19 @@ class PhanAnhController extends Controller
             UploadFilePhanAnhJob::dispatch($phanAnh->IdPhanAnh, $tempFiles)
                 ->onQueue('uploads');
         }
-
+        // Gửi thông báo nếu có email
         Notification::route('mail', $request->email)
             ->notify(new PhanAnhCreatedNotification($maTheoDoi));
+
+        $this->thongBaoService->create([
+            'TieuDe' => 'Phản ánh đã được gửi',
+            'NoiDung' => 'Phản ánh của bạn đã được gửi thành công: '.$phanAnh->MaTheoDoi,
+            'IdNguoiDung' => $phanAnh->IdNguoiDung,
+            'Loai' => 'PHAN_ANH_MOI',
+            'Link' => [
+                'url' => '/phan-anh/'.$phanAnh->MaTheoDoi,
+            ],
+        ]);
 
         DB::commit();
 
@@ -147,8 +163,8 @@ class PhanAnhController extends Controller
         // Chỉ lấy phản ánh nếu user là người tạo hoặc thuộc đơn vị được giao
         $user = JWTAuth::parseToken()->authenticate();
 
-        $phanAnh = PhanAnh::with(['files', 'linhVuc', 'donVi', 'trangThaiPhanAnh', 
-                        'phanHoi.files', 'phanHoi.nguoiDung', 'phanHoi.nguoiDung.donVi'])
+        $phanAnh = PhanAnh::with(['files', 'linhVuc', 'donVi', 'trangThaiPhanAnh',
+            'phanHoi.files', 'phanHoi.nguoiDung', 'phanHoi.nguoiDung.donVi'])
             ->where('MaTheoDoi', $maTheoDoi)
             ->where(function ($query) use ($user) {
                 $query->where('IdNguoiDung', $user->IdNguoiDung)
