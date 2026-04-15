@@ -48,6 +48,26 @@ export const NotificationProvider = ({ children }: any) => {
 
         const echo = createEcho(token);
 
+        // 🔥 DEBUG WS
+        echo.connector.pusher.connection.bind('connecting', () => {
+            console.log('⏳ WS connecting...');
+        });
+
+        echo.connector.pusher.connection.bind('connected', () => {
+            console.log('✅ WS connected');
+            console.log(token);
+            console.log(userId);
+        });
+
+        echo.connector.pusher.connection.bind('error', (err: any) => {
+            console.error('❌ WS error:', err);
+        });
+
+        echo.connector.pusher.connection.bind('unavailable', () => {
+            console.log('⚠️ WS unavailable');
+        });
+
+        // 🔥 LISTEN EVENT
         echo.private(`user.${userId}`)
             .listen(".thongbao.created", (e: any) => {
                 console.log("🔥 New:", e.thongBao);
@@ -59,7 +79,6 @@ export const NotificationProvider = ({ children }: any) => {
             echo.disconnect();
         };
     }, [token, userId]);
-
     // ✅ Mark as read
     const markAsRead = async (id: number) => {
         try {

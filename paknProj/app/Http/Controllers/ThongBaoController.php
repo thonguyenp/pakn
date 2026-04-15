@@ -26,6 +26,9 @@ class ThongBaoController extends Controller
         ]);
 
         $this->service->create($request->all());
+        // event(new \App\Events\ThongBaoCreated(ThongBao::orderBy('NgayTao', 'desc')->first()
+        // ));
+        // dd('Đã gửi thông báo');
 
         return response()->json([
             'message' => 'Đã gửi thông báo',
@@ -36,7 +39,6 @@ class ThongBaoController extends Controller
     {
         return ThongBao::where('IdNguoiDung', $userId)
             ->orderByDesc('NgayTao')
-            ->take(5)
             ->get();
     }
 
