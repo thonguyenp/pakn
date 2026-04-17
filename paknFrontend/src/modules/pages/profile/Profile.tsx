@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { updateProfileApi, getProfile } from "@/api/user/profileApi";
-import { useSearchParams } from "react-router-dom";
-
+import { useLocation } from "react-router-dom";
 import ChangePassword from "@/components/homepage/profile/ChangePassword";
 import MainProfile from "@/components/homepage/profile/MainProfile";
 import NotificationTab from "@/components/homepage/profile/NotificationTab";
@@ -15,14 +14,12 @@ interface User {
 }
 
 export default function Profile() {
-
+    const location = useLocation();
     const [user, setUser] = useState<User | null>(null);
-    const [searchParams] = useSearchParams();
-
-    const initialTab =
-        (searchParams.get("tab") as "profile" | "password" | "notifications") || "profile";
-    const [tab, setTab] = useState<"profile" | "password" | "notifications">(initialTab);
-    const [form, setForm] = useState({
+    const [tab, setTab] = useState<"profile" | "password" | "notifications">(
+        location.state?.tab || "profile"
+    );
+     const [form, setForm] = useState({
         HoTen: "",
         SoDienThoai: ""
     });
@@ -70,11 +67,6 @@ export default function Profile() {
         }
     };
     useEffect(() => {
-        const tabParam = searchParams.get("tab");
-        if (tabParam)
-        {
-            setTab(tabParam as any);
-        }
         fetchProfile();
     }, []);
 

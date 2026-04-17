@@ -49,8 +49,8 @@ const NotificationDropdown = () => {
                                     key={tb.IdThongBao}
                                     onClick={() => markAsRead(tb.IdThongBao)}
                                     className={`p-3 border-b cursor-pointer transition ${tb.DaDoc
-                                            ? "bg-gray-50 hover:bg-gray-100"
-                                            : "bg-blue-100 hover:bg-blue-200"
+                                        ? "bg-gray-50 hover:bg-gray-100"
+                                        : "bg-blue-100 hover:bg-blue-200"
                                         }`}
                                 >
                                     {/* 👉 Header: title + date */}
@@ -72,17 +72,18 @@ const NotificationDropdown = () => {
 
                             {notifications.length > 5 && (
                                 <div
-                                    onClick={() => navigate("/profile?tab=notifications")}
+                                    onClick={() => navigate("/thong-tin-ca-nhan", { state: { tab: "notifications" } })}
                                     className="p-3 text-center text-[#0C4396] cursor-pointer hover:bg-gray-100"
                                 >
-                                    Xem thêm
-                                </div>
+                            Xem thêm
+                        </div>
                             )}
-                        </>
-                    )}
-                </div>
+                </>
             )}
         </div>
+    )
+}
+        </div >
     );
 };
 
