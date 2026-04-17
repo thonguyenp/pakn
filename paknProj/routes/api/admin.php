@@ -30,7 +30,6 @@ Route::middleware(['auth:api'])
 
                 Route::get('/', [PhanAnhController::class, 'index']);
                 Route::get('/{id}', [PhanAnhController::class, 'show']);
-                Route::put('/{id}', [PhanAnhController::class, 'update']);
                 Route::delete('/{id}', [PhanAnhController::class, 'destroy'])
                     ->middleware('permission:XoaPhanAnh');
 

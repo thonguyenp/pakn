@@ -22,17 +22,17 @@ export const NotificationProvider = ({ children }: any) => {
     const [notifications, setNotifications] = useState<Notification[]>([]);
 
     const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const rawUser = localStorage.getItem("user");
+    const user = rawUser ? JSON.parse(rawUser) : null;
 
     const userId = user?.IdNguoiDung;
-
     // 📥 Load danh sách ban đầu
     useEffect(() => {
-        if (!token || !userId) return;
+        if (!token) return;
 
         const fetchData = async () => {
             try {
-                const res = await api.get(`thongbao/${userId}`);
+                const res = await api.get(`thongbao`);
                 setNotifications(res.data);
             } catch (err) {
                 console.error("Load thông báo lỗi:", err);

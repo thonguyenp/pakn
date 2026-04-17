@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ThongBao;
 use App\Services\ThongBaoService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ThongBaoController extends Controller
 {
@@ -26,17 +27,16 @@ class ThongBaoController extends Controller
         ]);
 
         $this->service->create($request->all());
-        // event(new \App\Events\ThongBaoCreated(ThongBao::orderBy('NgayTao', 'desc')->first()
-        // ));
-        // dd('Đã gửi thông báo');
 
         return response()->json([
             'message' => 'Đã gửi thông báo',
         ]);
     }
 
-    public function index($userId)
+    public function index()
     {
+        $userId = Auth::id();
+
         return ThongBao::where('IdNguoiDung', $userId)
             ->orderByDesc('NgayTao')
             ->get();

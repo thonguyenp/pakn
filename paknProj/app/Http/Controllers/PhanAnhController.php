@@ -94,7 +94,7 @@ class PhanAnhController extends Controller
         // Gửi thông báo nếu có email
         Notification::route('mail', $request->email)
             ->notify(new PhanAnhCreatedNotification($maTheoDoi));
-
+        //tạo thông báo trong hệ thống
         $this->thongBaoService->create([
             'TieuDe' => 'Phản ánh đã được gửi',
             'NoiDung' => 'Phản ánh của bạn đã được gửi thành công: '.$phanAnh->MaTheoDoi,

@@ -13,8 +13,6 @@ class PhanAnhStateFactory
 
     public static function make($action): PhanAnhStateInterface
     {
-        // Nếu bạn muốn giữ static, có thể dùng app() helper (xem cách 1b)
-        // Nhưng khuyến nghị inject container
         return (new self(app()))->create($action);
     }
 

@@ -74,25 +74,6 @@ class PhanAnhController extends Controller
 
     }
 
-    // Cập nhật phản ánh
-    public function update(Request $request, $id)
-    {
-        $phanAnh = PhanAnh::find($id);
-
-        if (! $phanAnh) {
-            return response()->json([
-                'message' => 'Không tìm thấy phản ánh',
-            ], 404);
-        }
-
-        $phanAnh->update($request->all());
-
-        return response()->json([
-            'message' => 'Cập nhật thành công',
-            'data' => $phanAnh,
-        ]);
-    }
-
     // Xóa phản ánh
     public function destroy($id)
     {

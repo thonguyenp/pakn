@@ -1,21 +1,33 @@
 import { useState } from "react";
 import { useNotification } from "@/contexts/NotificationContext";
+import { useNavigate } from "react-router-dom";
 
 const NotificationDropdown = () => {
     const { notifications, markAsRead } = useNotification();
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
 
     const unreadCount = notifications.filter(tb => tb.DaDoc === 0).length;
 
+    const latestNotifications = notifications.slice(0, 5);
+
+    // 👉 format ngày
+    const formatDate = (date: string) => {
+        return new Date(date).toLocaleString("vi-VN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            day: "2-digit",
+            month: "2-digit",
+        });
+    };
+
     return (
         <div className="relative">
-            {/* 🔔 Bell icon */}
             <button
                 onClick={() => setOpen(!open)}
                 className="relative"
             >
-                <i className="fa-regular fa-bell text-xl">
-                </i>
+                <i className="fa-regular fa-bell text-xl"></i>
 
                 {unreadCount > 0 && (
                     <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full">
@@ -24,7 +36,6 @@ const NotificationDropdown = () => {
                 )}
             </button>
 
-            {/* 📥 Dropdown */}
             {open && (
                 <div className="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded z-50">
                     {notifications.length === 0 ? (
@@ -32,23 +43,42 @@ const NotificationDropdown = () => {
                             Không có thông báo
                         </div>
                     ) : (
-                        notifications.map((tb) => (
-                            <div
-                                key={tb.IdThongBao}
-                                onClick={() => markAsRead(tb.IdThongBao)}
-                                className={`p-3 border-b cursor-pointer ${tb.DaDoc
-                                        ? "bg-gray-100"
-                                        : "bg-blue-50"
-                                    }`}
-                            >
-                                <div className="font-bold">
-                                    {tb.TieuDe}
+                        <>
+                            {latestNotifications.map((tb) => (
+                                <div
+                                    key={tb.IdThongBao}
+                                    onClick={() => markAsRead(tb.IdThongBao)}
+                                    className={`p-3 border-b cursor-pointer transition ${tb.DaDoc
+                                            ? "bg-gray-50 hover:bg-gray-100"
+                                            : "bg-blue-100 hover:bg-blue-200"
+                                        }`}
+                                >
+                                    {/* 👉 Header: title + date */}
+                                    <div className="flex justify-between items-start">
+                                        <div className="font-bold">
+                                            {tb.TieuDe}
+                                        </div>
+                                        <div className="text-xs text-gray-500 whitespace-nowrap ml-2">
+                                            {formatDate(tb.NgayTao)}
+                                        </div>
+                                    </div>
+
+                                    {/* 👉 Content */}
+                                    <div className="text-sm mt-1 text-gray-700">
+                                        {tb.NoiDung}
+                                    </div>
                                 </div>
-                                <div className="text-sm">
-                                    {tb.NoiDung}
+                            ))}
+
+                            {notifications.length > 5 && (
+                                <div
+                                    onClick={() => navigate("/profile?tab=notifications")}
+                                    className="p-3 text-center text-[#0C4396] cursor-pointer hover:bg-gray-100"
+                                >
+                                    Xem thêm
                                 </div>
-                            </div>
-                        ))
+                            )}
+                        </>
                     )}
                 </div>
             )}

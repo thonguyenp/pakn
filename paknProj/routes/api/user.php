@@ -35,17 +35,17 @@ Route::middleware('auth:api')->group(function () {
     // Các route cần xác thực ở đây
     Route::prefix('thongbao')->group(function () {
         Route::post('/', [ThongBaoController::class, 'store']);
-        Route::get('/{userId}', [ThongBaoController::class, 'index']);
+        Route::get('/', [ThongBaoController::class, 'index']);
         Route::post('/read/{id}', [ThongBaoController::class, 'markAsRead']);
     });
-
+    // Nhóm service xử lý phản ánh
+    Route::post('/phananh/action/{maTheoDoi}', [PhanAnhController::class, 'action'])->middleware('permission:CapNhatTrangThai');  // checked
+    
     Route::get('/phananh/xem', [PhanAnhController::class, 'getByNguoiDung'])->middleware('permission:XemPhanAnhCuaMinh');  // checked
 
     Route::get('/phananh/donvi/', [PhanAnhController::class, 'getByDonVi'])->middleware('permission:XemPhanAnhPhong');  // checked
     Route::get('/phananh/{maTheoDoi}', [PhanAnhController::class, 'show']);
 
-    // Nhóm service xử lý phản ánh
-    Route::post('/phananh/action/{maTheoDoi}', [PhanAnhController::class, 'action'])->middleware('permission:CapNhatTrangThai');  // checked
 
     Route::get('/profile', [ProfileController::class, 'getProfile']);   // checked
 

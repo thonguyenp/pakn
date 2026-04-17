@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
-import { api } from "@/api/api";
+import { updateProfileApi, getProfile } from "@/api/user/profileApi";
+import { useSearchParams } from "react-router-dom";
+
 import ChangePassword from "@/components/homepage/profile/ChangePassword";
 import MainProfile from "@/components/homepage/profile/MainProfile";
+import NotificationTab from "@/components/homepage/profile/NotificationTab";
 
 interface User {
+    userId: number;
     HoTen: string;
     Email: string;
     SoDienThoai: string;
@@ -13,7 +17,11 @@ interface User {
 export default function Profile() {
 
     const [user, setUser] = useState<User | null>(null);
-    const [tab, setTab] = useState<"profile" | "password">("profile");
+    const [searchParams] = useSearchParams();
+
+    const initialTab =
+        (searchParams.get("tab") as "profile" | "password" | "notifications") || "profile";
+    const [tab, setTab] = useState<"profile" | "password" | "notifications">(initialTab);
     const [form, setForm] = useState({
         HoTen: "",
         SoDienThoai: ""
@@ -28,7 +36,7 @@ export default function Profile() {
 
     const fetchProfile = async () => {
         try {
-            const res = await api.get("/profile");
+            const res = await getProfile();
 
             setUser(res.data);
             setForm({
@@ -40,7 +48,6 @@ export default function Profile() {
             console.error(err);
         }
     };
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({
             ...form,
@@ -51,7 +58,7 @@ export default function Profile() {
     const updateProfile = async () => {
         try {
 
-            await api.put("/profile", form);
+            await updateProfileApi(form);
 
             alert("Cập nhật thông tin thành công");
 
@@ -62,8 +69,12 @@ export default function Profile() {
             alert("Cập nhật thất bại");
         }
     };
-
     useEffect(() => {
+        const tabParam = searchParams.get("tab");
+        if (tabParam)
+        {
+            setTab(tabParam as any);
+        }
         fetchProfile();
     }, []);
 
@@ -97,6 +108,11 @@ export default function Profile() {
                             className="w-full border border-gray-300 py-2 rounded hover:bg-gray-100">
                             Đổi mật khẩu
                         </button>
+                        <button
+                            onClick={() => setTab("notifications")}
+                            className="w-full border border-gray-300 py-2 rounded hover:bg-gray-100">
+                            Thông báo
+                        </button>
 
                         <button
                             onClick={logout}
@@ -123,6 +139,11 @@ export default function Profile() {
 
                     {tab === "password" && (
                         <ChangePassword onCancel={() => setTab("profile")} />
+                    )}
+
+                    {tab === "notifications" && (
+                        <NotificationTab />
+
                     )}
 
                 </div>
