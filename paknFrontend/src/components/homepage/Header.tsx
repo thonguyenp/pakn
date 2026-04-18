@@ -152,6 +152,9 @@ export default function Header() {
                             <Link to="/gui-phan-anh" className="hover:text-blue-600">
                                 Gửi phản ánh
                             </Link>
+                            <Link to="/tra-cuu" className="hover:text-blue-600">
+                                Tra cứu
+                            </Link>
                             <Link to="/huong-dan" className="hover:text-blue-600">
                                 Hướng dẫn
                             </Link>

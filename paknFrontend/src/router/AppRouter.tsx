@@ -35,6 +35,7 @@ import PhanAnhChiTiet from "@/components/homepage/PhanAnh/PhanAnhChiTiet";
 import PhanHoiCreate from "@/modules/pages/PhanHoi/PhanHoiCreate";
 import SmtpConfigPage from "@/modules/admin/SmtpConfig/SmtpConfigPage";
 import PhanAnhActionForm from "@/components/homepage/PhanAnh/PhanAnhActionForm";
+import TraCuuPhanAnh from "@/modules/pages/PhanAnh/TraCuuPhanAnh";
 
 export default function AppRouter() {
   return (
@@ -55,7 +56,7 @@ export default function AppRouter() {
           {/* Trang chủ */}
           <Route path="/" element={<Dashboard />} />
           <Route path="/verify-email" element={<Dashboard />} />
-
+          <Route path="/tra-cuu" element={<TraCuuPhanAnh />} />
           {/* Các route cần login */}
           <Route element={<ProtectedRoute />}>
             <Route path="/thong-tin-ca-nhan" element={<Profile />} />

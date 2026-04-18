@@ -19,7 +19,16 @@ export const guiPhanAnh = async (formData: FormData) => {
 
   return response.data;
 };
+export const traCuuPhanAnh = async (maTheoDoi: string, ngayGui: string) => {
+  const response = await api.get("/phananh/traCuu", {
+    params: {
+      maTheoDoi,
+      ngayGui,
+    },
+  })
 
+  return response.data
+};
 export const getPhanAnhCuaToi = async (
   filter: PhanAnhFilter
 ): Promise<Pagination<PhanAnh>> => {
