@@ -7,6 +7,7 @@ use App\Models\PhanAnh;
 use App\Notifications\PhanAnhCreatedNotification;
 use App\Services\PhanAnhService;
 use App\Services\ThongBaoService;
+use App\States\PhanAnh\BoSungThongTinUserState;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -181,7 +182,7 @@ class PhanAnhController extends Controller
             ->whereDate('NgayGui', $ngayGui)
             ->first();
 
-        if (!$phanAnh) {
+        if (! $phanAnh) {
             return response()->json([
                 'message' => 'Không tìm thấy phản ánh',
             ], 404);
@@ -189,6 +190,29 @@ class PhanAnhController extends Controller
 
         return response()->json([
             'data' => $phanAnh,
+        ]);
+    }
+
+    public function capNhat(Request $request)
+    {
+        $request->validate([
+            'maTheoDoi' => 'required|string|size:12',
+            'ngayGui' => 'required|date',
+            'NoiDung' => 'required|string',
+            'files.*' => 'file|max:10240',
+        ]);
+
+        $state = app(BoSungThongTinUserState::class);
+
+        $result = $state->handle(
+            $request->maTheoDoi,
+            $request->all(),
+            $request->file('files')
+        );
+
+        return response()->json([
+            'message' => 'Bổ sung thành công',
+            'data' => $result,
         ]);
     }
 

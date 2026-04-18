@@ -57,12 +57,16 @@ export default function AppRouter() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/verify-email" element={<Dashboard />} />
           <Route path="/tra-cuu" element={<TraCuuPhanAnh />} />
+
           {/* Các route cần login */}
           <Route element={<ProtectedRoute />}>
+            {/* Phản ánh */}
             <Route path="/thong-tin-ca-nhan" element={<Profile />} />
             <Route path="/gui-phan-anh" element={<GuiPhanAnh />} />
             <Route path="/phan-anh" element={<PhanAnhPage />} />
             <Route path="/phan-anh/:MaTheoDoi" element={<PhanAnhChiTiet />} />
+            <Route path="/phan-anh/:MaTheoDoi/:action" element={<PhanAnhActionForm />} />
+            {/* Phản hồi */}
             <Route
               path="/phan-hoi/:maTheoDoi"
               element={
@@ -70,7 +74,6 @@ export default function AppRouter() {
                   <PhanHoiCreate />
                 </PermissionGuard>
               } />
-            <Route path="/phan-anh/:MaTheoDoi/:action" element={<PhanAnhActionForm />} />
           </Route>
         </Route>
         {/* ================= ADMIN ROUTES ================= */}
