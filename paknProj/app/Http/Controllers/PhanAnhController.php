@@ -162,8 +162,8 @@ class PhanAnhController extends Controller
     {
         // Validate
         $request->validate([
-            'ma_theo_doi' => 'required|string|size:12',
-            'ngay_gui' => 'required|date',
+            'maTheoDoi' => 'required|string|size:12',
+            'ngayGui' => 'required|date',
         ]);
 
         $maTheoDoi = $request->query('maTheoDoi');
