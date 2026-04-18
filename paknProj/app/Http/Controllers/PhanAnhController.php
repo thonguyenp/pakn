@@ -94,7 +94,7 @@ class PhanAnhController extends Controller
         // Gửi thông báo nếu có email
         Notification::route('mail', $request->email)
             ->notify(new PhanAnhCreatedNotification($maTheoDoi));
-        //tạo thông báo trong hệ thống
+        // tạo thông báo trong hệ thống
         $this->thongBaoService->create([
             'TieuDe' => 'Phản ánh đã được gửi',
             'NoiDung' => 'Phản ánh của bạn đã được gửi thành công: '.$phanAnh->MaTheoDoi,
@@ -155,6 +155,40 @@ class PhanAnhController extends Controller
         return response()->json([
             'success' => true,
             'data' => $phanAnhs,
+        ]);
+    }
+
+    public function traCuu(Request $request)
+    {
+        // Validate
+        $request->validate([
+            'ma_theo_doi' => 'required|string|size:12',
+            'ngay_gui' => 'required|date',
+        ]);
+
+        $maTheoDoi = $request->query('maTheoDoi');
+        $ngayGui = $request->query('ngayGui');
+
+        // Tìm đúng 1 record
+        $phanAnh = PhanAnh::with([
+            'linhVuc',
+            'donVi',
+            'trangThaiPhanAnh',
+            'files',
+            'phanHoi',
+        ])
+            ->where('MaTheoDoi', $maTheoDoi)
+            ->whereDate('NgayGui', $ngayGui)
+            ->first();
+
+        if (!$phanAnh) {
+            return response()->json([
+                'message' => 'Không tìm thấy phản ánh',
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => $phanAnh,
         ]);
     }
 

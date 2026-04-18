@@ -3,7 +3,7 @@ import { useNotification } from "@/contexts/NotificationContext";
 import { useNavigate } from "react-router-dom";
 
 const NotificationDropdown = () => {
-        const { notifications, markAsRead, unreadCount } = useNotification();
+    const { notifications, markAsRead, unreadCount, total } = useNotification();
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -68,19 +68,21 @@ const NotificationDropdown = () => {
                                 </div>
                             ))}
 
-                            {notifications.length > 5 && (
+                            {total > 5 && (
                                 <div
                                     onClick={() => navigate("/thong-tin-ca-nhan", { state: { tab: "notifications" } })}
                                     className="p-3 text-center text-[#0C4396] cursor-pointer hover:bg-gray-100"
                                 >
-                            Xem thêm
-                        </div>
+                                    Xem thêm
+                                </div>
                             )}
-                </>
-            )}
-        </div>
-    )
-}
+                        </>
+                    )}
+                </div>
+                
+            )
+
+            }
         </div >
     );
 };

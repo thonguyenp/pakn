@@ -29,7 +29,7 @@ Route::get('/reset-password/{token}', function ($token) {
 Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
 
 // Theo dõi phản ánh mà không cần đăng nhập
-Route::get('/phananh/theodoi/{maTheoDoi}', [PhanAnhController::class, 'theoDoi'])->middleware('guest.auth');
+Route::get('/phananh/traCuu', [PhanAnhController::class, 'traCuu']);
 
 Route::middleware('auth:api')->group(function () {
     // Các route cần xác thực ở đây

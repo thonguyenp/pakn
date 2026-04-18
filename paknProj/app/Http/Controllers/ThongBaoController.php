@@ -37,7 +37,7 @@ class ThongBaoController extends Controller
     {
         $userId = Auth::id();
 
-        $perPage = $request->get('per_page', 10);
+        $perPage = $request->input('per_page', 10);
 
         $notifications = ThongBao::where('IdNguoiDung', $userId)
             ->orderByDesc('NgayTao')
@@ -47,12 +47,14 @@ class ThongBaoController extends Controller
         $unreadCount = ThongBao::where('IdNguoiDung', $userId)
             ->where('DaDoc', 0)
             ->count();
+        $total = ThongBao::where('IdNguoiDung', $userId)->count();
 
         return response()->json([
             'data' => $notifications->items(),
             'current_page' => $notifications->currentPage(),
             'last_page' => $notifications->lastPage(),
             'unread_count' => $unreadCount,
+            'total' => $total,
         ]);
     }
 

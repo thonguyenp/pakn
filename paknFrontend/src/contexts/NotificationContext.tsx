@@ -13,6 +13,7 @@ type Notification = {
 type ContextType = {
     notifications: Notification[];
     unreadCount: number;
+    total: number;
     setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
     markAsRead: (id: number) => Promise<void>;
     refreshNotifications: () => Promise<void>;
@@ -23,6 +24,7 @@ const NotificationContext = createContext<ContextType | null>(null);
 export const NotificationProvider = ({ children }: any) => {
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
+    const [total, setTotal] = useState(0);
 
     const token = localStorage.getItem("token");
     const rawUser = localStorage.getItem("user");
@@ -39,6 +41,7 @@ export const NotificationProvider = ({ children }: any) => {
             // 🔥 đảm bảo luôn là array
             setNotifications(Array.isArray(res.data.data) ? res.data.data : []);
             setUnreadCount(res.data.unread_count ?? 0);
+            setTotal(res.data.total ?? 0);
         } catch (err) {
             console.error("Load thông báo lỗi:", err);
         }
@@ -105,6 +108,7 @@ export const NotificationProvider = ({ children }: any) => {
             value={{
                 notifications,
                 unreadCount,
+                total,
                 setNotifications,
                 markAsRead,
                 refreshNotifications,
