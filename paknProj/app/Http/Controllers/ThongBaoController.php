@@ -33,13 +33,27 @@ class ThongBaoController extends Controller
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $userId = Auth::id();
 
-        return ThongBao::where('IdNguoiDung', $userId)
+        $perPage = $request->get('per_page', 10);
+
+        $notifications = ThongBao::where('IdNguoiDung', $userId)
             ->orderByDesc('NgayTao')
-            ->get();
+            ->paginate($perPage);
+
+        // 👉 đếm toàn bộ chưa đọc
+        $unreadCount = ThongBao::where('IdNguoiDung', $userId)
+            ->where('DaDoc', 0)
+            ->count();
+
+        return response()->json([
+            'data' => $notifications->items(),
+            'current_page' => $notifications->currentPage(),
+            'last_page' => $notifications->lastPage(),
+            'unread_count' => $unreadCount,
+        ]);
     }
 
     public function markAsRead($id)

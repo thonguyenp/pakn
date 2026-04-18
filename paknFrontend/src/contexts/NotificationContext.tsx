@@ -12,74 +12,70 @@ type Notification = {
 
 type ContextType = {
     notifications: Notification[];
+    unreadCount: number;
     setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
     markAsRead: (id: number) => Promise<void>;
+    refreshNotifications: () => Promise<void>;
 };
 
 const NotificationContext = createContext<ContextType | null>(null);
 
 export const NotificationProvider = ({ children }: any) => {
     const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [unreadCount, setUnreadCount] = useState(0);
 
     const token = localStorage.getItem("token");
     const rawUser = localStorage.getItem("user");
     const user = rawUser ? JSON.parse(rawUser) : null;
-
     const userId = user?.IdNguoiDung;
-    // 📥 Load danh sách ban đầu
+
+    // =============================
+    // 📥 Load initial (dropdown only)
+    // =============================
+    const fetchNotifications = async () => {
+        try {
+            const res = await api.get(`thongbao?per_page=5`);
+
+            // 🔥 đảm bảo luôn là array
+            setNotifications(Array.isArray(res.data.data) ? res.data.data : []);
+            setUnreadCount(res.data.unread_count ?? 0);
+        } catch (err) {
+            console.error("Load thông báo lỗi:", err);
+        }
+    };
+
     useEffect(() => {
         if (!token) return;
-
-        const fetchData = async () => {
-            try {
-                const res = await api.get(`thongbao`);
-                setNotifications(res.data);
-            } catch (err) {
-                console.error("Load thông báo lỗi:", err);
-            }
-        };
-
-        fetchData();
+        fetchNotifications();
     }, [token, userId]);
 
-    // 🔥 Realtime
+    // =============================
+    // 🔥 Realtime (WebSocket)
+    // =============================
     useEffect(() => {
         if (!token || !userId) return;
 
         const echo = createEcho(token);
 
-        // 🔥 DEBUG WS
-        echo.connector.pusher.connection.bind('connecting', () => {
-            console.log('⏳ WS connecting...');
-        });
-
-        echo.connector.pusher.connection.bind('connected', () => {
-            console.log('✅ WS connected');
-            console.log(token);
-            console.log(userId);
-        });
-
-        echo.connector.pusher.connection.bind('error', (err: any) => {
-            console.error('❌ WS error:', err);
-        });
-
-        echo.connector.pusher.connection.bind('unavailable', () => {
-            console.log('⚠️ WS unavailable');
-        });
-
-        // 🔥 LISTEN EVENT
         echo.private(`user.${userId}`)
             .listen(".thongbao.created", (e: any) => {
-                console.log("🔥 New:", e.thongBao);
+                const newTb = e.thongBao;
 
-                setNotifications((prev) => [e.thongBao, ...prev]);
+                // thêm vào đầu list (dropdown)
+                setNotifications((prev) => [newTb, ...prev].slice(0, 5));
+
+                // tăng unread count
+                setUnreadCount((prev) => prev + 1);
             });
 
         return () => {
             echo.disconnect();
         };
     }, [token, userId]);
+
+    // =============================
     // ✅ Mark as read
+    // =============================
     const markAsRead = async (id: number) => {
         try {
             await api.post(`thongbao/read/${id}`);
@@ -89,23 +85,43 @@ export const NotificationProvider = ({ children }: any) => {
                     tb.IdThongBao === id ? { ...tb, DaDoc: 1 } : tb
                 )
             );
+
+            // giảm unread count
+            setUnreadCount((prev) => Math.max(prev - 1, 0));
         } catch (err) {
             console.error("Mark as read lỗi:", err);
         }
     };
 
+    // =============================
+    // 🔄 Refresh thủ công (nếu cần)
+    // =============================
+    const refreshNotifications = async () => {
+        await fetchNotifications();
+    };
+
     return (
         <NotificationContext.Provider
-            value={{ notifications, setNotifications, markAsRead }}
+            value={{
+                notifications,
+                unreadCount,
+                setNotifications,
+                markAsRead,
+                refreshNotifications,
+            }}
         >
             {children}
         </NotificationContext.Provider>
     );
 };
 
+// =============================
 // hook
+// =============================
 export const useNotification = () => {
     const context = useContext(NotificationContext);
-    if (!context) throw new Error("useNotification must be used inside Provider");
+    if (!context) {
+        throw new Error("useNotification must be used inside Provider");
+    }
     return context;
 };

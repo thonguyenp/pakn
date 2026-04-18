@@ -13,7 +13,7 @@ export default function LoginPage() {
       localStorage.setItem("token", res.token);
       setAuthToken(res.token);
 
-      // 👇 QUAN TRỌNG: fake user cho guest
+      // QUAN TRỌNG: fake user cho guest
       localStorage.setItem(
         "user",
         JSON.stringify({

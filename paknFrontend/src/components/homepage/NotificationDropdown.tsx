@@ -3,11 +3,9 @@ import { useNotification } from "@/contexts/NotificationContext";
 import { useNavigate } from "react-router-dom";
 
 const NotificationDropdown = () => {
-    const { notifications, markAsRead } = useNotification();
+        const { notifications, markAsRead, unreadCount } = useNotification();
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
-
-    const unreadCount = notifications.filter(tb => tb.DaDoc === 0).length;
 
     const latestNotifications = notifications.slice(0, 5);
 

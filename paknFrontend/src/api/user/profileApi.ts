@@ -5,9 +5,9 @@ export const getProfile = async () => {
     return await api.get("/profile");
 };
 
-export const getNotification = async () => {
-    return await api.get(`/thongbao`);
-}
+export const getNotification = (page = 1) => {
+    return api.get(`/thongbao?page=${page}`);
+};
 
 // 👉 Cập nhật profile
 export const updateProfileApi = async (data: {

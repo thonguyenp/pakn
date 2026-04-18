@@ -12,11 +12,16 @@ interface ThongBao {
 export default function NotificationTab() {
     const [notifications, setNotifications] = useState<ThongBao[]>([]);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
 
-    const fetchNotifications = async () => {
+    const fetchNotifications = async (page = 1) => {
         try {
-            const res = await getNotification();
-            setNotifications(res.data);
+            const res = await getNotification(page);
+            setNotifications(res.data.data);
+            setCurrentPage(res.data.current_page);
+            setLastPage(res.data.last_page);
+            console.log(res.data);
         } catch (err) {
             console.error(err);
         } finally {
@@ -25,8 +30,8 @@ export default function NotificationTab() {
     };
 
     useEffect(() => {
-        fetchNotifications();
-    }, []);
+        fetchNotifications(currentPage);
+    }, [currentPage]);
 
     const formatDate = (date: string) => {
         return new Date(date).toLocaleString("vi-VN");
@@ -46,11 +51,10 @@ export default function NotificationTab() {
                 notifications.map((tb) => (
                     <div
                         key={tb.IdThongBao}
-                        className={`p-4 rounded border ${
-                            tb.DaDoc
-                                ? "bg-gray-50"
-                                : "bg-blue-100"
-                        }`}
+                        className={`p-4 rounded border ${tb.DaDoc
+                            ? "bg-gray-50"
+                            : "bg-blue-100"
+                            }`}
                     >
                         <div className="flex justify-between">
                             <div className="font-semibold">
@@ -66,7 +70,31 @@ export default function NotificationTab() {
                         </div>
                     </div>
                 ))
+
             )}
+            {/* Pagination */}
+            <div className="flex justify-center gap-2 mt-4">
+                <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(prev => prev - 1)}
+                    className="px-3 py-1 border rounded disabled:opacity-50"
+                >
+                    Trước
+                </button>
+
+                <span className="px-3 py-1">
+                    {currentPage} / {lastPage}
+                </span>
+
+                <button
+                    disabled={currentPage === lastPage}
+                    onClick={() => setCurrentPage(prev => prev + 1)}
+                    className="px-3 py-1 border rounded disabled:opacity-50"
+                >
+                    Sau
+                </button>
+            </div>
         </div>
+
     );
 }
