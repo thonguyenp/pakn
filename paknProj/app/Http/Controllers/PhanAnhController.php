@@ -253,6 +253,48 @@ class PhanAnhController extends Controller
         ]);
     }
 
+    public function showPublic($maTheoDoi, $ngayGui)
+    {
+        $phanAnh = PhanAnh::with([
+            'files',
+            'linhVuc',
+            'donVi',
+            'trangThaiPhanAnh',
+            'phanHoi.files',
+            'phanHoi.nguoiDung',
+        ])
+            ->where('MaTheoDoi', $maTheoDoi)
+            ->whereDate('NgayGui', $ngayGui)
+            ->where(function ($q) {
+                $q->where('IdTrangThaiPhanAnh', 6)
+                    ->orWhere('IdTrangThaiPhanAnh', 4);
+            })
+            ->first();
+
+        if (!$phanAnh) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tìm thấy phản ánh',
+            ], 404);
+        }
+
+        // Map file URL
+        foreach ($phanAnh->files as $file) {
+            $file->url = asset('storage/'.$file->DuongDan);
+        }
+
+        foreach ($phanAnh->phanHoi as $phanHoi) {
+            foreach ($phanHoi->files as $file) {
+                $file->url = asset('storage/'.$file->DuongDan);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $phanAnh,
+        ]);
+    }
+
     public function action(Request $request, $maTheoDoi)
     {
         $request->validate([

@@ -28,6 +28,7 @@ Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
 // Theo dõi phản ánh mà không cần đăng nhập
 Route::get('/phananh/traCuu', [PhanAnhController::class, 'traCuu']);
 Route::post('/phananh/capNhat', [PhanAnhController::class, 'capNhat']);
+Route::get('/phananh/public/{maTheoDoi}/{ngayGui}', [PhanAnhController::class, 'showPublic']);
 
 Route::middleware('auth:api')->group(function () {
     // Các route cần xác thực ở đây
