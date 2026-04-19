@@ -31,10 +31,10 @@ class BoSungThongTinUserState extends BasePhanAnhState
                     $data['ngayGui'].' 23:59:59',
                 ])
                 ->first();
+
             // Kiểm tra trạng thái hiện tại là 4 và được chuyển sang 3 hay không
-            if (!in_array(3, $this->allowedTransitions($phanAnh->IdTrangThaiPhanAnh)) 
-                && ($phanAnh->IdTrangThaiPhanAnh == 4)) {
-                throw new \Exception('Không thể bổ sung ở trạng thái hiện tại');
+            if (($phanAnh->IdTrangThaiPhanAnh != 4)) {
+                throw new \Exception('Chỉ được bổ sung khi trạng thái = 4');
             }
 
             // 🎯 Tạo phản hồi (QUAN TRỌNG)
@@ -100,7 +100,7 @@ class BoSungThongTinUserState extends BasePhanAnhState
 
         return [
             'phanHoi' => $phanHoi,
-            'hasFiles' => !empty($tempFiles),
+            'hasFiles' => ! empty($tempFiles),
         ];
     }
 }

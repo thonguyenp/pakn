@@ -1,7 +1,7 @@
 import { api } from "@/api/api";
 import type { Pagination } from "@/types/pagination";
 import type { PhanAnh } from "@/types/phanAnh";
-import type { PhanHoiCreateRequest } from "@/types/phanHoi";
+import type { CapNhatPhanAnhPayload, PhanHoiCreateRequest } from "@/types/phanHoi";
 
 export interface PhanAnhFilter {
   page?: number
@@ -115,3 +115,25 @@ export const createAction = async (
     }
   });
 };
+
+export const capNhatPhanAnh = async (data: CapNhatPhanAnhPayload) => {
+  const formData = new FormData()
+
+  formData.append("maTheoDoi", data.maTheoDoi)
+  formData.append("ngayGui", data.ngayGui)
+  formData.append("NoiDung", data.NoiDung)
+
+  if (data.files && data.files.length > 0) {
+    data.files.forEach((file) => {
+      formData.append("files[]", file)
+    })
+  }
+
+  const response = await api.post("/phananh/capNhat", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  })
+
+  return response.data
+}

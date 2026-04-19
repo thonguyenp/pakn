@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { traCuuPhanAnh } from "@/api/user/phanAnhService"
+import { useNavigate } from "react-router-dom"
 
 const TraCuuPhanAnh = () => {
   const [maTheoDoi, setMaTheoDoi] = useState("")
@@ -7,6 +8,7 @@ const TraCuuPhanAnh = () => {
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const navigate = useNavigate()
 
   const handleSearch = async () => {
     setError("")
@@ -82,7 +84,21 @@ const TraCuuPhanAnh = () => {
             <b>Nội dung:</b>
             <p className="mt-2 text-gray-700">{data.NoiDung}</p>
           </div>
-
+          {data.IdTrangThaiPhanAnh === 4 && (
+            <button
+              onClick={() =>
+                navigate(`/phan-anh/cap-nhat/${data.MaTheoDoi}`, {
+                  state: {
+                    ngayGui: data.NgayGui,
+                    idTrangThaiPhanAnh: data.IdTrangThaiPhanAnh
+                  }
+                })
+              }
+              className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
+            >
+              Bổ sung thông tin
+            </button>
+          )}
           {/* Phản hồi */}
           {data.phan_hoi?.length > 0 && (
             <div>

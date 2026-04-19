@@ -201,12 +201,12 @@ class PhanAnhController extends Controller
             'NoiDung' => 'required|string',
             'files.*' => 'file|max:10240',
         ]);
-
+        $data = $request->only(['ngayGui', 'NoiDung']);
         $state = app(BoSungThongTinUserState::class);
 
         $result = $state->handle(
             $request->maTheoDoi,
-            $request->all(),
+            $data,
             $request->file('files')
         );
 
