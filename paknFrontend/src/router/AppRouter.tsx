@@ -37,6 +37,7 @@ import SmtpConfigPage from "@/modules/admin/SmtpConfig/SmtpConfigPage";
 import PhanAnhActionForm from "@/components/homepage/PhanAnh/PhanAnhActionForm";
 import TraCuuPhanAnh from "@/modules/pages/PhanAnh/TraCuuPhanAnh";
 import CapNhatPhanAnhPage from "@/modules/pages/PhanAnh/CapNhatPhanAnhPage";
+import PhanAnhPublicPage from "@/modules/pages/PhanAnh/PhanAnhPublicPage";
 
 export default function AppRouter() {
   return (
@@ -59,6 +60,7 @@ export default function AppRouter() {
           <Route path="/verify-email" element={<Dashboard />} />
           <Route path="/tra-cuu" element={<TraCuuPhanAnh />} />
           <Route path="/phan-anh/cap-nhat/:maTheoDoi" element={<CapNhatPhanAnhPage />} />
+          <Route path="/phan-anh/:maTheoDoi/:ngayGui" element={<PhanAnhPublicPage />} />
 
           {/* Các route cần login */}
           <Route element={<ProtectedRoute />}>

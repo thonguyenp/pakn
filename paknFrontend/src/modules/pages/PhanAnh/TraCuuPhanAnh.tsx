@@ -1,11 +1,12 @@
 import { useState } from "react"
 import { traCuuPhanAnh } from "@/api/user/phanAnhService"
 import { useNavigate } from "react-router-dom"
+import type { PhanAnh } from "@/types/phanAnh"
 
 const TraCuuPhanAnh = () => {
   const [maTheoDoi, setMaTheoDoi] = useState("")
   const [ngayGui, setNgayGui] = useState("")
-  const [data, setData] = useState<any>(null)
+  const [data, setData] = useState<PhanAnh | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const navigate = useNavigate()
@@ -84,34 +85,19 @@ const TraCuuPhanAnh = () => {
             <b>Nội dung:</b>
             <p className="mt-2 text-gray-700">{data.NoiDung}</p>
           </div>
-          {data.IdTrangThaiPhanAnh === 4 && (
-            <button
-              onClick={() =>
-                navigate(`/phan-anh/cap-nhat/${data.MaTheoDoi}`, {
-                  state: {
-                    ngayGui: data.NgayGui,
-                    idTrangThaiPhanAnh: data.IdTrangThaiPhanAnh
-                  }
-                })
-              }
-              className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
-            >
-              Bổ sung thông tin
-            </button>
-          )}
-          {/* Phản hồi */}
-          {data.phan_hoi?.length > 0 && (
-            <div>
-              <b>Phản hồi:</b>
-              <ul className="mt-2 space-y-2">
-                {data.phan_hoi.map((item: any, index: number) => (
-                  <li key={index} className="border p-3 rounded-xl">
-                    {item.NoiDung}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <button
+            onClick={() =>
+              navigate(`/phan-anh/${data.MaTheoDoi}/${new Date(data.NgayGui).toISOString().split('T')[0]}`, {
+                state: {
+                  ngayGui: data.NgayGui,
+                  idTrangThaiPhanAnh: data.IdTrangThaiPhanAnh
+                }
+              })
+            }
+            className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
+          >
+            Chi tiết phản ánh
+          </button>
         </div>
       )}
     </div>

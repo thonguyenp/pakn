@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Download } from "lucide-react";
-import { getPhanAnhChiTiet } from "@/api/user/phanAnhService";
-import type { PhanAnh } from "@/types/phanAnh";
-import PhanHoiList from "./PhanHoiList";
+import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import { getPhanAnhPublic } from "@/api/user/phanAnhService"
+import type { PhanAnh } from "@/types/phanAnh"
+import PhanHoiList from "@/components/homepage/PhanAnh/PhanHoiList"
+import { Download } from "lucide-react"
 
-const PhanAnhDetail = () => {
-  const { MaTheoDoi } = useParams();
-  const [data, setData] = useState<PhanAnh | null>(null);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+const PhanAnhPublicPage = () => {
+  const navigate = useNavigate()
+  const { maTheoDoi, ngayGui } = useParams()
 
+  const [data, setData] = useState<PhanAnh | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
   const getUrgency = (value: string) => {
     if (value === "THAP") return ["Thấp", "bg-gray-100 text-gray-600"];
     if (value === "TRUNG_BINH") return ["Trung bình", "bg-yellow-100 text-yellow-600"];
@@ -18,27 +19,28 @@ const PhanAnhDetail = () => {
     if (value === "KHAN_CAP") return ["Khẩn cấp", "bg-red-100 text-red-600"];
     return ["Không rõ", "bg-gray-100 text-gray-500"];
   };
-
+  const [label, color] = getUrgency(data?.MucDoKhanCap || "")
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (!MaTheoDoi) return;
-        const res = await getPhanAnhChiTiet(MaTheoDoi);
-        setData(res);
-      } catch (error) {
-        console.error("Lỗi khi load chi tiết:", error);
+        if (!maTheoDoi || !ngayGui) return
+
+        const res = await getPhanAnhPublic(maTheoDoi, ngayGui)
+        setData(res)
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Có lỗi xảy ra")
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchData();
-  }, [MaTheoDoi]);
+    fetchData()
+  }, [maTheoDoi, ngayGui])
 
-  if (loading) return <div className="p-6">Đang tải...</div>;
+  if (loading) return <div className="p-6">Đang tải...</div>
+  if (error) return <div className="p-6 text-red-500">{error}</div>
+  if (!data) return null
 
-  if (!data) return <div className="p-6 text-red-500">Không tìm thấy dữ liệu</div>;
-  const [label, color] = getUrgency(data.MucDoKhanCap);
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white shadow rounded-2xl p-6 space-y-6">
@@ -120,25 +122,26 @@ const PhanAnhDetail = () => {
           </div>
         )}
         {/* Các hành động */}
-        {/* Cần check lại nếu các trạng thái như nào thì hiển thị các btn ra sao */}
-        {data.IdTrangThaiPhanAnh === 4 && (
-          <button
-            onClick={() =>
-              navigate(`/phan-anh/cap-nhat/${data.MaTheoDoi}`, {
-                state: {
-                  ngayGui: data.NgayGui,
-                  idTrangThaiPhanAnh: data.IdTrangThaiPhanAnh
-                }
-              })
-            }
-            className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
-          >
-            Bổ sung thông tin
-          </button>
-        )}
+        <div className="flex justify-end">
+          {data.IdTrangThaiPhanAnh === 4 && (
+            <button
+              onClick={() =>
+                navigate(`/phan-anh/cap-nhat/${data.MaTheoDoi}`, {
+                  state: {
+                    ngayGui: data.NgayGui,
+                    idTrangThaiPhanAnh: data.IdTrangThaiPhanAnh
+                  }
+                })
+              }
+              className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
+            >
+              Bổ sung thông tin
+            </button>
+          )}
 
+
+        </div>
       </div>
-
       {/* PHẢN HỒI */}
       <div>
         <h2 className="font-semibold mb-3">Phản hồi</h2>
@@ -147,8 +150,7 @@ const PhanAnhDetail = () => {
           phanAnh={data} />
       </div>
     </div>
+  )
+}
 
-  );
-};
-
-export default PhanAnhDetail;
+export default PhanAnhPublicPage

@@ -19,6 +19,14 @@ export const guiPhanAnh = async (formData: FormData) => {
 
   return response.data;
 };
+export const getPhanAnhPublic = async (
+  maTheoDoi: string,
+  ngayGui: string
+): Promise<PhanAnh> => {
+  const res = await api.get(`/phananh/public/${maTheoDoi}/${ngayGui}`)
+  return res.data.data
+}
+
 export const traCuuPhanAnh = async (maTheoDoi: string, ngayGui: string) => {
   const response = await api.get("/phananh/traCuu", {
     params: {

@@ -6,12 +6,12 @@ export interface PhanHoiCreateRequest {
   files?: File[];
 }
 
-export interface PhanHoiResponse {
-  IdPhanHoi: number;
-  NoiDung: string;
-  NgayPhanHoi: string;
-  IdPhanAnh: number;
-}
+// export interface PhanHoiResponse {
+//   IdPhanHoi: number;
+//   NoiDung: string;
+//   NgayPhanHoi: string;
+//   IdPhanAnh: number;
+// }
 
 // Cập nhật phản ánh bằng cách tạo phản hồi
 export interface CapNhatPhanAnhPayload {

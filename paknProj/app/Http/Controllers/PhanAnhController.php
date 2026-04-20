@@ -176,7 +176,7 @@ class PhanAnhController extends Controller
             'donVi',
             'trangThaiPhanAnh',
             'files',
-            'phanHoi',
+            'phanHoi.files', 'phanHoi.nguoiDung', 'phanHoi.nguoiDung.donVi'
         ])
             ->where('MaTheoDoi', $maTheoDoi)
             ->whereDate('NgayGui', $ngayGui)
@@ -262,6 +262,7 @@ class PhanAnhController extends Controller
             'trangThaiPhanAnh',
             'phanHoi.files',
             'phanHoi.nguoiDung',
+            'phanHoi.nguoiDung.donVi'
         ])
             ->where('MaTheoDoi', $maTheoDoi)
             ->whereDate('NgayGui', $ngayGui)
@@ -270,7 +271,7 @@ class PhanAnhController extends Controller
                     ->orWhere('IdTrangThaiPhanAnh', 4);
             })
             ->first();
-
+        // dd($phanAnh);
         if (!$phanAnh) {
             return response()->json([
                 'success' => false,
