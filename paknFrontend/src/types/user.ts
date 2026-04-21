@@ -9,6 +9,7 @@ export interface User {
   IdDonVi?: string | null
 }
 
+
 export interface Permission {
   IdQuyen: number
   TenQuyen: string

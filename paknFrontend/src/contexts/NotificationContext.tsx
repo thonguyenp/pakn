@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { createEcho } from "@/lib/echo";
 import { api } from "@/api/api";
 
@@ -30,6 +30,7 @@ export const NotificationProvider = ({ children }: any) => {
     const rawUser = localStorage.getItem("user");
     const user = rawUser ? JSON.parse(rawUser) : null;
     const userId = user?.IdNguoiDung;
+    const echoRef = useRef<any>(null);
 
     // =============================
     // 📥 Load initial (dropdown only)
@@ -58,24 +59,25 @@ export const NotificationProvider = ({ children }: any) => {
     useEffect(() => {
         if (!token || !userId) return;
 
-        const echo = createEcho(token);
+        const timeout = setTimeout(() => {
+            if (echoRef.current) {
+                echoRef.current.disconnect();
+            }
 
-        echo.private(`user.${userId}`)
-            .listen(".thongbao.created", (e: any) => {
-                const newTb = e.thongBao;
+            const echo = createEcho(token);
+            echoRef.current = echo;
 
-                // thêm vào đầu list (dropdown)
-                setNotifications((prev) => [newTb, ...prev].slice(0, 5));
+            echo.private(`user.${userId}`)
+                .listen(".thongbao.created", (e: any) => {
+                    const newTb = e.thongBao;
 
-                // tăng unread count
-                setUnreadCount((prev) => prev + 1);
-            });
+                    setNotifications((prev) => [newTb, ...prev].slice(0, 5));
+                    setUnreadCount((prev) => prev + 1);
+                });
+        }, 200); // 🔥 magic delay
 
-        return () => {
-            echo.disconnect();
-        };
+        return () => clearTimeout(timeout);
     }, [token, userId]);
-
     // =============================
     // ✅ Mark as read
     // =============================
