@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import NotificationDropdown from './NotificationDropdown';
 
@@ -10,7 +10,8 @@ export default function Header() {
     const [open, setOpen] = useState(false);
     const [mobileMenu, setMobileMenu] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-
+    const [keyword, setKeyword] = useState("");
+    const navigate = useNavigate();
     const logout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
@@ -78,7 +79,7 @@ export default function Header() {
 
                         {user && (
                             <>
-                                        <NotificationDropdown />
+                                <NotificationDropdown />
 
                                 <div className="relative" ref={dropdownRef}>
 
@@ -166,13 +167,27 @@ export default function Header() {
                             <input
                                 type="text"
                                 placeholder="Tìm phản ánh..."
-                                className="w-full border rounded-md py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400 text-black"
+                                className="w-full border rounded-md py-2 pl-4 pr-10 text-black"
+                                value={keyword}
+                                onChange={(e) => setKeyword(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter" && keyword.trim()) {
+                                        navigate(`/tim-kiem?keyword=${keyword}`);
+                                    }
+                                }}
                             />
-                            <button className="absolute right-3 top-2.5 text-gray-500">
+
+                            <button
+                                onClick={() => {
+                                    if (keyword.trim()) {
+                                        navigate(`/tim-kiem?keyword=${keyword}`);
+                                    }
+                                }}
+                                className="absolute right-3 top-2.5 text-gray-500"
+                            >
                                 <i className="fa-solid fa-search"></i>
                             </button>
-                        </div>
-                    </div>
+                        </div>                    </div>
                 </div>
             </div>
 

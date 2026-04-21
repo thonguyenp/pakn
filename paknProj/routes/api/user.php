@@ -29,6 +29,7 @@ Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
 Route::get('/phananh/traCuu', [PhanAnhController::class, 'traCuu']);
 Route::post('/phananh/capNhat', [PhanAnhController::class, 'capNhat']);
 Route::get('/phananh/public/{maTheoDoi}/{ngayGui}', [PhanAnhController::class, 'showPublic']);
+Route::get('/phananh/timKiem', [PhanAnhController::class, 'timKiem']);
 
 Route::middleware('auth:api')->group(function () {
     // Các route cần xác thực ở đây

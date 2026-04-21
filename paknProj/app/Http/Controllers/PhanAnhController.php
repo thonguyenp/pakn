@@ -158,6 +158,25 @@ class PhanAnhController extends Controller
             'data' => $phanAnhs,
         ]);
     }
+    //Tìm kiếm theo kiểu cổ điển
+    public function timKiem(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        $query = PhanAnh::query();
+
+        if (!empty($keyword)) {
+            $query->where(function ($q) use ($keyword) {
+                $q->where('TieuDe', 'like', "%{$keyword}%")
+                    ->orWhere('NoiDung', 'like', "%{$keyword}%");
+            });
+        }
+
+        // Có thể thêm sort nếu muốn
+        $phanAnhs = $query->orderBy('NgayGui', 'desc')->paginate(10);
+
+        return response()->json($phanAnhs);
+    }
 
     public function traCuu(Request $request)
     {
@@ -176,7 +195,7 @@ class PhanAnhController extends Controller
             'donVi',
             'trangThaiPhanAnh',
             'files',
-            'phanHoi.files', 'phanHoi.nguoiDung', 'phanHoi.nguoiDung.donVi'
+            'phanHoi.files', 'phanHoi.nguoiDung', 'phanHoi.nguoiDung.donVi',
         ])
             ->where('MaTheoDoi', $maTheoDoi)
             ->whereDate('NgayGui', $ngayGui)
@@ -262,7 +281,7 @@ class PhanAnhController extends Controller
             'trangThaiPhanAnh',
             'phanHoi.files',
             'phanHoi.nguoiDung',
-            'phanHoi.nguoiDung.donVi'
+            'phanHoi.nguoiDung.donVi',
         ])
             ->where('MaTheoDoi', $maTheoDoi)
             ->whereDate('NgayGui', $ngayGui)
@@ -272,7 +291,7 @@ class PhanAnhController extends Controller
             })
             ->first();
         // dd($phanAnh);
-        if (!$phanAnh) {
+        if (! $phanAnh) {
             return response()->json([
                 'success' => false,
                 'message' => 'Không tìm thấy phản ánh',

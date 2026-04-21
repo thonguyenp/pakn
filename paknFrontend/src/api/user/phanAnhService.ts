@@ -37,6 +37,14 @@ export const traCuuPhanAnh = async (maTheoDoi: string, ngayGui: string) => {
 
   return response.data
 };
+export const searchPhanAnh = (keyword: string, page = 1) => {
+  return api.get("/phananh/timKiem", {
+    params: {
+      keyword,
+      page
+    }
+  });
+};
 export const getPhanAnhCuaToi = async (
   filter: PhanAnhFilter
 ): Promise<Pagination<PhanAnh>> => {

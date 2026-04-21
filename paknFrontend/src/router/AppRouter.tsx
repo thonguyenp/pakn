@@ -38,6 +38,7 @@ import PhanAnhActionForm from "@/components/homepage/PhanAnh/PhanAnhActionForm";
 import TraCuuPhanAnh from "@/modules/pages/PhanAnh/TraCuuPhanAnh";
 import CapNhatPhanAnhPage from "@/modules/pages/PhanAnh/CapNhatPhanAnhPage";
 import PhanAnhPublicPage from "@/modules/pages/PhanAnh/PhanAnhPublicPage";
+import TimKiemPage from "@/modules/pages/PhanAnh/TimKiemPage";
 
 export default function AppRouter() {
   return (
@@ -61,7 +62,7 @@ export default function AppRouter() {
           <Route path="/tra-cuu" element={<TraCuuPhanAnh />} />
           <Route path="/phan-anh/cap-nhat/:maTheoDoi" element={<CapNhatPhanAnhPage />} />
           <Route path="/phan-anh/:maTheoDoi/:ngayGui" element={<PhanAnhPublicPage />} />
-
+          <Route path="/tim-kiem" element={<TimKiemPage />} />
           {/* Các route cần login */}
           <Route element={<ProtectedRoute />}>
             {/* Phản ánh */}
