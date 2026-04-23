@@ -158,24 +158,50 @@ class PhanAnhController extends Controller
             'data' => $phanAnhs,
         ]);
     }
-    //Tìm kiếm theo kiểu cổ điển
+    // Tìm kiếm theo kiểu cổ điển
+    // public function timKiem(Request $request)
+    // {
+    //     $keyword = $request->input('keyword');
+
+    //     $query = PhanAnh::query();
+
+    //     if (!empty($keyword)) {
+    //         $query->where(function ($q) use ($keyword) {
+    //             $q->where('TieuDe', 'like', "%{$keyword}%")
+    //                 ->orWhere('NoiDung', 'like', "%{$keyword}%");
+    //         });
+    //     }
+
+    //     // Có thể thêm sort nếu muốn
+    //     $phanAnhs = $query->orderBy('NgayGui', 'desc')->paginate(10);
+
+    //     return response()->json($phanAnhs);
+    // }
+
     public function timKiem(Request $request)
     {
-        $keyword = $request->input('keyword');
+        $keyword = $request->q;
 
-        $query = PhanAnh::query();
+        $results = PhanAnh::search($keyword, function ($meiliSearch, $query, $options) use ($request) {
 
-        if (!empty($keyword)) {
-            $query->where(function ($q) use ($keyword) {
-                $q->where('TieuDe', 'like', "%{$keyword}%")
-                    ->orWhere('NoiDung', 'like', "%{$keyword}%");
-            });
-        }
+            $filters = [];
 
-        // Có thể thêm sort nếu muốn
-        $phanAnhs = $query->orderBy('NgayGui', 'desc')->paginate(10);
+            if ($request->id_linh_vuc) {
+                $filters[] = 'id_linh_vuc = '.$request->id_linh_vuc;
+            }
 
-        return response()->json($phanAnhs);
+            if ($request->id_trang_thai) {
+                $filters[] = 'id_trang_thai = '.$request->id_trang_thai;
+            }
+
+            if (! empty($filters)) {
+                $options['filter'] = implode(' AND ', $filters);
+            }
+
+            return $meiliSearch->search($query, $options);
+        })->get();
+
+        return response()->json($results);
     }
 
     public function traCuu(Request $request)

@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class PhanAnh extends Model
 {
+    use Searchable;
+
     protected $table = 'phananh';
 
     protected $primaryKey = 'IdPhanAnh';
@@ -25,6 +28,16 @@ class PhanAnh extends Model
         'IdTrangThaiPhanAnh',
         'MaTheoDoi',
     ];
+
+    public function getScoutKey()
+    {
+        return $this->IdPhanAnh;
+    }
+
+    public function getScoutKeyName()
+    {
+        return 'IdPhanAnh';
+    }
 
     public function files()
     {
@@ -49,5 +62,24 @@ class PhanAnh extends Model
     public function trangThaiPhanAnh()
     {
         return $this->belongsTo(TrangThaiPhanAnh::class, 'IdTrangThaiPhanAnh');
+    }
+
+    public function toSearchableArray()
+    {
+        $this->loadMissing(['linhVuc', 'donVi']);
+
+        return [
+            'id' => $this->IdPhanAnh,
+            'tieu_de' => $this->TieuDe,
+            'noi_dung' => $this->NoiDung,
+
+            'linh_vuc' => optional($this->linhVuc)->TenLinhVuc,
+            'don_vi' => optional($this->donVi)->TenDonVi,
+
+            'id_linh_vuc' => $this->IdLinhVuc,
+            'id_trang_thai' => $this->IdTrangThaiPhanAnh,
+
+            'ngay_gui' => $this->NgayGui,
+        ];
     }
 }
