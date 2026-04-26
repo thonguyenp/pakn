@@ -24,6 +24,8 @@ Route::get('/reset-password/{token}', function ($token) {
 
 // Email verification
 Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
+// Gửi lại email
+Route::post('/resend-verify-email', [AuthController::class, 'resendVerifyEmail']);
 
 // Theo dõi phản ánh mà không cần đăng nhập
 Route::get('/phananh/traCuu', [PhanAnhController::class, 'traCuu']);

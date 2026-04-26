@@ -89,6 +89,28 @@ class AuthController extends Controller
         }
     }
 
+    public function resendVerifyEmail(Request $request)
+    {
+        $request->validate([
+            'Email' => 'required|email|exists:NguoiDung,Email',
+        ]);
+
+        $user = NguoiDung::where('Email', $request->Email)->first();
+
+        $token = Str::random(60);
+
+        DB::table('email_verifications')->updateOrInsert(
+            ['user_id' => $user->IdNguoiDung],
+            ['token' => $token, 'created_at' => now()]
+        );
+
+        $user->notify(new VerifyEmailQueued($token));
+
+        return response()->json([
+            'message' => 'Đã gửi lại email xác thực',
+        ]);
+    }
+
     public function verifyEmail(Request $request)
     {
         $token = $request->token;
