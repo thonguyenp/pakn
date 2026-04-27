@@ -180,8 +180,8 @@ class PhanAnhController extends Controller
 
     public function timKiem(Request $request)
     {
-        $keyword = $request->q;
-
+        $keyword = trim($request->q);
+        
         $results = PhanAnh::search($keyword, function ($meiliSearch, $query, $options) use ($request) {
 
             $filters = [];
@@ -190,8 +190,8 @@ class PhanAnhController extends Controller
                 $filters[] = 'id_linh_vuc = '.$request->id_linh_vuc;
             }
 
-            if ($request->id_trang_thai) {
-                $filters[] = 'id_trang_thai = '.$request->id_trang_thai;
+            if ($request->id_don_vi) {
+                $filters[] = 'id_don_vi = '.$request->id_don_vi;
             }
 
             if (! empty($filters)) {
@@ -199,7 +199,7 @@ class PhanAnhController extends Controller
             }
 
             return $meiliSearch->search($query, $options);
-        })->get();
+        })->paginate(10);
 
         return response()->json($results);
     }
@@ -317,7 +317,7 @@ class PhanAnhController extends Controller
             })
             ->first();
         // dd($phanAnh);
-        if (! $phanAnh) {
+        if (!$phanAnh) {
             return response()->json([
                 'success' => false,
                 'message' => 'Không tìm thấy phản ánh',

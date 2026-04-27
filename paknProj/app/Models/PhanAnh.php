@@ -69,7 +69,7 @@ class PhanAnh extends Model
         $this->loadMissing(['linhVuc', 'donVi']);
 
         return [
-            'id' => $this->IdPhanAnh,
+            'IdPhanAnh' => $this->IdPhanAnh,
             'tieu_de' => $this->TieuDe,
             'noi_dung' => $this->NoiDung,
 
@@ -77,7 +77,7 @@ class PhanAnh extends Model
             'don_vi' => optional($this->donVi)->TenDonVi,
 
             'id_linh_vuc' => $this->IdLinhVuc,
-            'id_trang_thai' => $this->IdTrangThaiPhanAnh,
+            'id_don_vi' => $this->IdDonVi,
 
             'ngay_gui' => $this->NgayGui,
         ];
