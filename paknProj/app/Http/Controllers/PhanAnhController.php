@@ -69,7 +69,10 @@ class PhanAnhController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return response()->json(['error' => 'Không thể tạo phản ánh'], 500);
+            return response()->json([
+                'error' => 'Không thể tạo phản ánh',
+                'message' => $e->getMessage(),
+            ], 500);
         }
 
         $tempFiles = [];
@@ -181,7 +184,7 @@ class PhanAnhController extends Controller
     public function timKiem(Request $request)
     {
         $keyword = trim($request->q);
-        
+
         $results = PhanAnh::search($keyword, function ($meiliSearch, $query, $options) use ($request) {
 
             $filters = [];
@@ -317,7 +320,7 @@ class PhanAnhController extends Controller
             })
             ->first();
         // dd($phanAnh);
-        if (!$phanAnh) {
+        if (! $phanAnh) {
             return response()->json([
                 'success' => false,
                 'message' => 'Không tìm thấy phản ánh',
