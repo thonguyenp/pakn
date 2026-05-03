@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useVerifyEmail } from "@/hooks/useVerifyEmail";
 import VerifyEmailModal from "@/components/shared/VerifyEmailModal";
@@ -6,7 +7,12 @@ import { getHomeData, type HomeResponse } from "@/api/user/homePageApi";
 
 type CardItemProps = {
     title: string;
-    items: { content: string; date: string }[];
+    items: {
+        content: string;
+        date: string;
+        maTheoDoi: string;
+        ngayGui: string;
+    }[];
     image?: string;
 };
 
@@ -21,12 +27,18 @@ function CardItem({ title, items, image }: CardItemProps) {
 
             <div className="p-4 space-y-3 text-sm">
                 {items.map((item, index) => (
-                    <div key={index} className="border-b pb-2 last:border-none">
+                    <Link
+                        key={index}
+                        to={`/phan-anh/${item.maTheoDoi}/${new Date(item.ngayGui)
+                            .toISOString()
+                            .split("T")[0]}`}
+                        state={{ ngayGui: item.ngayGui }}
+                        className="block border-b pb-2 last:border-none hover:bg-gray-50 hover:pl-1 transition-all"                    >
                         <p className="line-clamp-2">{item.content}</p>
                         <div className="text-red-700 text-xs mt-1">
                             ⏰ {item.date}
                         </div>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </div>
@@ -198,9 +210,11 @@ export default function DashboardPage() {
                             key={index}
                             title={card.linh_vuc.TenLinhVuc}
                             image={card.linh_vuc.AnhDaiDien}
-                             items={card.phan_anhs.map((pa) => ({
+                            items={card.phan_anhs.map((pa) => ({
                                 content: pa.TieuDe,
-                                date: pa.NgayGuiFormatted || pa.NgayGui
+                                date: pa.NgayGuiFormatted || pa.NgayGui,
+                                maTheoDoi: pa.MaTheoDoi ?? "",
+                                ngayGui: pa.NgayGui
                             }))}
                         />
                     ))}

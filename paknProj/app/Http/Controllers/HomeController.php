@@ -14,6 +14,7 @@ class HomeController extends Controller
         $phanAnhNoiBat = PhanAnh::with(['linhVuc', 'donVi', 'trangThaiPhanAnh'])
             ->orderBy('NgayGui', 'desc')
             ->limit(4)
+            ->where('IdTrangThaiPhanAnh', 6)
             ->get();
 
         // ===== 2. Lấy tất cả lĩnh vực
@@ -27,6 +28,7 @@ class HomeController extends Controller
                 ->where('IdLinhVuc', $linhVuc->IdLinhVuc)
                 ->orderBy('NgayGui', 'desc')
                 ->limit(4)
+                ->where('IdTrangThaiPhanAnh', 6)
                 ->get();
 
             $phanAnhTheoLinhVuc[] = [
