@@ -7,6 +7,7 @@ import { getHomeData, type HomeResponse } from "@/api/user/homePageApi";
 
 type CardItemProps = {
     title: string;
+    idLinhVuc: number;
     items: {
         content: string;
         date: string;
@@ -16,16 +17,16 @@ type CardItemProps = {
     image?: string;
 };
 
-function CardItem({ title, items, image }: CardItemProps) {
+function CardItem({ title, items, image, idLinhVuc }: CardItemProps) {
     return (
-        <div className="bg-white rounded-xl shadow overflow-hidden">
+        <div className="bg-white rounded-xl shadow overflow-hidden flex flex-col">
             <img src={image} className="w-full h-32 object-cover" />
 
             <div className="bg-blue-600 text-white font-semibold px-4 py-2">
                 {title}
             </div>
 
-            <div className="p-4 space-y-3 text-sm">
+            <div className="p-4 space-y-3 text-sm flex-1">
                 {items.map((item, index) => (
                     <Link
                         key={index}
@@ -33,7 +34,8 @@ function CardItem({ title, items, image }: CardItemProps) {
                             .toISOString()
                             .split("T")[0]}`}
                         state={{ ngayGui: item.ngayGui }}
-                        className="block border-b pb-2 last:border-none hover:bg-gray-50 hover:pl-1 transition-all"                    >
+                        className="block border-b pb-2 last:border-none hover:bg-gray-50 hover:pl-1 transition-all"
+                    >
                         <p className="line-clamp-2">{item.content}</p>
                         <div className="text-red-700 text-xs mt-1">
                             ⏰ {item.date}
@@ -41,10 +43,19 @@ function CardItem({ title, items, image }: CardItemProps) {
                     </Link>
                 ))}
             </div>
+
+            {/* ===== XEM THÊM ===== */}
+            <div className="px-4 pb-4">
+                <Link
+                    to={`/tim-kiem?keyword=&id_linh_vuc=${idLinhVuc}`}
+                    className="block text-right text-blue-600 text-sm hover:underline"
+                >
+                    Xem thêm →
+                </Link>
+            </div>
         </div>
     );
 }
-
 export default function DashboardPage() {
     const navigate = useNavigate();
     const { token, setToken } = useVerifyEmail();
@@ -209,6 +220,7 @@ export default function DashboardPage() {
                         <CardItem
                             key={index}
                             title={card.linh_vuc.TenLinhVuc}
+                            idLinhVuc={card.linh_vuc.IdLinhVuc}
                             image={card.linh_vuc.AnhDaiDien}
                             items={card.phan_anhs.map((pa) => ({
                                 content: pa.TieuDe,

@@ -183,12 +183,33 @@ class PhanAnhController extends Controller
 
     public function timKiem(Request $request)
     {
-        $keyword = trim($request->q);
+        $keyword = trim($request->q ?? '');
+
+        // ===== CASE 1: KHÔNG CÓ KEYWORD ===== (sử dụng query builder bình thường)
+        if (empty($keyword)) {
+
+            $query = PhanAnh::query()->where('IdTrangThaiPhanAnh', 6); // Chỉ tìm kiếm phản ánh đã hoàn thành
+
+            if ($request->id_linh_vuc) {
+                $query->where('IdLinhVuc', $request->id_linh_vuc);
+            }
+
+            if ($request->id_don_vi) {
+                $query->where('IdDonVi', $request->id_don_vi);
+            }
+
+            $results = $query
+                ->orderBy('NgayGui', 'desc')
+                ->paginate(10);
+
+            return response()->json($results);
+        }
+
+        // ===== CASE 2: CÓ KEYWORD ===== (sử dụng MeiliSearch để tìm kiếm full-text)
 
         $results = PhanAnh::search($keyword, function ($meiliSearch, $query, $options) use ($request) {
 
-            $filters = [];
-
+            $filters = ["id_trang_thai = 6"]; // Chỉ tìm kiếm phản ánh đã hoàn thành
             if ($request->id_linh_vuc) {
                 $filters[] = 'id_linh_vuc = '.$request->id_linh_vuc;
             }

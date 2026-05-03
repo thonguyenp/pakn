@@ -12,7 +12,7 @@ export default function TimKiemPage() {
     const navigate = useNavigate();
 
     const keyword = searchParams.get("keyword") || "";
-
+    const idLinhVucParam = searchParams.get("id_linh_vuc") || "";
     const [data, setData] = useState<PhanAnh[]>([]);
     const [dsLinhVuc, setDsLinhVuc] = useState<LinhVuc[]>([]);
     const [dsDonVi, setDsDonVi] = useState<DonVi[]>([]);
@@ -39,7 +39,7 @@ export default function TimKiemPage() {
             behavior: "smooth" // hoặc "auto" nếu không muốn animation
         });
     }, [page]);
-    
+
     useEffect(() => {
         const fetchMeta = async () => {
             try {
@@ -53,11 +53,12 @@ export default function TimKiemPage() {
 
         fetchMeta();
     }, []);
+    useEffect(() => {
+        setIdLinhVuc(idLinhVucParam);
+    }, [idLinhVucParam]);
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!keyword) return;
-
             try {
                 setLoading(true);
 
@@ -77,7 +78,6 @@ export default function TimKiemPage() {
                 setLoading(false);
             }
         };
-
         fetchData();
     }, [keyword, page, idLinhVuc, idDonVi]);
 

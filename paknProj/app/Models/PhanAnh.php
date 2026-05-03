@@ -90,7 +90,8 @@ class PhanAnh extends Model
 
             'id_linh_vuc' => $this->IdLinhVuc,
             'id_don_vi' => $this->IdDonVi,
-
+            'id_trang_thai' => $this->IdTrangThaiPhanAnh,
+            
             'ngay_gui' => $this->NgayGui,
         ];
     }
