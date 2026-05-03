@@ -1,14 +1,18 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MetaController;
 use App\Http\Controllers\PhanAnhController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThongBaoController;
 use Illuminate\Support\Facades\Route;
 
+
 // Các meta data như lĩnh vực, đơn vị, trạng thái phản ánh
 Route::get('/meta', [MetaController::class, 'index']);
+// Home page
+Route::get('/home', [HomeController::class, 'index']);
 // Đăng nhập và đăng ký
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);

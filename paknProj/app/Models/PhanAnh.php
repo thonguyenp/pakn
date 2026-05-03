@@ -28,6 +28,18 @@ class PhanAnh extends Model
         'IdTrangThaiPhanAnh',
         'MaTheoDoi',
     ];
+    // Tạo thuộc tính ảo để định dạng ngày gửi
+    protected $appends = ['NgayGuiFormatted'];
+    protected $casts = [
+        'NgayGui' => 'datetime',
+    ];
+
+    public function getNgayGuiFormattedAttribute()
+    {
+        return $this->NgayGui
+            ? $this->NgayGui->format('d/m/Y')
+            : null;
+    }
 
     public function getScoutKey()
     {
