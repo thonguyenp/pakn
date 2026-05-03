@@ -47,14 +47,14 @@ export default function AppRouter() {
 
         {/* ================= PUBLIC ROUTES ================= */}
 
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* ================= USER ROUTES ================= */}
 
         <Route element={<UserLayout />}>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* Trang chủ */}
           <Route path="/" element={<Dashboard />} />

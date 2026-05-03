@@ -7,6 +7,7 @@ export interface PhanAnh {
   MucDoKhanCap: string
   AnDanh: number
   NgayGui: string
+  NgayGuiFormatted?: string
   IdNguoiDung: number
   IdLinhVuc: number
   IdDonVi: number
