@@ -43,4 +43,6 @@ class HomeController extends Controller
             'phan_anh_theo_linh_vuc' => $phanAnhTheoLinhVuc,
         ]);
     }
+
+    
 }

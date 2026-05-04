@@ -6,6 +6,7 @@ use App\Http\Controllers\MetaController;
 use App\Http\Controllers\PhanAnhController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThongBaoController;
+use App\Http\Controllers\ThongKeController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/meta', [MetaController::class, 'index']);
 // Home page
 Route::get('/home', [HomeController::class, 'index']);
+Route::get('/thong-ke/trang-thai', [ThongKeController::class, 'thongKeTrangThai']);
+
 // Đăng nhập và đăng ký
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
