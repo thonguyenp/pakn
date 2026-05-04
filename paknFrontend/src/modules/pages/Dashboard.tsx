@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useVerifyEmail } from "@/hooks/useVerifyEmail";
 import VerifyEmailModal from "@/components/shared/VerifyEmailModal";
-import { getHomeData, type HomeResponse } from "@/api/user/homePageApi";
+import { getHomeData, type HomeResponse } from "@/api/user/homePage/homePageApi";
+import { getThongKeTrangThai } from "@/api/user/homePage/thongKeApi";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts"
 
 type CardItemProps = {
     title: string;
@@ -16,6 +18,12 @@ type CardItemProps = {
     }[];
     image?: string;
 };
+
+type ThongKeItem = {
+    trang_thai: string
+    so_luong: number
+}
+
 
 function CardItem({ title, items, image, idLinhVuc }: CardItemProps) {
     return (
@@ -62,7 +70,9 @@ export default function DashboardPage() {
 
     const [homeData, setHomeData] = useState<HomeResponse | null>(null);
     const [loading, setLoading] = useState(true);
-
+    const [thongKe, setThongKe] = useState<ThongKeItem[]>([]);
+    const total = thongKe.reduce((sum, item) => sum + item.so_luong, 0);
+    const COLORS = ["#22c55e", "#eab308", "#ef4444", "#3b82f6"];
     // ===== SLIDER =====
     const slides = [
         { id: 1, image: "/images/homepage/dashboard/slider1.png" },
@@ -77,6 +87,8 @@ export default function DashboardPage() {
             try {
                 const data = await getHomeData();
                 setHomeData(data);
+                const thongKeData = await getThongKeTrangThai();
+                setThongKe(thongKeData);
             } catch (err) {
                 console.error("Lỗi load homepage:", err);
             } finally {
@@ -176,27 +188,43 @@ export default function DashboardPage() {
                 {/* ===== RIGHT ===== */}
                 <div className="lg:col-span-3 space-y-6">
                     <div className="bg-white rounded-lg shadow p-4 md:p-5">
-                        <h2 className="text-base md:text-lg font-semibold mb-4">
-                            Thống kê xử lý
+                        {/* ✅ Title */}
+                        <h2 className="text-base md:text-lg font-semibold mb-4 text-center">
+                            Thống kê trạng thái phản ánh
                         </h2>
 
-                        <div className="space-y-2 text-sm">
-                            <div className="flex justify-between">
-                                <span>Đã xử lý</span>
-                                <span className="text-green-600 font-semibold">120</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Đang xử lý</span>
-                                <span className="text-yellow-600 font-semibold">35</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Chưa xử lý</span>
-                                <span className="text-red-600 font-semibold">12</span>
-                            </div>
-                        </div>
-                    </div>
+                        <div className="h-72">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={thongKe}
+                                        dataKey="so_luong"
+                                        nameKey="trang_thai"
+                                        cx="50%"
+                                        cy="50%"
+                                        outerRadius={80}
+                                        label={({ percent }) =>
+                                            `(${(percent * 100).toFixed(0)}%)`
+                                        }
+                                    >
+                                        {thongKe.map((_, index) => (
+                                            <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                                        ))}
+                                    </Pie>
 
-                    <div className="bg-white rounded-lg shadow p-4 md:p-5">
+                                    {/* Tooltip khi hover */}
+                                    <Tooltip formatter={(value) => `${value} phản ánh`} />
+
+                                    {/* Legend (chú thích màu) */}
+                                    <Legend
+                                        verticalAlign="bottom"
+                                        height={36}
+                                        formatter={(value) => <span className="text-sm">{value}</span>}
+                                    />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>                    <div className="bg-white rounded-lg shadow p-4 md:p-5">
                         <h2 className="text-base md:text-lg font-semibold mb-4">
                             Mức độ hài lòng
                         </h2>
