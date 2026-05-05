@@ -8,8 +8,8 @@ export const phanAnhApi = {
   getAll: (page: number = 1) =>
     api.get<Pagination<PhanAnh>>(`/admin/phananh?page=${page}`),
 
-  getById: (id: number) =>
-    api.get<PhanAnh>(`/admin/phananh/${id}`),
+  getByMaTheoDoi: (maTheoDoi: string) =>
+    api.get<PhanAnh>(`/admin/phananh/${maTheoDoi}`),
 
   getFiles: (id: number) =>
     api.get<FileDinhKem[]>(`/admin/phananh/files/${id}`),
@@ -17,11 +17,11 @@ export const phanAnhApi = {
   create: (data: PhanAnh) =>
     api.post(`/admin/phananh`, data),
 
-  update: (id: number, data: PhanAnh) =>
-    api.put(`/admin/phananh/${id}`, data),
-
   delete: (id: number) =>
-    api.delete(`/admin/phananh/${id}`)
+    api.delete(`/admin/phananh/${id}`),
+
+  getLichSu: (maTheoDoi: string, page: number = 1) =>
+    api.get(`/admin/phananh/lichsu/${maTheoDoi}?page=${page}`),
 }
 
 export interface PhanAnhFilter {

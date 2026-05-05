@@ -39,6 +39,7 @@ import TraCuuPhanAnh from "@/modules/pages/PhanAnh/TraCuuPhanAnh";
 import CapNhatPhanAnhPage from "@/modules/pages/PhanAnh/CapNhatPhanAnhPage";
 import PhanAnhPublicPage from "@/modules/pages/PhanAnh/PhanAnhPublicPage";
 import TimKiemPage from "@/modules/pages/PhanAnh/TimKiemPage";
+import LichSuPhanAnh from "@/modules/admin/PhanAnh/LichSuPhanAnh";
 
 export default function AppRouter() {
   return (
@@ -107,7 +108,7 @@ export default function AppRouter() {
               >
               </Route>
               <Route
-                path="xem/:id"
+                path="xem/:maTheoDoi"
                 element={
                   <PermissionGuard permission="XemTatCaPhanAnh">
                     <PhanAnhDetail />
@@ -129,6 +130,16 @@ export default function AppRouter() {
                 element={
                   <PermissionGuard permission="XemTatCaPhanAnh">
                     <PhanAnhForm />
+                  </PermissionGuard>
+                }
+              >
+              </Route>
+
+              <Route
+                path="lichsu/:maTheoDoi"
+                element={
+                  <PermissionGuard permission="XemTatCaPhanAnh">
+                    <LichSuPhanAnh />
                   </PermissionGuard>
                 }
               >

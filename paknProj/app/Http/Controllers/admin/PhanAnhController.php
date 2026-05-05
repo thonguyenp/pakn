@@ -53,11 +53,11 @@ class PhanAnhController extends Controller
     }
 
     // Lấy chi tiết 1 phản ánh
-    public function show($id)
+    public function show($maTheoDoi)
     {
 
         $phanAnh = PhanAnh::with(['files', 'linhVuc', 'donVi', 'trangThaiPhanAnh'])
-            ->where('IdPhanAnh', $id)->first();
+            ->where('MaTheoDoi', $maTheoDoi)->first();
         if (! $phanAnh) {
             return response()->json([
                 'success' => false,
@@ -76,9 +76,9 @@ class PhanAnhController extends Controller
     }
 
     // Xóa phản ánh
-    public function destroy($id)
+    public function destroy($maTheoDoi)
     {
-        $phanAnh = PhanAnh::find($id);
+        $phanAnh = PhanAnh::where('MaTheoDoi', $maTheoDoi)->first();
 
         if (! $phanAnh) {
             return response()->json([
@@ -96,7 +96,7 @@ class PhanAnhController extends Controller
     // Xem lịch sử phản ánh
     public function lichSu(Request $request, $maTheoDoi)
     {
-        $perPage = $request->get('per_page', 10); // số item mỗi trang
+        $perPage = $request->get('per_page', 5); // số item mỗi trang
 
         $lichSu = LichSuXuLy::whereHas('phanAnh', function ($query) use ($maTheoDoi) {
             $query->where('MaTheoDoi', $maTheoDoi);

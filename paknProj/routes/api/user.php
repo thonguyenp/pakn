@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DanhGiaPhanHoiController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MetaController;
 use App\Http\Controllers\PhanAnhController;
@@ -8,7 +9,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThongBaoController;
 use App\Http\Controllers\ThongKeController;
 use Illuminate\Support\Facades\Route;
-
 
 // Các meta data như lĩnh vực, đơn vị, trạng thái phản ánh
 Route::get('/meta', [MetaController::class, 'index']);
@@ -34,14 +34,18 @@ Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
 // Gửi lại email
 Route::post('/resend-verify-email', [AuthController::class, 'resendVerifyEmail']);
 
+
 // Theo dõi phản ánh mà không cần đăng nhập
 Route::get('/phananh/traCuu', [PhanAnhController::class, 'traCuu']);
 Route::post('/phananh/capNhat', [PhanAnhController::class, 'capNhat']);
 Route::get('/phananh/public/{maTheoDoi}/{ngayGui}', [PhanAnhController::class, 'showPublic']);
 Route::get('/phananh/timKiem', [PhanAnhController::class, 'timKiem']);
+// Hiển thị đánh giá theo phản hồi
+Route::get('/danhgia/{idPhanHoi}', [DanhGiaPhanHoiController::class, 'getByPhanHoi']);
 
 Route::middleware('auth:api')->group(function () {
     // Các route cần xác thực ở đây
+    Route::post('/danhgia', [DanhGiaPhanHoiController::class, 'store']);
     Route::prefix('thongbao')->group(function () {
         Route::post('/', [ThongBaoController::class, 'store']);
         Route::get('/', [ThongBaoController::class, 'index']);

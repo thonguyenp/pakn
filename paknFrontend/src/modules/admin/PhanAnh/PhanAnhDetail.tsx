@@ -2,9 +2,10 @@ import { useEffect, useState } from "react"
 import { useParams, Link } from "react-router-dom"
 import { phanAnhApi } from "@/api/admin/phanAnhApi"
 import type { PhanAnh } from "@/types/phanAnh"
+import dayjs from "dayjs"
 
 export default function PhanAnhDetail() {
-  const { id } = useParams()
+  const { maTheoDoi } = useParams()
   const [phanAnh, setPhanAnh] = useState<PhanAnh | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
@@ -12,8 +13,8 @@ export default function PhanAnhDetail() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (!id) return
-        const res = await phanAnhApi.getById(Number(id))
+        if (!maTheoDoi) return
+        const res = await phanAnhApi.getByMaTheoDoi(maTheoDoi)
         setPhanAnh(res.data.data)
 
       } catch (err) {
@@ -24,7 +25,7 @@ export default function PhanAnhDetail() {
     }
 
     fetchData()
-  }, [id])
+  }, [maTheoDoi])
 
   if (loading) return <div className="p-6">Đang tải...</div>
 
@@ -78,7 +79,7 @@ export default function PhanAnhDetail() {
           <div>
             <label className="font-semibold">Ngày gửi</label>
             <div className="mt-1">
-              {new Date(phanAnh.NgayGui).toLocaleString()}
+              {dayjs(phanAnh.NgayGui).format("DD/MM/YYYY HH:mm")}
             </div>
           </div>
 
@@ -100,58 +101,67 @@ export default function PhanAnhDetail() {
           </div>
 
         </div>
+        {/* File đính kèm */}
+        <div>
+          <label className="font-semibold">File đính kèm</label>
 
-          <div>
-            <label className="font-semibold">File đính kèm</label>
+          {(!phanAnh.files || phanAnh.files.length === 0) ? (
+            <div className="text-gray-500 mt-1">Không có file</div>
+          ) : (
+            <div className="space-y-3 mt-2">
 
-            {(!phanAnh.files || phanAnh.files.length === 0) ? (
-              <div className="text-gray-500 mt-1">Không có file</div>
-            ) : (
-              <div className="space-y-3 mt-2">
+              {phanAnh.files.map(file => {
 
-                {phanAnh.files.map(file => {
+                const fileUrl = file.url;
+                return (
+                  <div
+                    key={file.IdFile}
+                    className="flex items-center border rounded-xl p-3 hover:bg-gray-50 transition"
+                  >
 
-                  const fileUrl = file.url;
-                  return (
-                    <div
-                      key={file.IdFile}
-                      className="flex items-center border rounded-xl p-3 hover:bg-gray-50 transition"
-                    >
+                    {/* ICON / IMAGE */}
+                    {file.LoaiFile.startsWith("image") ? (
+                      <img
+                        src={fileUrl}
+                        className="w-10 h-10 object-cover rounded"
+                      />
+                    ) : (
+                      <div className="text-2xl">📄</div>
+                    )}
 
-                      {/* ICON / IMAGE */}
-                      {file.LoaiFile.startsWith("image") ? (
-                        <img
-                          src={fileUrl}
-                          className="w-10 h-10 object-cover rounded"
-                        />
-                      ) : (
-                        <div className="text-2xl">📄</div>
-                      )}
-
-                      {/* FILE NAME */}
-                      <div className="ml-3 text-sm font-medium text-gray-700 truncate max-w-[250px]">
-                        {file.TenFile}
-                      </div>
-
-                      {/* DOWNLOAD */}
-                      <a
-                        href={fileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        download
-                        className="ml-auto text-gray-500 hover:text-blue-600"
-                      >
-                        ⬇️
-                      </a>
-
+                    {/* FILE NAME */}
+                    <div className="ml-3 text-sm font-medium text-gray-700 truncate max-w-[250px]">
+                      {file.TenFile}
                     </div>
-                  )
-                })}
 
-              </div>
-            )}
-          </div>
+                    {/* DOWNLOAD */}
+                    <a
+                      href={fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      download
+                      className="ml-auto text-gray-500 hover:text-blue-600"
+                    >
+                      ⬇️
+                    </a>
+
+                  </div>
+                )
+              })}
+
+            </div>
+          )}
         </div>
+        {/* Xem lịch sử xử lý */}
+        <div className="mt-8 flex justify-end">
+          <Link
+            to={`/admin/phananh/lichsu/${phanAnh.MaTheoDoi}`}
+            className="px-5 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+          >
+            Xem lịch sử xử lý
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }

@@ -28,8 +28,8 @@ Route::middleware(['auth:api'])
             ->group(function () {
 
                 Route::get('/', [PhanAnhController::class, 'index']);
-                Route::get('/{id}', [PhanAnhController::class, 'show']);
-                Route::delete('/{id}', [PhanAnhController::class, 'destroy'])
+                Route::get('/{maTheoDoi}', [PhanAnhController::class, 'show']);
+                Route::delete('/{maTheoDoi}', [PhanAnhController::class, 'destroy'])
                     ->middleware('permission:XoaPhanAnh');
 
                 Route::get('/files/{id}', [FileDinhKemController::class, 'getByPhanAnh']);
