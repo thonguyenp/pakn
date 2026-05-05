@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { type PhanAnh } from "@/types/phanAnh"
-import { getPhanAnhCuaToi, getPhanAnhDonVi, type PhanAnhFilter } from "@/api/user/phanAnhService"
+import { getPhanAnhCuaToi, getPhanAnhDonVi, type PhanAnhFilter } from "@/api/user/phanAnh/phanAnhService"
 
 
 export const usePhanAnhCuaToi = () => {

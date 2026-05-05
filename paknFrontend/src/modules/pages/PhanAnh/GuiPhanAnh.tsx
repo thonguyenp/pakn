@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { guiPhanAnh } from "@/api/user/phanAnhService"
+import { guiPhanAnh } from "@/api/user/phanAnh/phanAnhService"
 import { getMeta } from "@/api/meta/metaService"
 
 import ToggleSwitch from "@/components/shared/ToogleSwitch"

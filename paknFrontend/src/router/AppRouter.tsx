@@ -25,14 +25,12 @@ import UserPermissions from "@/modules/admin/users/UserPermissions";
 
 import PermissionGuard from "@/components/admin/PermissionGuard";
 import ProtectedRoute from "@/components/admin/ProtectedRoute";
-// import PhanAnhList from "@/modules/admin/PhanAnh/PhanAnhList";
 import PhanAnhEdit from "@/modules/admin/PhanAnh/PhanAnhEdit";
 import PhanAnhForm from "@/modules/admin/PhanAnh/PhanAnhForm";
 import PhanAnhList from "@/modules/admin/PhanAnh/PhanAnhList";
 import PhanAnhDetail from "@/modules/admin/PhanAnh/PhanAnhDetail";
 import PhanAnhPage from "@/modules/pages/PhanAnh/PhanAnhPage";
 import PhanAnhChiTiet from "@/components/homepage/PhanAnh/PhanAnhChiTiet";
-import PhanHoiCreate from "@/modules/pages/PhanHoi/PhanHoiCreate";
 import SmtpConfigPage from "@/modules/admin/SmtpConfig/SmtpConfigPage";
 import PhanAnhActionForm from "@/components/homepage/PhanAnh/PhanAnhActionForm";
 import TraCuuPhanAnh from "@/modules/pages/PhanAnh/TraCuuPhanAnh";
@@ -71,15 +69,8 @@ export default function AppRouter() {
             <Route path="/gui-phan-anh" element={<GuiPhanAnh />} />
             <Route path="/phan-anh" element={<PhanAnhPage />} />
             <Route path="/phan-anh/:MaTheoDoi" element={<PhanAnhChiTiet />} />
-            <Route path="/phan-anh/:MaTheoDoi/:action" element={<PhanAnhActionForm />} />
             {/* Phản hồi */}
-            <Route
-              path="/phan-hoi/:maTheoDoi"
-              element={
-                <PermissionGuard permission="CapNhatPhanAnh">
-                  <PhanHoiCreate />
-                </PermissionGuard>
-              } />
+            <Route path="/phan-anh/:MaTheoDoi/:action" element={<PhanAnhActionForm />} />
           </Route>
         </Route>
         {/* ================= ADMIN ROUTES ================= */}

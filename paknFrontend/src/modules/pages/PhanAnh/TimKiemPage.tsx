@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { searchPhanAnh } from "@/api/user/phanAnhService";
+import { searchPhanAnh } from "@/api/user/phanAnh/phanAnhService";
 import { getMeta } from "@/api/meta/metaService";
 import type { PhanAnh } from "@/types/phanAnh";
 import SelectSearchDropdown from "@/components/shared/SelectSearchDropdown";

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate, useLocation } from "react-router-dom"
-import { capNhatPhanAnh } from "@/api/user/phanAnhService"
+import { capNhatPhanAnh } from "@/api/user/phanAnh/phanAnhService"
 import FileDropzone from "@/components/shared/FileDropzone"
 
 const CapNhatPhanAnhPage = () => {

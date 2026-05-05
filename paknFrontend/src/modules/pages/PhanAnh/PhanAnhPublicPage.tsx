@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { getPhanAnhPublic } from "@/api/user/phanAnhService"
+import { getPhanAnhPublic } from "@/api/user/phanAnh/phanAnhService"
 import type { PhanAnh } from "@/types/phanAnh"
 import PhanHoiList from "@/components/homepage/PhanAnh/PhanHoiList"
 import { Download } from "lucide-react"
+import DanhGiaPhanHoi from "@/components/homepage/PhanAnh/DanhGiaPhanHoi"
 
 const PhanAnhPublicPage = () => {
   const navigate = useNavigate()
@@ -20,6 +21,13 @@ const PhanAnhPublicPage = () => {
     return ["Không rõ", "bg-gray-100 text-gray-500"];
   };
   const [label, color] = getUrgency(data?.MucDoKhanCap || "")
+  const phanHoiMoiNhat = data?.phan_hoi
+    ?.filter((ph) => ph.LaNoiBo === 0) // nếu cần lọc public
+    ?.sort(
+      (a, b) =>
+        new Date(b.NgayPhanHoi).getTime() -
+        new Date(a.NgayPhanHoi).getTime()
+    )[0]
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -146,9 +154,13 @@ const PhanAnhPublicPage = () => {
       <div>
         <h2 className="font-semibold mb-3">Phản hồi</h2>
         <PhanHoiList
-          danhSach={data.phan_hoi || []}
-          phanAnh={data} />
+          danhSach={data?.phan_hoi || []}
+          phanAnh={data}
+          phanHoiMoiNhatId={phanHoiMoiNhat?.IdPhanHoi}
+        />
       </div>
+      {/* ĐÁNH GIÁ */}
+
     </div>
   )
 }

@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ReactQuill from "react-quill-new";
 import FileDropzone from "@/components/shared/FileDropzone";
-import { createAction } from "@/api/user/phanAnhService";
+import { createAction } from "@/api/user/phanAnh/phanAnhService";
 import { actionConfig } from "@/constants/phanAnh/actionConfig";
 import { ActionType } from "@/constants/phanAnh/actionType";
 import ToggleSwitch from "@/components/shared/ToogleSwitch";
@@ -52,14 +52,6 @@ const PhanAnhActionForm = () => {
 
         <ReactQuill value={noiDung} onChange={setNoiDung} />
 
-        {/* {config.extra === "donVi" && (
-          <input
-            value={donVi}
-            onChange={(e) => setDonVi(e.target.value)}
-            placeholder="Nhập đơn vị"
-            className="w-full border p-2 rounded"
-          />
-        )} */}
         <ToggleSwitch
           label="Nội bộ"
           checked={laNoiBo}

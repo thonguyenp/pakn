@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { traCuuPhanAnh } from "@/api/user/phanAnhService"
+import { traCuuPhanAnh } from "@/api/user/phanAnh/phanAnhService"
 import { useNavigate } from "react-router-dom"
 import type { PhanAnh } from "@/types/phanAnh"
 
