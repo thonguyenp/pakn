@@ -12,11 +12,13 @@ class HomeController extends Controller
     {
         // ===== 1. Phản ánh nổi bật (4 mới nhất)
         $phanAnhNoiBat = PhanAnh::with(['linhVuc', 'donVi', 'trangThaiPhanAnh'])
+            ->where('IdTrangThaiPhanAnh', 6)
+            ->whereDoesntHave('phanHoi', function ($query) {
+                $query->where('LaNoiBo', 1);
+            })
             ->orderBy('NgayGui', 'desc')
             ->limit(4)
-            ->where('IdTrangThaiPhanAnh', 6)
             ->get();
-
         // ===== 2. Lấy tất cả lĩnh vực
         $linhVucs = LinhVuc::all();
 
@@ -26,9 +28,14 @@ class HomeController extends Controller
         foreach ($linhVucs as $linhVuc) {
             $phanAnhs = PhanAnh::with(['linhVuc', 'donVi', 'trangThaiPhanAnh'])
                 ->where('IdLinhVuc', $linhVuc->IdLinhVuc)
+                ->where('IdTrangThaiPhanAnh', 6)
+                ->whereDoesntHave('phanHoi', function ($query) 
+                {
+                    // Chỉ lấy phản hồi không chứa nội bộ (LaNoiBo = 1)
+                    $query->where('LaNoiBo', 1);
+                })
                 ->orderBy('NgayGui', 'desc')
                 ->limit(4)
-                ->where('IdTrangThaiPhanAnh', 6)
                 ->get();
 
             $phanAnhTheoLinhVuc[] = [
@@ -43,6 +50,4 @@ class HomeController extends Controller
             'phan_anh_theo_linh_vuc' => $phanAnhTheoLinhVuc,
         ]);
     }
-
-    
 }

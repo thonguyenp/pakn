@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\UploadFilePhanAnhJob;
+use App\Models\LichSuXuLy;
 use App\Models\PhanAnh;
 use App\Notifications\PhanAnhCreatedNotification;
 use App\Services\PhanAnhService;
@@ -107,6 +108,13 @@ class PhanAnhController extends Controller
             'Link' => [
                 'url' => '/phan-anh/'.$phanAnh->MaTheoDoi,
             ],
+        ]);
+        LichSuXuLy::create([
+            'HanhDong' => 'Tạo phản ánh',
+            'GhiChu' => 'Nguời dùng tạo phản ánh',
+            'ThoiGian' => now(),
+            'IdPhanAnh' => $phanAnh->IdPhanAnh,
+            'IdNguoiDung' => $phanAnh->IdNguoiDung ?? null,
         ]);
 
         DB::commit();

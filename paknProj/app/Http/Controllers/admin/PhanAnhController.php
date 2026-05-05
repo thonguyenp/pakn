@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\LichSuXuLy;
 use App\Models\PhanAnh;
 use Illuminate\Http\Request;
 
@@ -89,6 +90,31 @@ class PhanAnhController extends Controller
 
         return response()->json([
             'message' => 'Xóa thành công',
+        ]);
+    }
+
+    // Xem lịch sử phản ánh
+    public function lichSu(Request $request, $maTheoDoi)
+    {
+        $perPage = $request->get('per_page', 10); // số item mỗi trang
+
+        $lichSu = LichSuXuLy::whereHas('phanAnh', function ($query) use ($maTheoDoi) {
+            $query->where('MaTheoDoi', $maTheoDoi);
+        })
+            ->with('nguoiDung')
+            ->orderBy('ThoiGian', 'desc')
+            ->paginate($perPage);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Lấy lịch sử xử lý thành công',
+            'data' => $lichSu->items(),
+            'pagination' => [
+                'current_page' => $lichSu->currentPage(),
+                'last_page' => $lichSu->lastPage(),
+                'per_page' => $lichSu->perPage(),
+                'total' => $lichSu->total(),
+            ],
         ]);
     }
 }

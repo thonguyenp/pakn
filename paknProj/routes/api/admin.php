@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\admin\DonViController;
 use App\Http\Controllers\admin\FileDinhKemController;
+use App\Http\Controllers\admin\LichSuController;
 use App\Http\Controllers\admin\NguoiDungController;
 use App\Http\Controllers\admin\PhanAnhController;
 use App\Http\Controllers\admin\SmtpController;
@@ -14,14 +15,12 @@ Route::middleware(['auth:api'])
         Route::prefix('donvi')
             ->middleware('permission:QuanLyHeThong')
             ->group(function () {
-
                 Route::get('/', [DonViController::class, 'index']);
                 Route::get('/list', [DonViController::class, 'list']);
                 Route::get('/{id}', [DonViController::class, 'show']);
                 Route::post('/', [DonViController::class, 'store']);
                 Route::put('/{id}', [DonViController::class, 'update']);
                 Route::delete('/{id}', [DonViController::class, 'destroy']);
-
             });
 
         Route::prefix('phananh')
@@ -34,7 +33,7 @@ Route::middleware(['auth:api'])
                     ->middleware('permission:XoaPhanAnh');
 
                 Route::get('/files/{id}', [FileDinhKemController::class, 'getByPhanAnh']);
-
+                Route::get('/lichsu/{maTheoDoi}', [PhanAnhController::class, 'lichSu']);
             });
 
         Route::prefix('nguoidung')
