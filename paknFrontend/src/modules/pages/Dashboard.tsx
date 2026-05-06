@@ -6,6 +6,8 @@ import VerifyEmailModal from "@/components/shared/VerifyEmailModal";
 import { getHomeData, type HomeResponse } from "@/api/user/homePage/homePageApi";
 import { getThongKeTrangThai } from "@/api/user/homePage/thongKeApi";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts"
+import ThongKePieChart from "@/components/shared/ThongKePieChart"
+import { getThongKeMucDoHaiLong } from "@/api/user/homePage/thongKeApi"
 
 type CardItemProps = {
     title: string;
@@ -71,8 +73,7 @@ export default function DashboardPage() {
     const [homeData, setHomeData] = useState<HomeResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [thongKe, setThongKe] = useState<ThongKeItem[]>([]);
-    const total = thongKe.reduce((sum, item) => sum + item.so_luong, 0);
-    const COLORS = ["#22c55e", "#eab308", "#ef4444", "#3b82f6"];
+    const [thongKeHaiLong, setThongKeHaiLong] = useState<any[]>([]);
     // ===== SLIDER =====
     const slides = [
         { id: 1, image: "/images/homepage/dashboard/slider1.png" },
@@ -85,20 +86,31 @@ export default function DashboardPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getHomeData();
-                setHomeData(data);
-                const thongKeData = await getThongKeTrangThai();
-                setThongKe(thongKeData);
+                const data = await getHomeData()
+                setHomeData(data)
+
+                const thongKeData = await getThongKeTrangThai()
+                setThongKe(thongKeData)
+
+                const haiLongData = await getThongKeMucDoHaiLong()
+
+                // 🔥 thêm label
+                const formatted = haiLongData.map((item: any) => ({
+                    ...item,
+                    muc_do_label: `${item.muc_do} sao`
+                }))
+
+                setThongKeHaiLong(formatted)
+
             } catch (err) {
-                console.error("Lỗi load homepage:", err);
+                console.error("Lỗi load homepage:", err)
             } finally {
-                setLoading(false);
+                setLoading(false)
             }
-        };
+        }
 
-        fetchData();
-    }, []);
-
+        fetchData()
+    }, [])
     if (loading) {
         return <div className="text-center mt-10">Loading...</div>;
     }
@@ -187,59 +199,25 @@ export default function DashboardPage() {
 
                 {/* ===== RIGHT ===== */}
                 <div className="lg:col-span-3 space-y-6">
-                    <div className="bg-white rounded-lg shadow p-4 md:p-5">
-                        {/* ✅ Title */}
-                        <h2 className="text-base md:text-lg font-semibold mb-4 text-center">
-                            Thống kê trạng thái phản ánh
-                        </h2>
 
-                        <div className="h-72">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie
-                                        data={thongKe}
-                                        dataKey="so_luong"
-                                        nameKey="trang_thai"
-                                        cx="50%"
-                                        cy="50%"
-                                        outerRadius={80}
-                                        label={({ percent }) =>
-                                            `(${(percent * 100).toFixed(0)}%)`
-                                        }
-                                    >
-                                        {thongKe.map((_, index) => (
-                                            <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Pie>
+                    {/* Trạng thái */}
+                    <ThongKePieChart
+                        title="Thống kê trạng thái phản ánh"
+                        data={thongKe}
+                        dataKey="so_luong"
+                        nameKey="trang_thai"
+                        unit="phản ánh"
+                    />
 
-                                    {/* Tooltip khi hover */}
-                                    <Tooltip formatter={(value) => `${value} phản ánh`} />
+                    {/* Mức độ hài lòng */}
+                    <ThongKePieChart
+                        title="Mức độ hài lòng"
+                        data={thongKeHaiLong}
+                        dataKey="so_luong"
+                        nameKey="muc_do_label"
+                        unit="đánh giá"
+                    />
 
-                                    {/* Legend (chú thích màu) */}
-                                    <Legend
-                                        verticalAlign="bottom"
-                                        height={36}
-                                        formatter={(value) => <span className="text-sm">{value}</span>}
-                                    />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </div>                    
-                    {/* Thống kê mức độ hài lòng */}
-                    <div className="bg-white rounded-lg shadow p-4 md:p-5">
-                        <h2 className="text-base md:text-lg font-semibold mb-4">
-                            Mức độ hài lòng
-                        </h2>
-
-                        <div className="text-center">
-                            <div className="text-2xl md:text-3xl font-bold text-blue-600">
-                                87%
-                            </div>
-                            <p className="text-sm text-gray-500 mt-2">
-                                Sinh viên hài lòng
-                            </p>
-                        </div>
-                    </div>
                 </div>
             </div>
 

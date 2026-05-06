@@ -17,7 +17,7 @@ class HomeController extends Controller
                 $query->where('LaNoiBo', 1);
             })
             ->orderBy('NgayGui', 'desc')
-            ->limit(4)
+            ->limit(6)
             ->get();
         // ===== 2. Lấy tất cả lĩnh vực
         $linhVucs = LinhVuc::all();
