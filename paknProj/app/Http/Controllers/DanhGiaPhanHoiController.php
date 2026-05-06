@@ -124,6 +124,7 @@ class DanhGiaPhanHoiController extends Controller
         return response()->json([
             'list' => $danhGia,
             'daDanhGia' => $daDanhGia,
+            'coDanhGia' => $danhGia->isNotEmpty(),
         ]);
     }
 }

@@ -14,22 +14,26 @@ const PhanHoiList = ({ danhSach, phanAnh, phanHoiMoiNhatId }: Props) => {
 
   return (
     <div className="space-y-4">
-      {danhSach.map((item) => (
-        <div key={item.IdPhanHoi} className="space-y-2">
-          
-          {/* Phản hồi */}
-          <PhanHoiItem phanHoi={item} phanAnh={phanAnh} />
+      {danhSach.map((item) => {
+        const isLatest = item.IdPhanHoi === phanHoiMoiNhatId;
 
-          {/* Đánh giá */}
-          {phanAnh?.IdTrangThaiPhanAnh === 6 && item.LaNoiBo === 0 && (
-            <DanhGiaPhanHoi
-              idPhanHoi={item.IdPhanHoi}
-              chiChoDanhGia={item.IdPhanHoi === phanHoiMoiNhatId}
-            />
-          )}
+        return (
+          <div key={item.IdPhanHoi} className="space-y-2">
 
-        </div>
-      ))}
+            {/* Phản hồi */}
+            <PhanHoiItem phanHoi={item} phanAnh={phanAnh} />
+
+            {/* ✅ LUÔN render để xem list */}
+            {phanAnh?.IdTrangThaiPhanAnh === 6 && item.LaNoiBo === 0 && (
+              <DanhGiaPhanHoi
+                idPhanHoi={item.IdPhanHoi}
+                chiChoDanhGia={isLatest}
+              />
+            )}
+
+          </div>
+        );
+      })}
     </div>
   );
 };

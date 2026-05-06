@@ -224,7 +224,9 @@ export default function DashboardPage() {
                                 </PieChart>
                             </ResponsiveContainer>
                         </div>
-                    </div>                    <div className="bg-white rounded-lg shadow p-4 md:p-5">
+                    </div>                    
+                    {/* Thống kê mức độ hài lòng */}
+                    <div className="bg-white rounded-lg shadow p-4 md:p-5">
                         <h2 className="text-base md:text-lg font-semibold mb-4">
                             Mức độ hài lòng
                         </h2>

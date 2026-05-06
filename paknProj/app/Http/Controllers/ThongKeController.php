@@ -20,4 +20,18 @@ class ThongKeController extends Controller
 
         return response()->json($data);
     }
+
+    public function thongKeMucDoHaiLong()
+    {
+        $data = DB::table('danhgiaphanhoi')
+            ->select(
+                'MucDoHaiLong as muc_do',
+                DB::raw('COUNT(*) as so_luong')
+            )
+            ->groupBy('MucDoHaiLong')
+            ->orderBy('MucDoHaiLong')
+            ->get();
+
+        return response()->json($data);
+    }
 }

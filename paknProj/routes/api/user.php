@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/meta', [MetaController::class, 'index']);
 // Home page
 Route::get('/home', [HomeController::class, 'index']);
-Route::get('/thong-ke/trang-thai', [ThongKeController::class, 'thongKeTrangThai']);
+// Thống kê
+Route::get('/thongke/trang-thai', [ThongKeController::class, 'thongKeTrangThai']);
+Route::get('/thongke/muc-do-hai-long', [ThongKeController::class, 'thongKeMucDoHaiLong']);
 
 // Đăng nhập và đăng ký
 Route::post('register', [AuthController::class, 'register']);
