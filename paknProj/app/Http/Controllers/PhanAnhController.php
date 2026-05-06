@@ -57,7 +57,7 @@ class PhanAnhController extends Controller
             $phanAnh = PhanAnh::create([
                 'TieuDe' => $request->TieuDe,
                 'NoiDung' => $request->NoiDung,
-                'MucDoKhanCap' => $request->MucDoKhanCap ?? 'THAP',
+                'IdMucDoKhanCap' => $request->IdMucDoKhanCap ?? 1,
                 'AnDanh' => $request->AnDanh ?? 0,
                 'NgayGui' => now(),
                 'IdNguoiDung' => $user ? $user->IdNguoiDung : null,
@@ -129,8 +129,8 @@ class PhanAnhController extends Controller
     private function buildQuery(Request $request, $field, $value)
     {
         return PhanAnh::where($field, $value)
-            ->when($request->MucDoKhanCap, function ($query) use ($request) {
-                $query->where('MucDoKhanCap', $request->MucDoKhanCap);
+            ->when($request->IdMucDoKhanCap, function ($query) use ($request) {
+                $query->where('IdMucDoKhanCap', $request->IdMucDoKhanCap);
             })
             ->when($request->IdTrangThaiPhanAnh, function ($query) use ($request) {
                 $query->where('IdTrangThaiPhanAnh', $request->IdTrangThaiPhanAnh);

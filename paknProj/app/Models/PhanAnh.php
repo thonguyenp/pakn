@@ -18,18 +18,20 @@ class PhanAnh extends Model
     protected $fillable = [
         'TieuDe',
         'NoiDung',
-        'MucDoKhanCap',
         'AnDanh',
         'NgayGui',
         'NgayCapNhat',
         'IdNguoiDung',
         'IdLinhVuc',
         'IdDonVi',
+        'IdMucDoKhanCap',
         'IdTrangThaiPhanAnh',
         'MaTheoDoi',
     ];
+
     // Tạo thuộc tính ảo để định dạng ngày gửi
-    protected $appends = ['NgayGuiFormatted'];
+    protected $appends = ['NgayGuiFormatted', 'qua_han', 'deadline'];
+
     protected $casts = [
         'NgayGui' => 'datetime',
     ];
@@ -76,6 +78,20 @@ class PhanAnh extends Model
         return $this->belongsTo(TrangThaiPhanAnh::class, 'IdTrangThaiPhanAnh');
     }
 
+    public function thoiHanXuLy()
+    {
+        return $this->hasOne(
+            ThoiHanXuLyLinhVuc::class,
+            'IdLinhVuc',
+            'IdLinhVuc'
+        )->where('IdMucDoKhanCap', $this->IdMucDoKhanCap);
+    }
+
+    public function mucDoKhanCap()
+    {
+        return $this->belongsTo(MucDoKhanCap::class, 'IdMucDoKhanCap');
+    }
+
     public function toSearchableArray()
     {
         $this->loadMissing(['linhVuc', 'donVi']);
@@ -91,8 +107,43 @@ class PhanAnh extends Model
             'id_linh_vuc' => $this->IdLinhVuc,
             'id_don_vi' => $this->IdDonVi,
             'id_trang_thai' => $this->IdTrangThaiPhanAnh,
-            
+
             'ngay_gui' => $this->NgayGui,
         ];
+    }
+
+    // Logic để tính quá hạn và deadline
+    public function getDeadlineAttribute()
+    {
+        if (! $this->IdMucDoKhanCap || ! $this->IdLinhVuc || ! $this->NgayGui) {
+            return null;
+        }
+
+        $thoiHan = ThoiHanXuLyLinhVuc::where('IdMucDoKhanCap', $this->IdMucDoKhanCap)
+            ->where('IdLinhVuc', $this->IdLinhVuc)
+            ->first();
+
+        if (! $thoiHan) {
+            return null;
+        }
+
+        return $this->NgayGui->copy()->addHours($thoiHan->SoGioXuLy);
+    }
+
+    public function isQuaHan()
+    {
+        $deadline = $this->deadline;
+
+        if (! $deadline) {
+            return false;
+        }
+
+        return now()->gt($deadline);
+    }
+
+    // 👇 dùng cho API
+    public function getQuaHanAttribute()
+    {
+        return $this->isQuaHan();
     }
 }

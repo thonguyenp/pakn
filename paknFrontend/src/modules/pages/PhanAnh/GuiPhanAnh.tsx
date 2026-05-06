@@ -19,7 +19,7 @@ const GuiPhanAnh = () => {
   const [linhVuc, setLinhVuc] = useState("")
   const [donVi, setDonVi] = useState("")
   
-  const [mucDoKhanCap, setMucDoKhanCap] = useState("THAP")
+  const [mucDoKhanCap, setMucDoKhanCap] = useState("1") // Mặc định là "Thấp"
 
   const [anDanh, setAnDanh] = useState(false)
 
@@ -181,10 +181,10 @@ const GuiPhanAnh = () => {
           className="w-full border p-2 rounded"
         >
 
-          <option value="THAP">Thấp</option>
-          <option value="TRUNG_BINH">Trung bình</option>
-          <option value="CAO">Cao</option>
-          <option value="KHAN_CAP">Khẩn cấp</option>
+          <option value="1">Thấp</option>
+          <option value="2">Trung bình</option>
+          <option value="3">Cao</option>
+          <option value="4">Khẩn cấp</option>
 
         </select>
 
