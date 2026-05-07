@@ -1,3 +1,5 @@
+import type { DonVi } from "./donvi"
+
 export interface User {
   IdNguoiDung: number
   HoTen: string
@@ -7,6 +9,7 @@ export interface User {
   TrangThai: number
   NgayTao?: string
   IdDonVi?: string | null
+  don_vi?: DonVi
 }
 
 

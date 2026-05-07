@@ -56,8 +56,16 @@ class PhanAnhController extends Controller
     public function show($maTheoDoi)
     {
 
-        $phanAnh = PhanAnh::with(['files', 'linhVuc', 'donVi', 'trangThaiPhanAnh'])
-            ->where('MaTheoDoi', $maTheoDoi)->first();
+        $phanAnh = PhanAnh::with([
+            'files',
+            'linhVuc',
+            'donVi',
+            'trangThaiPhanAnh',
+            'phanHoi.files',
+            'phanHoi.nguoiDung',
+            'phanHoi.nguoiDung.donVi',
+        ])->where('MaTheoDoi', $maTheoDoi)->first();
+
         if (! $phanAnh) {
             return response()->json([
                 'success' => false,
@@ -66,6 +74,11 @@ class PhanAnhController extends Controller
         }
         foreach ($phanAnh->files as $file) {
             $file->url = asset('storage/'.$file->DuongDan);
+        }
+        foreach ($phanAnh->phanHoi as $phanHoi) {
+            foreach ($phanHoi->files as $file) {
+                $file->url = asset('storage/'.$file->DuongDan);
+            }
         }
 
         return response()->json([

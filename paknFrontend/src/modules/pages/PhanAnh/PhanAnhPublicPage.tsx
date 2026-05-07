@@ -103,8 +103,9 @@ const PhanAnhPublicPage = () => {
         {/* Nội dung */}
         <div>
           <h2 className="font-semibold mb-2">Nội dung</h2>
-          <p className="text-gray-700 whitespace-pre-line">
-            {data.NoiDung}
+          <p className="text-gray-700 whitespace-pre-line"
+            dangerouslySetInnerHTML={{ __html: data.NoiDung }}
+          >  
           </p>
         </div>
 

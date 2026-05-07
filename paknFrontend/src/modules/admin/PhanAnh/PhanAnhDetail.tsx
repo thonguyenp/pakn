@@ -9,7 +9,7 @@ export default function PhanAnhDetail() {
   const [phanAnh, setPhanAnh] = useState<PhanAnh | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
-
+  const [showPhanHoi, setPhanHoi] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -57,16 +57,16 @@ export default function PhanAnhDetail() {
 
         <div>
           <label className="font-semibold">Nội dung</label>
-          <div className="mt-1 whitespace-pre-line text-gray-800">
-            {phanAnh.NoiDung}
-          </div>
+          <div className="mt-1 whitespace-pre-line text-gray-800"
+            dangerouslySetInnerHTML={{ __html: phanAnh.NoiDung }}
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
 
           <div>
             <label className="font-semibold">Mức độ khẩn cấp</label>
-            <div className="mt-1">{phanAnh.MucDoKhanCap}</div>
+            <div className="mt-1">{phanAnh.IdMucDoKhanCap}</div>
           </div>
 
           <div>
@@ -153,12 +153,18 @@ export default function PhanAnhDetail() {
           )}
         </div>
         {/* Xem lịch sử xử lý */}
-        <div className="mt-8 flex justify-end">
+        <div className="mt-8 gap-2 flex justify-end">
           <Link
             to={`/admin/phananh/lichsu/${phanAnh.MaTheoDoi}`}
             className="px-5 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
           >
             Xem lịch sử xử lý
+          </Link>
+          <Link
+            to={`/admin/phananh/xem/${phanAnh.MaTheoDoi}/phanhoi`}
+            className="px-5 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
+          >
+            Xem phản hồi
           </Link>
         </div>
       </div>

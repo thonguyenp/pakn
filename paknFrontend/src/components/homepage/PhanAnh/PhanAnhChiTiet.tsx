@@ -11,11 +11,11 @@ const PhanAnhDetail = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const getUrgency = (value: string) => {
-    if (value === "THAP") return ["Thấp", "bg-gray-100 text-gray-600"];
-    if (value === "TRUNG_BINH") return ["Trung bình", "bg-yellow-100 text-yellow-600"];
-    if (value === "CAO") return ["Cao", "bg-orange-100 text-orange-600"];
-    if (value === "KHAN_CAP") return ["Khẩn cấp", "bg-red-100 text-red-600"];
+  const getUrgency = (value: number) => {
+    if (value === 1) return ["Thấp", "bg-gray-100 text-gray-600"];
+    if (value === 2) return ["Trung bình", "bg-yellow-100 text-yellow-600"];
+    if (value === 3) return ["Cao", "bg-orange-100 text-orange-600"];
+    if (value === 4) return ["Khẩn cấp", "bg-red-100 text-red-600"];
     return ["Không rõ", "bg-gray-100 text-gray-500"];
   };
   const phanHoiMoiNhat = data?.phan_hoi
@@ -45,7 +45,7 @@ const PhanAnhDetail = () => {
   if (loading) return <div className="p-6">Đang tải...</div>;
 
   if (!data) return <div className="p-6 text-red-500">Không tìm thấy dữ liệu</div>;
-  const [label, color] = getUrgency(data.MucDoKhanCap);
+  const [label, color] = getUrgency(data.IdMucDoKhanCap);
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white shadow rounded-2xl p-6 space-y-6">
@@ -77,8 +77,8 @@ const PhanAnhDetail = () => {
         {/* Nội dung */}
         <div>
           <h2 className="font-semibold mb-2">Nội dung</h2>
-          <p className="text-gray-700 whitespace-pre-line">
-            {data.NoiDung}
+          <p className="text-gray-700 whitespace-pre-line"
+            dangerouslySetInnerHTML={{ __html: data.NoiDung }}>
           </p>
         </div>
 

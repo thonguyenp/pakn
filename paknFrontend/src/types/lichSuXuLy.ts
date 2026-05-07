@@ -9,9 +9,3 @@ export interface LichSuXuLy {
   }
 }
 
-export interface PhanHoi {
-  IdPhanHoi: number
-  NoiDung: string
-  LaNoiBo: number
-  NgayPhanHoi: string
-}

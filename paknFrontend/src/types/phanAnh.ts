@@ -1,5 +1,5 @@
 import type { FileDinhKem } from "./fileDinhKem"
-import type { PhanHoi } from "./lichSuXuLy"
+import type { PhanHoi } from "./phanHoi"
 
 export interface PhanAnh {
   IdPhanAnh: number

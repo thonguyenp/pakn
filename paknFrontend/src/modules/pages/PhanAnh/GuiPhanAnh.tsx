@@ -85,7 +85,7 @@ const GuiPhanAnh = () => {
     formData.append("NoiDung", noiDung)
     formData.append("IdLinhVuc", linhVuc)
     formData.append("IdDonVi", donVi)
-    formData.append("MucDoKhanCap", mucDoKhanCap)
+    formData.append("IdMucDoKhanCap", mucDoKhanCap)
     formData.append("AnDanh", anDanh ? "1" : "0")
     formData.append("email", email)
 

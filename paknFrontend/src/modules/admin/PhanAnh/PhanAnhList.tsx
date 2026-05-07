@@ -143,7 +143,9 @@ export default function PhanAnhList() {
           {data?.data.map((item) => (
             <tr key={item.IdPhanAnh} className="border-t">
               <td className="p-2">{item.TieuDe}</td>
-              <td>{item.NoiDung}</td>
+              <td
+                dangerouslySetInnerHTML={{ __html: item.NoiDung }}
+              />
               <td>{item.AnDanh ? "Có" : "Không"}</td>
               <td>{item.NgayGui}</td>
               <td className="p-2">

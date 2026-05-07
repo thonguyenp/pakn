@@ -83,8 +83,8 @@ export default function PhanAnhCuaToi() {
 
             </div>
 
-            <p className="text-gray-700">
-              {pa.NoiDung}
+            <p className="text-gray-700"
+              dangerouslySetInnerHTML={{ __html: pa.NoiDung }}>
             </p>
             {/* ACTION */}
             <div className="flex justify-end">

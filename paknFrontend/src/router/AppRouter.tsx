@@ -38,6 +38,7 @@ import CapNhatPhanAnhPage from "@/modules/pages/PhanAnh/CapNhatPhanAnhPage";
 import PhanAnhPublicPage from "@/modules/pages/PhanAnh/PhanAnhPublicPage";
 import TimKiemPage from "@/modules/pages/PhanAnh/TimKiemPage";
 import LichSuPhanAnh from "@/modules/admin/PhanAnh/LichSuPhanAnh";
+import PhanHoiListPage from "@/modules/admin/PhanAnh/PhanHoiListPage";
 
 export default function AppRouter() {
   return (
@@ -50,10 +51,10 @@ export default function AppRouter() {
         {/* ================= USER ROUTES ================= */}
 
         <Route element={<UserLayout />}>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* Trang chủ */}
           <Route path="/" element={<Dashboard />} />
@@ -107,6 +108,14 @@ export default function AppRouter() {
                 }
               >
               </Route>
+              <Route
+                path="xem/:maTheoDoi/phanhoi"
+                element={
+                  <PermissionGuard permission="XemTatCaPhanAnh">
+                    <PhanHoiListPage />
+                  </PermissionGuard>
+                }
+              />
               <Route
                 path="edit/:id"
                 element={

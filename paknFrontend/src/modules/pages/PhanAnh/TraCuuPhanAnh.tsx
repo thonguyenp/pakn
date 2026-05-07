@@ -75,7 +75,7 @@ const TraCuuPhanAnh = () => {
 
           <p><b>Mã theo dõi:</b> {data.MaTheoDoi}</p>
           <p><b>Ngày gửi:</b> {data.NgayGui}</p>
-          <p><b>Mức độ:</b> {data.MucDoKhanCap}</p>
+          <p><b>Mức độ:</b> {data.IdMucDoKhanCap}</p>
 
           <p><b>Lĩnh vực:</b> {data.linh_vuc?.TenLinhVuc}</p>
           <p><b>Đơn vị:</b> {data.don_vi?.TenDonVi}</p>
@@ -83,7 +83,9 @@ const TraCuuPhanAnh = () => {
 
           <div>
             <b>Nội dung:</b>
-            <p className="mt-2 text-gray-700">{data.NoiDung}</p>
+            <p className="mt-2 text-gray-700"
+              dangerouslySetInnerHTML={{ __html: data.NoiDung || "Không có nội dung" }}
+            />
           </div>
           <button
             onClick={() =>

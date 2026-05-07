@@ -137,8 +137,8 @@ export default function TimKiemPage() {
                             {item.TieuDe}
                         </h2>
 
-                        <p className="text-gray-500 text-sm">
-                            {item.NoiDung || "Không có nội dung"}
+                        <p className="text-gray-500 text-sm"
+                          dangerouslySetInnerHTML={{ __html: item.NoiDung || "Không có nội dung" }}>
                         </p>
 
                         <p className="text-xs text-gray-400 mt-1">

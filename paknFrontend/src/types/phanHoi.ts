@@ -1,3 +1,13 @@
+import type { User } from "./user"
+
+export interface PhanHoi {
+  IdPhanHoi: number
+  NoiDung: string
+  LaNoiBo: number
+  NgayPhanHoi: string
+  nguoi_dung?: User
+}
+
 export interface PhanHoiCreateRequest {
   NoiDung: string;
   IdPhanAnh: number;

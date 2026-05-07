@@ -189,8 +189,8 @@ export default function DashboardPage() {
                                 <h3 className="font-semibold text-sm md:text-base">
                                     {item.TieuDe}
                                 </h3>
-                                <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-                                    {item.NoiDung}
+                                <p className="text-sm text-gray-600 mt-1 line-clamp-2"
+                                  dangerouslySetInnerHTML={{ __html: item.NoiDung }}>
                                 </p>
                                 <div className="text-xs text-gray-400 mt-2">
                                     Ngày gửi:{" "}

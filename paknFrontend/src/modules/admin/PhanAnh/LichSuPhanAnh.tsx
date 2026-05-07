@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { phanAnhApi } from "@/api/admin/phanAnhApi"
-import { type LichSuXuLy, type PhanHoi } from "@/types/lichSuXuLy"
+import { type LichSuXuLy } from "@/types/lichSuXuLy"
+import type { PhanHoi } from "@/types/phanHoi"
 import dayjs from "dayjs"
 
 const LichSuPhanAnh = () => {
@@ -95,7 +96,9 @@ const LichSuPhanAnh = () => {
               </span>
             </div>
 
-            <p>{item.NoiDung}</p>
+            <p
+              dangerouslySetInnerHTML={{ __html: item.NoiDung }}
+            />
           </div>
         ))}
       </div>
