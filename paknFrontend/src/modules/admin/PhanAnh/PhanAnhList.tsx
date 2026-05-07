@@ -150,7 +150,7 @@ export default function PhanAnhList() {
                 <div className="flex gap-2 justify-center">
 
                   <Link
-                    to={`/admin/phananh/xem/${item.IdPhanAnh}`}
+                    to={`/admin/phananh/xem/${item.MaTheoDoi}`}
                     className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
                   >
                     Xem

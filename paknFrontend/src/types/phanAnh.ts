@@ -1,10 +1,11 @@
 import type { FileDinhKem } from "./fileDinhKem"
+import type { PhanHoi } from "./lichSuXuLy"
 
 export interface PhanAnh {
   IdPhanAnh: number
   TieuDe: string
   NoiDung: string
-  MucDoKhanCap: string
+  IdMucDoKhanCap: number
   AnDanh: number
   NgayGui: string
   NgayGuiFormatted?: string
@@ -13,7 +14,10 @@ export interface PhanAnh {
   IdDonVi: number
   IdTrangThaiPhanAnh: number
   MaTheoDoi?: string
-  files?: FileDinhKem[];
+  files?: FileDinhKem[]
+  deadline?: string
+  qua_han?: boolean
+  phan_hoi?: PhanHoi[]
 
   linh_vuc?: {
     IdLinhVuc: number

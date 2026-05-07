@@ -91,7 +91,7 @@ const LichSuPhanAnh = () => {
                 Phản hồi
               </span>
               <span className="text-sm text-gray-400">
-                {dayjs(item.ThoiGian).format("DD/MM/YYYY HH:mm")}
+                {dayjs(item.NgayPhanHoi).format("DD/MM/YYYY HH:mm")}
               </span>
             </div>
 

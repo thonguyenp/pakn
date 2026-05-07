@@ -4,7 +4,6 @@ import { getPhanAnhPublic } from "@/api/user/phanAnh/phanAnhService"
 import type { PhanAnh } from "@/types/phanAnh"
 import PhanHoiList from "@/components/homepage/PhanAnh/PhanHoiList"
 import { Download } from "lucide-react"
-import DanhGiaPhanHoi from "@/components/homepage/PhanAnh/DanhGiaPhanHoi"
 
 const PhanAnhPublicPage = () => {
   const navigate = useNavigate()
@@ -13,14 +12,14 @@ const PhanAnhPublicPage = () => {
   const [data, setData] = useState<PhanAnh | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
-  const getUrgency = (value: string) => {
-    if (value === "THAP") return ["Thấp", "bg-gray-100 text-gray-600"];
-    if (value === "TRUNG_BINH") return ["Trung bình", "bg-yellow-100 text-yellow-600"];
-    if (value === "CAO") return ["Cao", "bg-orange-100 text-orange-600"];
-    if (value === "KHAN_CAP") return ["Khẩn cấp", "bg-red-100 text-red-600"];
+  const getUrgency = (value: number) => {
+    if (value == 1) return ["Thấp", "bg-gray-100 text-gray-600"];
+    if (value == 2) return ["Trung bình", "bg-yellow-100 text-yellow-600"];
+    if (value == 3) return ["Cao", "bg-orange-100 text-orange-600"];
+    if (value == 4) return ["Khẩn cấp", "bg-red-100 text-red-600"];
     return ["Không rõ", "bg-gray-100 text-gray-500"];
   };
-  const [label, color] = getUrgency(data?.MucDoKhanCap || "")
+  const [label, color] = getUrgency(data?.IdMucDoKhanCap || 0)
   const phanHoiMoiNhat = data?.phan_hoi
     ?.filter((ph) => ph.LaNoiBo === 0) // nếu cần lọc public
     ?.sort(
@@ -62,19 +61,43 @@ const PhanAnhPublicPage = () => {
         </div>
 
         {/* Trạng thái + mức độ */}
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-3">
+
+          {/* Trạng thái */}
           <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-sm">
             {data.trang_thai_phan_anh?.TenTrangThai}
           </span>
 
+          {/* Mức độ khẩn cấp */}
           <span className={`px-3 py-1 rounded-full text-sm ${color}`}>
             {label}
           </span>
+
+          {/* Ẩn danh */}
           {data.AnDanh === 1 && (
             <span className="px-3 py-1 rounded-full bg-gray-200 text-gray-600 text-sm">
               Ẩn danh
             </span>
           )}
+
+          {/* Trễ hạn / Kịp hạn */}
+          {data.qua_han ? (
+            <span className="px-3 py-1 rounded-full bg-red-100 text-red-600 text-sm font-medium">
+              ⏰ Trễ hạn
+            </span>
+          ) : (
+            <span className="px-3 py-1 rounded-full bg-green-100 text-green-600 text-sm font-medium">
+              ✔ Kịp hạn
+            </span>
+          )}
+        </div>
+
+        {/* DEADLINE */}
+        <div className="text-sm text-gray-500">
+          Deadline xử lý:{" "}
+          {data.deadline
+            ? new Date(data.deadline).toLocaleString("vi-VN")
+            : "Không có"}
         </div>
 
         {/* Nội dung */}

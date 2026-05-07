@@ -12,5 +12,6 @@ export interface LichSuXuLy {
 export interface PhanHoi {
   IdPhanHoi: number
   NoiDung: string
-  ThoiGian: string
+  LaNoiBo: number
+  NgayPhanHoi: string
 }
