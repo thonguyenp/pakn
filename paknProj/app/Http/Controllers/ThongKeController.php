@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PhanAnh;
 use Illuminate\Support\Facades\DB;
 
 class ThongKeController extends Controller
@@ -33,5 +34,33 @@ class ThongKeController extends Controller
             ->get();
 
         return response()->json($data);
+    }
+
+    public function thongKeTreHanKipHan()
+    {
+        $phanAnhs = PhanAnh::all();
+
+        $treHan = 0;
+        $kipHan = 0;
+
+        foreach ($phanAnhs as $phanAnh) {
+
+            if ($phanAnh->qua_han) {
+                $treHan++;
+            } else {
+                $kipHan++;
+            }
+        }
+
+        return response()->json([
+            [
+                'trang_thai' => 'Kịp hạn',
+                'so_luong' => $kipHan,
+            ],
+            [
+                'trang_thai' => 'Trễ hạn',
+                'so_luong' => $treHan,
+            ],
+        ]);
     }
 }

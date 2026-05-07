@@ -8,6 +8,7 @@ import { getThongKeTrangThai } from "@/api/user/homePage/thongKeApi";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts"
 import ThongKePieChart from "@/components/shared/ThongKePieChart"
 import { getThongKeMucDoHaiLong } from "@/api/user/homePage/thongKeApi"
+import { getThongKeTreHan } from "@/api/user/homePage/thongKeApi"
 
 type CardItemProps = {
     title: string;
@@ -74,6 +75,8 @@ export default function DashboardPage() {
     const [loading, setLoading] = useState(true);
     const [thongKe, setThongKe] = useState<ThongKeItem[]>([]);
     const [thongKeHaiLong, setThongKeHaiLong] = useState<any[]>([]);
+    const [thongKeTreHan, setThongKeTreHan] = useState<any[]>([]);
+
     // ===== SLIDER =====
     const slides = [
         { id: 1, image: "/images/homepage/dashboard/slider1.png" },
@@ -101,7 +104,8 @@ export default function DashboardPage() {
                 }))
 
                 setThongKeHaiLong(formatted)
-
+                const treHanData = await getThongKeTreHan()
+                setThongKeTreHan(treHanData)
             } catch (err) {
                 console.error("Lỗi load homepage:", err)
             } finally {
@@ -162,43 +166,43 @@ export default function DashboardPage() {
             </div>
 
             {/* ===== CONTENT ===== */}
-            <div className="max-w-7xl mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-10 gap-6">
+            {/* ===== CONTENT ===== */}
+            <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
 
-                {/* ===== LEFT ===== */}
-                <div className="lg:col-span-7 bg-white rounded-lg shadow p-4 md:p-5">
+                {/* ===== PHẢN ÁNH NỔI BẬT ===== */}
+                <div className="bg-white rounded-lg shadow p-4 md:p-5">
                     <h2 className="text-lg md:text-xl font-semibold mb-4">
                         Phản ánh nổi bật
                     </h2>
 
-                    <div className="space-y-4">
-                        {homeData?.phan_anh_noi_bat.map((item) => (
-                            <div
+                    {/* 2 cột */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {homeData?.phan_anh_noi_bat.slice(0, 10).map((item) => (
+                            <Link
                                 key={item.IdPhanAnh}
-                                onClick={() => navigate(`/phan-anh/${item.MaTheoDoi}/${new Date(item.NgayGui).toISOString().split("T")[0]}`, {
-                                    state: {
-                                        ngayGui: item.NgayGui,
-                                    }
-                                })}
-                                className="border rounded-md p-3 md:p-4 hover:bg-gray-50 cursor-pointer"
+                                to={`/phan-anh/${item.MaTheoDoi}/${new Date(item.NgayGui)
+                                    .toISOString()
+                                    .split("T")[0]}`}
+                                state={{ ngayGui: item.NgayGui }}
+                                className="border rounded-md p-3 md:p-4 hover:bg-gray-50 transition"
                             >
                                 <h3 className="font-semibold text-sm md:text-base">
                                     {item.TieuDe}
                                 </h3>
-
                                 <p className="text-sm text-gray-600 mt-1 line-clamp-2">
                                     {item.NoiDung}
                                 </p>
-
                                 <div className="text-xs text-gray-400 mt-2">
-                                    Ngày gửi: {item.NgayGuiFormatted || item.NgayGui}
+                                    Ngày gửi:{" "}
+                                    {item.NgayGuiFormatted || item.NgayGui}
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 </div>
 
-                {/* ===== RIGHT ===== */}
-                <div className="lg:col-span-3 space-y-6">
+                {/* ===== PIE CHARTS ===== */}
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 
                     {/* Trạng thái */}
                     <ThongKePieChart
@@ -218,9 +222,16 @@ export default function DashboardPage() {
                         unit="đánh giá"
                     />
 
+                    {/* Trễ hạn */}
+                    <ThongKePieChart
+                        title="Thống kê phản ánh trễ hạn"
+                        data={thongKeTreHan}
+                        dataKey="so_luong"
+                        nameKey="trang_thai"
+                        unit="phản ánh"
+                    />
                 </div>
             </div>
-
             {/* ===== CARD GRID ===== */}
             <div className="max-w-7xl mx-auto px-4 md:px-6 pb-10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

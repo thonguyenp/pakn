@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
 
@@ -138,6 +139,12 @@ class PhanAnh extends Model
             return false;
         }
 
+        // Nếu đã cập nhật/xử lý
+        if ($this->NgayCapNhat) {
+            return Carbon::parse($this->NgayCapNhat)->gt($deadline);
+        }
+
+        // Nếu chưa xử lý
         return now()->gt($deadline);
     }
 

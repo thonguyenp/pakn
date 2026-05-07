@@ -17,7 +17,7 @@ Route::get('/home', [HomeController::class, 'index']);
 // Thống kê
 Route::get('/thongke/trang-thai', [ThongKeController::class, 'thongKeTrangThai']);
 Route::get('/thongke/muc-do-hai-long', [ThongKeController::class, 'thongKeMucDoHaiLong']);
-
+Route::get('/thongke/tre-han-kip-han', [ThongKeController::class, 'thongKeTreHanKipHan']);
 // Đăng nhập và đăng ký
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
