@@ -2,15 +2,7 @@ import { useEffect, useState } from "react";
 import { getNotification } from "@/api/user/profileApi";
 import { Link } from "react-router-dom";
 import { useNotification } from "@/contexts/NotificationContext";
-
-interface ThongBao {
-    IdThongBao: number;
-    TieuDe: string;
-    NoiDung: string;
-    NgayTao: string;
-    DaDoc: number;
-    Link: string;
-}
+import { type ThongBao } from "@/types/thongBao";
 
 export default function NotificationTab() {
     const [notifications, setNotifications] = useState<ThongBao[]>([]);

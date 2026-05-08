@@ -169,6 +169,7 @@ class PhanAnhController extends Controller
             'data' => $phanAnhs,
         ]);
     }
+
     // Tìm kiếm theo kiểu cổ điển
     // public function timKiem(Request $request)
     // {
@@ -217,7 +218,7 @@ class PhanAnhController extends Controller
 
         $results = PhanAnh::search($keyword, function ($meiliSearch, $query, $options) use ($request) {
 
-            $filters = ["id_trang_thai = 6"]; // Chỉ tìm kiếm phản ánh đã hoàn thành
+            $filters = ['id_trang_thai = 6']; // Chỉ tìm kiếm phản ánh đã hoàn thành
             if ($request->id_linh_vuc) {
                 $filters[] = 'id_linh_vuc = '.$request->id_linh_vuc;
             }

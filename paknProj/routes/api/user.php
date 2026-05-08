@@ -36,7 +36,6 @@ Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
 // Gửi lại email
 Route::post('/resend-verify-email', [AuthController::class, 'resendVerifyEmail']);
 
-
 // Theo dõi phản ánh mà không cần đăng nhập
 Route::get('/phananh/traCuu', [PhanAnhController::class, 'traCuu']);
 Route::post('/phananh/capNhat', [PhanAnhController::class, 'capNhat']);
@@ -57,9 +56,9 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/phananh/action/{maTheoDoi}', [PhanAnhController::class, 'action'])->middleware('permission:CapNhatTrangThai');  // checked
 
     Route::get('/phananh/xem', [PhanAnhController::class, 'getByNguoiDung'])->middleware('permission:XemPhanAnhCuaMinh');  // checked
-    Route::get('/phananh/{maTheoDoi}', [PhanAnhController::class, 'show']);
 
-    Route::get('/phananh/donvi/', [PhanAnhController::class, 'getByDonVi'])->middleware('permission:XemPhanAnhPhong');  // checked
+    Route::get('/phananh/donvi', [PhanAnhController::class, 'getByDonVi'])->middleware('permission:XemPhanAnhPhong');  // checked
+    Route::get('/phananh/{maTheoDoi}', [PhanAnhController::class, 'show']); //luôn đặt bên dưới getByDonVi vì getByDonVi phải load nhiều route này
 
     Route::get('/profile', [ProfileController::class, 'getProfile']);   // checked
 

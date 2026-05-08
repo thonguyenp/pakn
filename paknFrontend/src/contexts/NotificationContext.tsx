@@ -1,20 +1,13 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { createEcho } from "@/lib/echo";
 import { api } from "@/api/api";
-
-type Notification = {
-    IdThongBao: number;
-    TieuDe: string;
-    NoiDung: string;
-    DaDoc: number;
-    NgayTao: string;
-};
+import { type ThongBao } from "@/types/thongBao";
 
 type ContextType = {
-    notifications: Notification[];
+    notifications: ThongBao[];
     unreadCount: number;
     total: number;
-    setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
+    setNotifications: React.Dispatch<React.SetStateAction<ThongBao[]>>;
     markAsRead: (id: number) => Promise<void>;
     refreshNotifications: () => Promise<void>;
 };
@@ -22,7 +15,7 @@ type ContextType = {
 const NotificationContext = createContext<ContextType | null>(null);
 
 export const NotificationProvider = ({ children }: any) => {
-    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [notifications, setNotifications] = useState<ThongBao[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
     const [total, setTotal] = useState(0);
 
