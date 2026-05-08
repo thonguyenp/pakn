@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { getNotification } from "@/api/user/profileApi";
+import { Link } from "react-router-dom";
+import { useNotification } from "@/contexts/NotificationContext";
 
 interface ThongBao {
     IdThongBao: number;
@@ -7,10 +9,12 @@ interface ThongBao {
     NoiDung: string;
     NgayTao: string;
     DaDoc: number;
+    Link: string;
 }
 
 export default function NotificationTab() {
     const [notifications, setNotifications] = useState<ThongBao[]>([]);
+    const { markAsRead } = useNotification();
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [lastPage, setLastPage] = useState(1);
@@ -18,9 +22,11 @@ export default function NotificationTab() {
     const fetchNotifications = async (page = 1) => {
         try {
             const res = await getNotification(page);
+
             setNotifications(res.data.data);
             setCurrentPage(res.data.current_page);
             setLastPage(res.data.last_page);
+
             console.log(res.data);
         } catch (err) {
             console.error(err);
@@ -37,6 +43,23 @@ export default function NotificationTab() {
         return new Date(date).toLocaleString("vi-VN");
     };
 
+    const getUrl = (link: any) => {
+        try {
+            let parsedLink;
+            if (typeof link === "string") {
+                parsedLink = JSON.parse(link);
+            }
+            else {
+                parsedLink = link;
+            }
+            return parsedLink.url || "#";
+        }
+        catch (err) {
+            console.error("Lỗi khi phân tích link:", err);
+            return "#";
+        }
+    };
+
     if (loading) {
         return <div>Đang tải thông báo...</div>;
     }
@@ -49,9 +72,15 @@ export default function NotificationTab() {
                 </div>
             ) : (
                 notifications.map((tb) => (
-                    <div
+                    <Link
                         key={tb.IdThongBao}
-                        className={`p-4 rounded border ${tb.DaDoc
+                        to={getUrl(tb.Link)}
+                        onMouseDown={() => {
+                            if (!tb.DaDoc) {
+                                markAsRead(tb.IdThongBao);
+                            }
+                        }}
+                        className={`p-4 rounded border hover:shadow transition block ${tb.DaDoc
                             ? "bg-gray-50"
                             : "bg-blue-100"
                             }`}
@@ -60,6 +89,7 @@ export default function NotificationTab() {
                             <div className="font-semibold">
                                 {tb.TieuDe}
                             </div>
+
                             <div className="text-xs text-gray-500">
                                 {formatDate(tb.NgayTao)}
                             </div>
@@ -68,10 +98,10 @@ export default function NotificationTab() {
                         <div className="text-sm mt-1 text-gray-700">
                             {tb.NoiDung}
                         </div>
-                    </div>
+                    </Link>
                 ))
-
             )}
+
             {/* Pagination */}
             <div className="flex justify-center gap-2 mt-4">
                 <button
@@ -95,6 +125,5 @@ export default function NotificationTab() {
                 </button>
             </div>
         </div>
-
     );
 }

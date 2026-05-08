@@ -69,7 +69,7 @@ export default function PhanHoiListPage() {
                 </div>
 
                 <Link
-                    to={`/admin/phananh/${phanAnh.MaTheoDoi}`}
+                    to={`/admin/phananh/xem/${phanAnh.MaTheoDoi}`}
                     className="text-blue-600 hover:underline"
                 >
                     Quay lại
