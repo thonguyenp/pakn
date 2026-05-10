@@ -1,6 +1,7 @@
 import ToggleSwitch from "@/components/shared/ToogleSwitch";
 import { usePhanAnhCuaToi } from "@/hooks/usePhanAnh"
 import { useNavigate } from "react-router-dom"
+import dayjs from "dayjs";
 
 export default function PhanAnhCuaToi() {
 
@@ -78,7 +79,7 @@ export default function PhanAnhCuaToi() {
               </h2>
 
               <span className="text-sm text-gray-500">
-                {pa.NgayGui}
+                {dayjs(pa.NgayGui).format("DD/MM/YYYY HH:mm")}
               </span>
 
             </div>
