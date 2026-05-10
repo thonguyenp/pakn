@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DonVi;
 use App\Models\LinhVuc;
+use App\Models\MucDoKhanCap;
 use App\Models\TrangThaiPhanAnh;
 use Illuminate\Http\Request;
 
@@ -38,6 +39,13 @@ class MetaController extends Controller
                 'IdTrangThaiPhanAnh',
                 'TenTrangThai'
             )->orderBy('IdTrangThaiPhanAnh')->get();
+        }
+
+        if (in_array('mucdokhancap', $include)) {
+            $data['mucdokhancap'] = MucDoKhanCap::select(
+                'IdMucDoKhanCap',
+                'TenMucDo'
+            )->orderBy('IdMucDoKhanCap')->get();
         }
 
         return response()->json($data);

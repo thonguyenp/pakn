@@ -7,6 +7,8 @@ import FileDropzone from "@/components/shared/FileDropzone"
 
 import { type LinhVuc } from "@/types/linhvuc"
 import { type DonVi } from "@/types/donvi"
+import type { MucDoKhanCap } from "@/types/mucDoKhanCap"
+
 import SuccessModal from "@/components/shared/SuccessModal"
 import SelectSearchDropdown from "@/components/shared/SelectSearchDropdown"
 
@@ -27,6 +29,7 @@ const GuiPhanAnh = () => {
 
   const [dsLinhVuc, setDsLinhVuc] = useState<LinhVuc[]>([])
   const [dsDonVi, setDsDonVi] = useState<DonVi[]>([])
+  const [dsMucDoKhanCap, setDsMucDoKhanCap] = useState<MucDoKhanCap[]>([])
 
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
@@ -41,6 +44,10 @@ const GuiPhanAnh = () => {
     label: dv.TenDonVi,
     value: dv.IdDonVi.toString()
   }))
+  const mucDoKhanCapOptions = dsMucDoKhanCap.map(mdkc => ({
+    label: mdkc.TenMucDo,
+    value: mdkc.IdMucDoKhanCap.toString()
+  }))
 
 
   useEffect(() => {
@@ -54,10 +61,11 @@ const GuiPhanAnh = () => {
 
       try {
 
-        const meta = await getMeta("linhvuc,donvi")
+        const meta = await getMeta("linhvuc,donvi,mucdokhancap")
 
         setDsLinhVuc(meta.linhvuc)
         setDsDonVi(meta.donvi)
+        setDsMucDoKhanCap(meta.mucdokhancap)
 
       } catch (error) {
 
@@ -175,18 +183,12 @@ const GuiPhanAnh = () => {
 
         {/* Mức độ khẩn cấp */}
 
-        <select
+        <SelectSearchDropdown
+          options={mucDoKhanCapOptions}
           value={mucDoKhanCap}
-          onChange={(e) => setMucDoKhanCap(e.target.value)}
-          className="w-full border p-2 rounded"
-        >
-
-          <option value="1">Thấp</option>
-          <option value="2">Trung bình</option>
-          <option value="3">Cao</option>
-          <option value="4">Khẩn cấp</option>
-
-        </select>
+          onChange={setMucDoKhanCap}
+          placeholder="Chọn mức độ khẩn cấp"
+        />
 
         {/* Ẩn danh */}
 

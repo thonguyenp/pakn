@@ -115,6 +115,7 @@ export default function DashboardPage() {
 
         fetchData()
     }, [])
+    
     if (loading) {
         return <div className="text-center mt-10">Loading...</div>;
     }
