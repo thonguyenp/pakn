@@ -5,7 +5,6 @@ import { useVerifyEmail } from "@/hooks/useVerifyEmail";
 import VerifyEmailModal from "@/components/shared/VerifyEmailModal";
 import { getHomeData, type HomeResponse } from "@/api/user/homePage/homePageApi";
 import { getThongKeTrangThai } from "@/api/user/homePage/thongKeApi";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts"
 import ThongKePieChart from "@/components/shared/ThongKePieChart"
 import { getThongKeMucDoHaiLong } from "@/api/user/homePage/thongKeApi"
 import { getThongKeTreHan } from "@/api/user/homePage/thongKeApi"
@@ -72,7 +71,7 @@ export default function DashboardPage() {
     const { token, setToken } = useVerifyEmail();
 
     const [homeData, setHomeData] = useState<HomeResponse | null>(null);
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
     const [thongKe, setThongKe] = useState<ThongKeItem[]>([]);
     const [thongKeHaiLong, setThongKeHaiLong] = useState<any[]>([]);
     const [thongKeTreHan, setThongKeTreHan] = useState<any[]>([]);
@@ -89,36 +88,39 @@ export default function DashboardPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getHomeData()
-                setHomeData(data)
 
-                const thongKeData = await getThongKeTrangThai()
-                setThongKe(thongKeData)
+                const [
+                    homeDataRes,
+                    thongKeData,
+                    haiLongData,
+                    treHanData
+                ] = await Promise.all([
+                    getHomeData(),
+                    getThongKeTrangThai(),
+                    getThongKeMucDoHaiLong(),
+                    getThongKeTreHan()
+                ]);
 
-                const haiLongData = await getThongKeMucDoHaiLong()
+                setHomeData(homeDataRes);
 
-                // 🔥 thêm label
-                const formatted = haiLongData.map((item: any) => ({
-                    ...item,
-                    muc_do_label: `${item.muc_do} sao`
-                }))
+                setThongKe(thongKeData);
 
-                setThongKeHaiLong(formatted)
-                const treHanData = await getThongKeTreHan()
-                setThongKeTreHan(treHanData)
+                setThongKeHaiLong(
+                    haiLongData.map((item: any) => ({
+                        ...item,
+                        muc_do_label: `${item.muc_do} sao`
+                    }))
+                );
+
+                setThongKeTreHan(treHanData);
+
             } catch (err) {
-                console.error("Lỗi load homepage:", err)
-            } finally {
-                setLoading(false)
+                console.error("Lỗi load homepage:", err);
             }
-        }
+        };
 
-        fetchData()
-    }, [])
-    
-    if (loading) {
-        return <div className="text-center mt-10">Loading...</div>;
-    }
+        fetchData();
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -191,7 +193,7 @@ export default function DashboardPage() {
                                     {item.TieuDe}
                                 </h3>
                                 <p className="text-sm text-gray-600 mt-1 line-clamp-2"
-                                  dangerouslySetInnerHTML={{ __html: item.NoiDung }}>
+                                    dangerouslySetInnerHTML={{ __html: item.NoiDung }}>
                                 </p>
                                 <div className="text-xs text-gray-400 mt-2">
                                     Ngày gửi:{" "}
@@ -205,7 +207,6 @@ export default function DashboardPage() {
                 {/* ===== PIE CHARTS ===== */}
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 
-                    {/* Trạng thái */}
                     <ThongKePieChart
                         title="Thống kê trạng thái phản ánh"
                         data={thongKe}
@@ -214,7 +215,6 @@ export default function DashboardPage() {
                         unit="phản ánh"
                     />
 
-                    {/* Mức độ hài lòng */}
                     <ThongKePieChart
                         title="Mức độ hài lòng"
                         data={thongKeHaiLong}
@@ -223,7 +223,6 @@ export default function DashboardPage() {
                         unit="đánh giá"
                     />
 
-                    {/* Trễ hạn */}
                     <ThongKePieChart
                         title="Thống kê phản ánh trễ hạn"
                         data={thongKeTreHan}
