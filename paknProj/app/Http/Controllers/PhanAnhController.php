@@ -407,7 +407,8 @@ class PhanAnhController extends Controller
             'action' => 'required|integer',
             'files.*' => 'file|max:10240',
         ]);
-        if (in_array($request->action, [3, 4, 5, 7])) {
+        $action = (int) $request->action;
+        if (in_array($action, [3, 4, 5, 7])) {
             $request->validate([
                 'NoiDung' => 'required',
             ]);

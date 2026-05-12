@@ -19,8 +19,8 @@ const PhanAnhDetail = () => {
   const handleOpenAction = async (action: ActionType) => {
     const config = actionConfig[action];
 
-    if (config.requiresForm) {
-      navigate(`/phan-anh/${data?.MaTheoDoi}/action/${action}`);
+    if (config.requireForm) {
+      navigate(`/phan-hoi/${data?.MaTheoDoi}/${action}`);
       return;
     }
 
