@@ -1,16 +1,41 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Download } from "lucide-react";
-import { getPhanAnhChiTiet } from "@/api/user/phanAnh/phanAnhService";
+import { createAction, getPhanAnhChiTiet } from "@/api/user/phanAnh/phanAnhService";
 import type { PhanAnh } from "@/types/phanAnh";
 import PhanHoiList from "./PhanHoiList";
+import { actionTransitions } from "@/constants/phanAnh/actionTransitions";
+import { actionConfig } from "@/constants/phanAnh/actionConfig";
+import type { ActionType } from "@/constants/phanAnh/actionType";
 
 const PhanAnhDetail = () => {
   const { MaTheoDoi } = useParams();
   const [data, setData] = useState<PhanAnh | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const currentStatus = data?.IdTrangThaiPhanAnh;
 
+  const availableActions = actionTransitions[currentStatus] || [];
+  const handleOpenAction = async (action: ActionType) => {
+    const config = actionConfig[action];
+
+    if (config.requiresForm) {
+      navigate(`/phan-anh/${data?.MaTheoDoi}/action/${action}`);
+      return;
+    }
+
+    try {
+      await createAction(data!.MaTheoDoi, {
+        action,
+        NoiDung: "",
+        files: [],
+      });
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const getUrgency = (value: number) => {
     if (value === 1) return ["Thấp", "bg-gray-100 text-gray-600"];
     if (value === 2) return ["Trung bình", "bg-yellow-100 text-yellow-600"];
@@ -18,6 +43,7 @@ const PhanAnhDetail = () => {
     if (value === 4) return ["Khẩn cấp", "bg-red-100 text-red-600"];
     return ["Không rõ", "bg-gray-100 text-gray-500"];
   };
+
   const phanHoiMoiNhat = data?.phan_hoi
     ?.filter((ph) => ph.LaNoiBo === 0) // nếu cần lọc public
     ?.sort(
@@ -128,6 +154,7 @@ const PhanAnhDetail = () => {
         )}
         {/* Các hành động */}
         {/* Cần check lại nếu các trạng thái như nào thì hiển thị các btn ra sao */}
+        {/* Phía người dùng */}
         {data.IdTrangThaiPhanAnh === 4 && (
           <button
             onClick={() =>
@@ -143,6 +170,19 @@ const PhanAnhDetail = () => {
             Bổ sung thông tin
           </button>
         )}
+        {/* Phía người xử lý */}
+        {availableActions.map((action) => {
+          const config = actionConfig[action];
+          return (
+            <button
+              key={action}
+              onClick={() => handleOpenAction(action)}
+              className={`px-4 py-2 rounded-lg text-white bg-${config.color}-500`}
+            >
+              {config.button}
+            </button>
+          );
+        })}
 
       </div>
 

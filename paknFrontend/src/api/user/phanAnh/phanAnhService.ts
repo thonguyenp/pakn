@@ -125,8 +125,6 @@ export const createAction = async (
     formData.append("LaNoiBo", String(data.LaNoiBo));
   }
 
-
-
   if (data.files) {
     data.files.forEach((file: File) => {
       formData.append("files[]", file);

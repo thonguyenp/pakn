@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\UploadFilePhanAnhJob;
 use App\Models\LichSuXuLy;
+use App\Models\NguoiDung;
 use App\Models\PhanAnh;
 use App\Notifications\PhanAnhCreatedNotification;
 use App\Services\PhanAnhService;
@@ -99,16 +100,42 @@ class PhanAnhController extends Controller
         // Gửi thông báo nếu có email
         Notification::route('mail', $request->email)
             ->notify(new PhanAnhCreatedNotification($maTheoDoi));
-        // tạo thông báo trong hệ thống
-        $this->thongBaoService->create([
-            'TieuDe' => 'Phản ánh đã được gửi',
-            'NoiDung' => 'Phản ánh của bạn đã được gửi thành công: '.$phanAnh->MaTheoDoi,
-            'IdNguoiDung' => $phanAnh->IdNguoiDung,
-            'Loai' => 'PHAN_ANH_MOI',
-            'Link' => [
-                'url' => '/phan-anh/'.$phanAnh->MaTheoDoi,
-            ],
-        ]);
+        // tạo thông báo cho người gửi phản ánh
+        if ($phanAnh->IdNguoiDung) {
+
+            $this->thongBaoService->create([
+                'TieuDe' => 'Phản ánh đã được gửi',
+                'NoiDung' => 'Phản ánh của bạn đã được gửi thành công: '.$phanAnh->MaTheoDoi,
+                'IdNguoiDung' => $phanAnh->IdNguoiDung,
+                'Loai' => 'PHAN_ANH_MOI',
+                'Link' => [
+                    'url' => '/phan-anh/'.$phanAnh->MaTheoDoi,
+                ],
+            ]);
+        }
+
+        // gửi thông báo cho người cùng đơn vị xử lý
+        $nguoiDungDonVi = NguoiDung::where('IdDonVi', $phanAnh->IdDonVi)
+            ->where('TrangThai', 1)
+            ->get();
+
+        foreach ($nguoiDungDonVi as $nguoiNhan) {
+
+            // tránh gửi lại cho chính người tạo
+            if ($nguoiNhan->IdNguoiDung == $phanAnh->IdNguoiDung) {
+                continue;
+            }
+
+            $this->thongBaoService->create([
+                'TieuDe' => 'Có phản ánh mới',
+                'NoiDung' => 'Có phản ánh mới cần xử lý: '.$phanAnh->TieuDe,
+                'IdNguoiDung' => $nguoiNhan->IdNguoiDung,
+                'Loai' => 'PHAN_ANH_MOI_DON_VI',
+                'Link' => [
+                    'url' => '/phan-anh/'.$phanAnh->MaTheoDoi,
+                ],
+            ]);
+        }
         LichSuXuLy::create([
             'HanhDong' => 'Tạo phản ánh',
             'GhiChu' => 'Nguời dùng tạo phản ánh',
@@ -377,10 +404,14 @@ class PhanAnhController extends Controller
     public function action(Request $request, $maTheoDoi)
     {
         $request->validate([
-            'NoiDung' => 'required|string',
             'action' => 'required|integer',
             'files.*' => 'file|max:10240',
         ]);
+        if (in_array($request->action, [3, 4, 5, 7])) {
+            $request->validate([
+                'NoiDung' => 'required',
+            ]);
+        }
 
         try {
             $result = $this->phanAnhService->handleAction(

@@ -23,6 +23,7 @@ class PhanAnhStateFactory
         return match ($action) {
             7 => $this->container->make(TuChoiState::class),
             4 => $this->container->make(BoSungThongTinState::class),
+            2 => $this->container->make(TiepNhanState::class),
             default => throw new \Exception('Action không hợp lệ: ' . $action),
         };
     }

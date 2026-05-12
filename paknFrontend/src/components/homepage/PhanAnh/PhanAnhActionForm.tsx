@@ -10,7 +10,7 @@ import ToggleSwitch from "@/components/shared/ToogleSwitch";
 const PhanAnhActionForm = () => {
   const { MaTheoDoi, action } = useParams();
   const navigate = useNavigate();
-    const actionType = Number(action) as ActionType;
+  const actionType = Number(action) as ActionType;
   const config = actionConfig[actionType];
 
   const [noiDung, setNoiDung] = useState("");
