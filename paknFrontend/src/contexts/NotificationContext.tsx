@@ -24,6 +24,7 @@ export const NotificationProvider = ({ children }: any) => {
     const user = rawUser ? JSON.parse(rawUser) : null;
     const userId = user?.IdNguoiDung;
     const echoRef = useRef<any>(null);
+    const isGuest = user?.isGuest;
 
     // =============================
     // 📥 Load initial (dropdown only)
@@ -42,7 +43,7 @@ export const NotificationProvider = ({ children }: any) => {
     };
 
     useEffect(() => {
-        if (!token) return;
+        if (!token || isGuest) return;
         fetchNotifications();
     }, [token, userId]);
 

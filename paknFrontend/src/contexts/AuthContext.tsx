@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { setAuthToken } from "@/api/user/authApi";
+import { setAuthToken, guestLogin as guestLoginApi } from "@/api/user/authApi";
 import type { User } from "@/types/user";
 
 type AuthContextType = {
@@ -14,7 +14,7 @@ type AuthContextType = {
         permissions: string[];
     }) => void;
 
-    guestLogin: () => void;
+    guestLogin: () => Promise<void>;
     logout: () => void;
 };
 type GuestUser = {
@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }: any) => {
     // =========================
     // 🔥 STATE
     // =========================
+
     const [token, setToken] = useState<string | null>(
         localStorage.getItem("token")
     );
@@ -44,7 +45,7 @@ export const AuthProvider = ({ children }: any) => {
         const raw = localStorage.getItem("permissions");
         return raw ? JSON.parse(raw) : [];
     });
-
+    const isAuthenticated = !!token || !!localStorage.getItem("token");
     // =========================
     // 🔥 SYNC TOKEN -> AXIOS
     // =========================
@@ -53,7 +54,26 @@ export const AuthProvider = ({ children }: any) => {
             setAuthToken(token);
         }
     }, [token]);
+    // useEffect(() => {
+    //     const token = localStorage.getItem("token");
+    //     const user = localStorage.getItem("user");
+    //     const permissions = localStorage.getItem("permissions");
 
+    //     if (token) {
+    //         setToken(token);
+    //         setAuthToken(token);
+    //     }
+
+    //     if (user) {
+    //         setUser(JSON.parse(user));
+    //     }
+
+    //     if (permissions) {
+    //         setPermissions(JSON.parse(permissions));
+    //     }
+
+    //     setLoading(false);
+    // }, [token]);
     // =========================
     // ✅ LOGIN
     // =========================
@@ -74,21 +94,30 @@ export const AuthProvider = ({ children }: any) => {
     // =========================
     // 👤 GUEST LOGIN
     // =========================
-    const guestLogin = () => {
-        const guestUser: GuestUser = {
-            HoTen: "Khách",
-            isGuest: true,
-        };
+    const guestLogin = async () => {
+        try {
 
-        localStorage.setItem("token", "");
-        localStorage.setItem("user", JSON.stringify(guestUser));
-        localStorage.setItem("permissions", JSON.stringify([]));
+            const data = await guestLoginApi();
 
-        setToken("");
-        setUser(guestUser);
-        setPermissions([]);
-    };
-    // =========================
+            const guestUser: GuestUser = {
+                HoTen: "Khách",
+                isGuest: true,
+            };
+
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(guestUser));
+            localStorage.setItem("permissions", JSON.stringify([]));
+
+            setAuthToken(data.token);
+
+            setToken(data.token);
+            setUser(guestUser);
+            setPermissions([]);
+
+        } catch (error) {
+            console.error("Guest login failed:", error);
+        }
+    };    // =========================
     // 🚪 LOGOUT
     // =========================
     const logout = () => {
@@ -109,7 +138,7 @@ export const AuthProvider = ({ children }: any) => {
                 token,
                 user,
                 permissions,
-                isAuthenticated: !!token,
+                isAuthenticated: isAuthenticated,
                 login,
                 guestLogin,
                 logout,

@@ -5,6 +5,7 @@ import NotificationDropdown from './NotificationDropdown';
 export default function Header() {
 
     const user = JSON.parse(localStorage.getItem("user") || "null");
+    const isGuest = user?.isGuest;
     const permissions = JSON.parse(localStorage.getItem("permissions") || "[]");
 
     const [open, setOpen] = useState(false);
@@ -76,8 +77,32 @@ export default function Header() {
                                 </Link>
                             </>
                         )}
+                        {isGuest && (
+                            <div className="relative" ref={dropdownRef}>
 
-                        {user && (
+                                    <button
+                                        onClick={() => setOpen(!open)}
+                                        className="font-medium flex items-center gap-1"
+                                    >
+                                        {user.HoTen}
+                                        <span className="text-xs">▼</span>
+                                    </button>
+
+                                    {open && (
+                                        <div className="absolute right-0 top-full mt-2 w-56 bg-white shadow-lg rounded-md border z-50">
+                                            <button
+                                                onClick={logout}
+                                                className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                                            >
+                                                Đăng xuất
+                                            </button>
+
+                                        </div>
+                                    )}
+                                </div>
+                        )}
+
+                        {user && !isGuest && (
                             <>
                                 <NotificationDropdown />
 

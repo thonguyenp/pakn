@@ -1,24 +1,23 @@
 import LoginForm from "./LoginForm";
-import { guestLogin as guestLoginApi } from "@/api/user/authApi";
 import AuthLayout from "@/layouts/AuthLayout";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
 
   // 🔥 lấy từ context
   const { login, guestLogin } = useAuth();
-
+  const navigate = useNavigate();
   // =========================
   // 👤 GUEST LOGIN
   // =========================
   const handleGuestLogin = async () => {
     try {
-      await guestLoginApi();
+      // await guestLoginApi();
 
       // 🔥 dùng đúng function guestLogin trong context
-      guestLogin();
-
-      window.location.href = "/"; // reload lại trang để áp dụng quyền guest
+      await guestLogin();
+      navigate("/"); // chuyển về trang chủ sau khi login
     } catch (err) {
       console.error("Guest login failed", err);
     }
