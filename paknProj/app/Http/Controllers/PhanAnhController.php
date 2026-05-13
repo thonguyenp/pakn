@@ -113,29 +113,6 @@ class PhanAnhController extends Controller
                 ],
             ]);
         }
-
-        // gửi thông báo cho người cùng đơn vị xử lý
-        $nguoiDungDonVi = NguoiDung::where('IdDonVi', $phanAnh->IdDonVi)
-            ->where('TrangThai', 1)
-            ->get();
-
-        foreach ($nguoiDungDonVi as $nguoiNhan) {
-
-            // tránh gửi lại cho chính người tạo
-            if ($nguoiNhan->IdNguoiDung == $phanAnh->IdNguoiDung) {
-                continue;
-            }
-
-            $this->thongBaoService->create([
-                'TieuDe' => 'Có phản ánh mới',
-                'NoiDung' => 'Có phản ánh mới cần xử lý: '.$phanAnh->TieuDe,
-                'IdNguoiDung' => $nguoiNhan->IdNguoiDung,
-                'Loai' => 'PHAN_ANH_MOI_DON_VI',
-                'Link' => [
-                    'url' => '/phan-anh/'.$phanAnh->MaTheoDoi,
-                ],
-            ]);
-        }
         LichSuXuLy::create([
             'HanhDong' => 'Tạo phản ánh',
             'GhiChu' => 'Nguời dùng tạo phản ánh',
@@ -408,7 +385,7 @@ class PhanAnhController extends Controller
             'files.*' => 'file|max:10240',
         ]);
         $action = (int) $request->action;
-        if (in_array($action, [3, 4, 5, 7])) {
+        if (in_array($action, [4, 5, 7])) {
             $request->validate([
                 'NoiDung' => 'required',
             ]);

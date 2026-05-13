@@ -24,6 +24,8 @@ class PhanAnhStateFactory
             7 => $this->container->make(TuChoiState::class),
             4 => $this->container->make(BoSungThongTinState::class),
             2 => $this->container->make(TiepNhanState::class),
+            3 => $this->container->make(XuLyState::class),
+            5 => $this->container->make(ChuyenDonViState::class),
             default => throw new \Exception('Action không hợp lệ: ' . $action),
         };
     }

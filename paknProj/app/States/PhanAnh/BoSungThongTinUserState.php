@@ -7,6 +7,7 @@ use App\Models\LichSuXuLy;
 use App\Models\PhanAnh;
 use App\Models\PhanHoi;
 use App\Services\ThongBaoService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class BoSungThongTinUserState extends BasePhanAnhState
@@ -24,14 +25,18 @@ class BoSungThongTinUserState extends BasePhanAnhState
         // $data phải có: ngayGui (để check guest đúng phản ánh)
 
         $phanHoi = DB::transaction(function () use ($maTheoDoi, $data) {
+            $ngay = Carbon::parse($data['ngayGui'])->format('Y-m-d');
 
             $phanAnh = PhanAnh::where('MaTheoDoi', $maTheoDoi)
                 ->whereBetween('NgayGui', [
-                    $data['ngayGui'].' 00:00:00',
-                    $data['ngayGui'].' 23:59:59',
+                    $ngay.' 00:00:00',
+                    $ngay.' 23:59:59',
                 ])
                 ->first();
-
+            // dd($phanAnh);
+            if (! $phanAnh) {
+                throw new \Exception('Không tìm thấy phản ánh');
+            }
             // Kiểm tra trạng thái hiện tại là 4 và được chuyển sang 3 hay không
             if (($phanAnh->IdTrangThaiPhanAnh != 4)) {
                 throw new \Exception('Chỉ được bổ sung khi trạng thái = 4');

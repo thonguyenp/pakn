@@ -171,18 +171,21 @@ const PhanAnhDetail = () => {
           </button>
         )}
         {/* Phía người xử lý */}
-        {availableActions.map((action) => {
-          const config = actionConfig[action];
-          return (
-            <button
-              key={action}
-              onClick={() => handleOpenAction(action)}
-              className={`px-4 py-2 rounded-lg text-white bg-${config.color}-500`}
-            >
-              {config.button}
-            </button>
-          );
-        })}
+        <div className="flex gap-3">
+
+          {availableActions.map((action) => {
+            const config = actionConfig[action];
+            return (
+              <button
+                key={action}
+                onClick={() => handleOpenAction(action)}
+                className={`px-4 py-2 rounded-lg text-white ${config.bgColor}`}
+              >
+                {config.button}
+              </button>
+            );
+          })}
+        </div>
 
       </div>
 

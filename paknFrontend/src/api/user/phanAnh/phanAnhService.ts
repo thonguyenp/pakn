@@ -118,9 +118,11 @@ export const createAction = async (
   formData.append("NoiDung", data.NoiDung);
   formData.append("action", data.action);
 
-  if (data.donVi) {
-    formData.append("DonVi", data.donVi);
+  if (data.IdDonVi) {
+    formData.append("IdDonVi", String(data.IdDonVi));
   }
+
+
   if (data.LaNoiBo !== undefined) {
     formData.append("LaNoiBo", String(data.LaNoiBo));
   }

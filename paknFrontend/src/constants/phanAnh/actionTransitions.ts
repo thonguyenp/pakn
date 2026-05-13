@@ -15,14 +15,16 @@ export const actionTransitions: Record<number, ActionType[]> = {
   [ActionType.XU_LY]: [
     ActionType.GIAI_QUYET,
     ActionType.BO_SUNG,
+    ActionType.CHUYEN_DON_VI,
   ],
 
   [ActionType.BO_SUNG]: [
-    ActionType.XU_LY,
+    // ActionType.XU_LY,
   ],
 
   [ActionType.CHUYEN_DON_VI]: [
     ActionType.XU_LY,
+    ActionType.TU_CHOI,
   ],
 
   [ActionType.GIAI_QUYET]: [],
