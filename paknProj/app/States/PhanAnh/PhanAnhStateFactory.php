@@ -21,11 +21,12 @@ class PhanAnhStateFactory
         $action = (int) $action;
 
         return match ($action) {
-            7 => $this->container->make(TuChoiState::class),
-            4 => $this->container->make(BoSungThongTinState::class),
             2 => $this->container->make(TiepNhanState::class),
             3 => $this->container->make(XuLyState::class),
+            4 => $this->container->make(BoSungThongTinState::class),
             5 => $this->container->make(ChuyenDonViState::class),
+            6 => $this->container->make(HoanThanhState::class),
+            7 => $this->container->make(TuChoiState::class),
             default => throw new \Exception('Action không hợp lệ: ' . $action),
         };
     }

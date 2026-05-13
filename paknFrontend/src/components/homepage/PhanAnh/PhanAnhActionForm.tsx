@@ -34,6 +34,7 @@ const PhanAnhActionForm = () => {
   const [currentDonVi, setCurrentDonVi] = useState("");
 
   const [laNoiBo, setLaNoiBo] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -96,7 +97,7 @@ const PhanAnhActionForm = () => {
     try {
 
       setLoading(true);
-
+      setError("");
       await createAction(MaTheoDoi!, {
         NoiDung: noiDung,
         files,
@@ -107,7 +108,14 @@ const PhanAnhActionForm = () => {
 
       navigate(`/phan-anh/${MaTheoDoi}`);
 
-    } finally {
+    }
+    catch (error : any) {
+      const message =
+        error.response.data.error ||
+        "Có lỗi xảy ra";
+      setError(message);
+    }
+    finally {
 
       setLoading(false);
 
@@ -169,7 +177,11 @@ const PhanAnhActionForm = () => {
           files={files}
           setFiles={setFiles}
         />
-
+        {error && (
+          <div className="p-3 rounded-lg bg-red-100 text-red-700 text-sm">
+            {error}
+          </div>
+        )}
         <button
           disabled={loading}
           onClick={handleSubmit}

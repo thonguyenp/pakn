@@ -18,8 +18,8 @@ export const actionConfig = {
   [ActionType.GIAI_QUYET]: {
     title: "Đánh dấu đã giải quyết",
     bgColor: "bg-emerald-500",
-    button: "Hoàn thành",
-    requireForm: false,
+    button: "Phản hồi",
+    requireForm: true,
   },
 
   [ActionType.TU_CHOI]: {
