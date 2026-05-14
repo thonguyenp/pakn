@@ -12,6 +12,12 @@ class ThongKeController extends Controller
         protected ThongKeService $thongKeService
     ) {}
 
+    public function thongKeDashboard ()
+    {
+        $thongKe = $this->thongKeService->tongQuan(null, null, false);
+        return response()->json($thongKe);
+    }
+
     public function thongKeTongQuan(Request $request)
     {
         $validated = $request->validate([
@@ -21,7 +27,8 @@ class ThongKeController extends Controller
 
         $data = $this->thongKeService->tongQuan(
             $validated['from'],
-            $validated['to']
+            $validated['to'],
+            true
         );
 
         return response()->json($data);

@@ -39,6 +39,7 @@ Route::middleware(['auth:api'])
         Route::prefix('thongke')
             ->middleware('permission:QuanLyHeThong')
             ->group(function () {
+                Route::get('/dashboard', [ThongKeController::class, 'thongKeDashboard']);
                 Route::get('/tongquan', [ThongKeController::class, 'thongKeTongQuan']);
             });
         Route::prefix('nguoidung')
