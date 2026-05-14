@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\LichSuController;
 use App\Http\Controllers\admin\NguoiDungController;
 use App\Http\Controllers\admin\PhanAnhController;
 use App\Http\Controllers\admin\SmtpController;
+use App\Http\Controllers\admin\ThongKeController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:api'])
@@ -35,7 +36,11 @@ Route::middleware(['auth:api'])
                 Route::get('/files/{id}', [FileDinhKemController::class, 'getByPhanAnh']);
                 Route::get('/lichsu/{maTheoDoi}', [PhanAnhController::class, 'lichSu']);
             });
-
+        Route::prefix('thongke')
+            ->middleware('permission:QuanLyHeThong')
+            ->group(function () {
+                Route::get('/tongquan', [ThongKeController::class, 'thongKeTongQuan']);
+            });
         Route::prefix('nguoidung')
             ->middleware('permission:QuanLyNguoiDung')
             ->group(function () {
