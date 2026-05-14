@@ -39,6 +39,7 @@ import PhanAnhPublicPage from "@/modules/pages/PhanAnh/PhanAnhPublicPage";
 import TimKiemPage from "@/modules/pages/PhanAnh/TimKiemPage";
 import LichSuPhanAnh from "@/modules/admin/PhanAnh/LichSuPhanAnh";
 import PhanHoiListPage from "@/modules/admin/PhanAnh/PhanHoiListPage";
+import ThongKePage from "@/modules/admin/thongKe/ThongKePage";
 
 export default function AppRouter() {
   return (
@@ -208,6 +209,13 @@ export default function AppRouter() {
                 }
               />
             </Route>
+            {/* ================= THỐNG KÊ ================= */}
+            <Route
+              path="thongke"
+              element={
+                  <ThongKePage />
+              }
+            />
           </Route>
 
         </Route>
