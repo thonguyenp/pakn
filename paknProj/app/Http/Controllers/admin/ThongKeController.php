@@ -34,49 +34,25 @@ class ThongKeController extends Controller
 
         return response()->json($data);
     }
+    // API filter from-to
     public function thongKeNguoiDung(Request $request)
     {
-        $from = $request->from;
-        $to = $request->to;
+        $data = $this->thongKeService->thongKeNguoiDung(
+            $request->from,
+            $request->to
+        );
 
-        $query = NguoiDung::query();
+        return response()->json($data);
+    }
 
-        if ($from && $to) {
-            $query->whereBetween('NgayTao', [
-                $from.' 00:00:00',
-                $to.' 23:59:59',
-            ]);
-        }
-
-        // Tổng user
-        $tongNguoiDung = (clone $query)->count();
-
-        // User theo tháng
-        $theoThang = (clone $query)
-            ->select(
-                DB::raw('MONTH(NgayTao) as thang'),
-                DB::raw('YEAR(NgayTao) as nam'),
-                DB::raw('COUNT(*) as tong')
-            )
-            ->groupBy('nam', 'thang')
-            ->orderBy('nam')
-            ->orderBy('thang')
-            ->get();
-
-        // User theo ngày
-        $theoNgay = (clone $query)
-            ->select(
-                DB::raw('DATE(NgayTao) as ngay'),
-                DB::raw('COUNT(*) as tong')
-            )
-            ->groupBy('ngay')
-            ->orderBy('ngay')
-            ->get();
+    // Dashboard
+    public function dashboardNguoiDung()
+    {
+        $data = $this->thongKeService
+            ->thongKeNguoiDung6ThangGanNhat();
 
         return response()->json([
-            'tong_nguoi_dung' => $tongNguoiDung,
-            'theo_thang' => $theoThang,
-            'theo_ngay' => $theoNgay,
+            'theo_thang' => $data['theo_thang'],
         ]);
     }
 }

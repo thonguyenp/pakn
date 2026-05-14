@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\NguoiDung;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ThongKeService
@@ -198,5 +197,57 @@ class ThongKeService
 
     }
 
-    
+    // Thống kê theo khoảng thời gian
+    public function thongKeNguoiDung(?string $from = null, ?string $to = null)
+    {
+        $query = NguoiDung::query();
+
+        if ($from && $to) {
+            $query->whereBetween('NgayTao', [
+                $from.' 00:00:00',
+                $to.' 23:59:59',
+            ]);
+        }
+
+        $tongNguoiDung = (clone $query)->count();
+
+        $theoThang = (clone $query)
+            ->select(
+                DB::raw('MONTH(NgayTao) as thang'),
+                DB::raw('YEAR(NgayTao) as nam'),
+                DB::raw('COUNT(*) as tong')
+            )
+            ->groupBy('nam', 'thang')
+            ->orderBy('nam')
+            ->orderBy('thang')
+            ->get();
+
+        $theoNgay = (clone $query)
+            ->select(
+                DB::raw('DATE(NgayTao) as ngay'),
+                DB::raw('COUNT(*) as tong')
+            )
+            ->groupBy('ngay')
+            ->orderBy('ngay')
+            ->get();
+
+        return [
+            'tong_nguoi_dung' => $tongNguoiDung,
+            'theo_thang' => $theoThang,
+            'theo_ngay' => $theoNgay,
+        ];
+    }
+
+    // Dashboard: 6 tháng gần nhất
+    public function thongKeNguoiDung6ThangGanNhat()
+    {
+        $from = Carbon::now()
+            ->subMonths(5)
+            ->startOfMonth();
+
+        $to = Carbon::now()
+            ->endOfMonth();
+
+        return $this->thongKeNguoiDung($from->toDateString(), $to->toDateString());
+    }
 }

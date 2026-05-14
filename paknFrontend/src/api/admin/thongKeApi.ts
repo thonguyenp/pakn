@@ -27,4 +27,11 @@ export const getThongKeDashboard =
 
     return response.data
   }
+export const getThongKeNguoiDung6Thang =
+  async () => {
+    const response = await api.get(
+      "admin/thongke/dashboard-nguoidung"
+    )
+    return response.data
+  }
 export type { TongQuanResponse } from "@/types/thongKe"

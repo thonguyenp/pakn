@@ -3,6 +3,8 @@ import ThongKePieChart from "@/components/shared/ThongKePieChart";
 import { useEffect, useState } from "react";
 import ThongKeCard from "@/components/admin/ThongKeCard"
 import { getThongKeDashboard } from "@/api/admin/thongKeApi";
+import ThongKeLineChart from "@/components/admin/ThongKeLineChart"
+import { getThongKeNguoiDung6Thang } from "@/api/admin/thongKeApi"
 
 type ThongKeItem = {
   trang_thai: string
@@ -15,6 +17,7 @@ export default function DashboardPage() {
   const [thongKeHaiLong, setThongKeHaiLong] = useState<any[]>([]);
   const [thongKeTreHan, setThongKeTreHan] = useState<any[]>([]);
   const [tongQuan, setTongQuan] = useState<any>(null)
+  const [nguoiDung6Thang, setNguoiDung6Thang] = useState<any[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,6 +38,17 @@ export default function DashboardPage() {
         setThongKeHaiLong(formatted)
         const treHanData = await getThongKeTreHan()
         setThongKeTreHan(treHanData)
+
+        const nguoidung6Thang =
+          await getThongKeNguoiDung6Thang()
+
+        const formattedNguoiDung =
+          nguoidung6Thang.theo_thang.map((item: any) => ({
+            ...item,
+            label: `${item.thang}/${item.nam}`,
+          }))
+
+        setNguoiDung6Thang(formattedNguoiDung)
       } catch (err) {
         console.error("Lỗi load homepage:", err)
       }
@@ -128,6 +142,14 @@ export default function DashboardPage() {
             dataKey="so_luong"
             nameKey="trang_thai"
             unit="phản ánh"
+          />
+        </div>
+        <div className="mt-6">
+          <ThongKeLineChart
+            title="Người dùng đăng ký 6 tháng gần nhất"
+            data={nguoiDung6Thang}
+            dataKey="tong"
+            xKey="label"
           />
         </div>
       </div>
