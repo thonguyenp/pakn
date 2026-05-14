@@ -2,17 +2,15 @@
 
 namespace App\Services;
 
+use App\Models\NguoiDung;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ThongKeService
 {
-    public function tongQuan(
-        $from = null,
-        $to = null,
-        $includeTheoDonVi = true
-    ) {
-
+    public function tongQuan($from = null, $to = null, $includeTheoDonVi = true)
+    {
         $baseQuery = DB::table('phananh')
             ->join(
                 'thoihanxuly_linhvuc as thxlv',
@@ -199,4 +197,6 @@ class ThongKeService
         ];
 
     }
+
+    
 }

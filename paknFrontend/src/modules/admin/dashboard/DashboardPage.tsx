@@ -1,7 +1,8 @@
 import { getThongKeMucDoHaiLong, getThongKeTrangThai, getThongKeTreHan } from "@/api/user/homePage/thongKeApi";
 import ThongKePieChart from "@/components/shared/ThongKePieChart";
 import { useEffect, useState } from "react";
-
+import ThongKeCard from "@/components/admin/ThongKeCard"
+import { getThongKeDashboard } from "@/api/admin/thongKeApi";
 
 type ThongKeItem = {
   trang_thai: string
@@ -13,10 +14,13 @@ export default function DashboardPage() {
   const [thongKe, setThongKe] = useState<ThongKeItem[]>([]);
   const [thongKeHaiLong, setThongKeHaiLong] = useState<any[]>([]);
   const [thongKeTreHan, setThongKeTreHan] = useState<any[]>([]);
+  const [tongQuan, setTongQuan] = useState<any>(null)
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-
+        const tongQuanData = await getThongKeDashboard()
+        setTongQuan(tongQuanData)
         const thongKeData = await getThongKeTrangThai()
         setThongKe(thongKeData)
 
@@ -39,38 +43,93 @@ export default function DashboardPage() {
     fetchData()
   }, [])
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-      {/* Trạng thái */}
-      <div className="w-full">
-        <ThongKePieChart
-          title="Thống kê trạng thái phản ánh"
-          data={thongKe}
-          dataKey="so_luong"
-          nameKey="trang_thai"
-          unit="phản ánh"
-        />
-      </div>
 
-      {/* Mức độ hài lòng */}
-      <div className="w-full">
-        <ThongKePieChart
-          title="Mức độ hài lòng"
-          data={thongKeHaiLong}
-          dataKey="so_luong"
-          nameKey="muc_do_label"
-          unit="đánh giá"
+    // Card
+    // Chart
+    <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-3">
+        <ThongKeCard
+          title="Tổng phản ánh"
+          value={
+            tongQuan?.tong_quan.tong_phan_anh || 0
+          }
+          color="text-gray-900"
         />
-      </div>
 
-      {/* Trễ hạn */}
-      <div className="w-full">
-        <ThongKePieChart
-          title="Thống kê phản ánh trễ hạn"
-          data={thongKeTreHan}
-          dataKey="so_luong"
-          nameKey="trang_thai"
-          unit="phản ánh"
+        <ThongKeCard
+          title="Chưa xử lý"
+          value={
+            tongQuan?.tong_quan.chua_xu_ly || 0
+          }
+          color="text-yellow-600"
         />
+
+        <ThongKeCard
+          title="Đang xử lý"
+          value={
+            tongQuan?.tong_quan.dang_xu_ly || 0
+          }
+          color="text-blue-600"
+        />
+
+        <ThongKeCard
+          title="Đã hoàn thành"
+          value={
+            tongQuan?.tong_quan.da_hoan_thanh || 0
+          }
+          color="text-green-600"
+        />
+
+        <ThongKeCard
+          title="Quá hạn"
+          value={
+            tongQuan?.tong_quan.qua_han || 0
+          }
+          color="text-red-600"
+        />
+
+        <ThongKeCard
+          title="Kịp hạn"
+          value={
+            tongQuan?.tong_quan.kip_han || 0
+          }
+          color="text-emerald-600"
+        />
+
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {/* Trạng thái */}
+        <div className="w-full">
+          <ThongKePieChart
+            title="Thống kê trạng thái phản ánh"
+            data={thongKe}
+            dataKey="so_luong"
+            nameKey="trang_thai"
+            unit="phản ánh"
+          />
+        </div>
+
+        {/* Mức độ hài lòng */}
+        <div className="w-full">
+          <ThongKePieChart
+            title="Mức độ hài lòng"
+            data={thongKeHaiLong}
+            dataKey="so_luong"
+            nameKey="muc_do_label"
+            unit="đánh giá"
+          />
+        </div>
+
+        {/* Trễ hạn */}
+        <div className="w-full">
+          <ThongKePieChart
+            title="Thống kê phản ánh trễ hạn"
+            data={thongKeTreHan}
+            dataKey="so_luong"
+            nameKey="trang_thai"
+            unit="phản ánh"
+          />
+        </div>
       </div>
     </div>
   )

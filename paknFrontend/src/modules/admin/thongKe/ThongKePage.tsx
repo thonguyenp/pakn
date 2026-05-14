@@ -5,6 +5,8 @@ import {
   type TongQuanResponse
 } from "@/api/admin/thongKeApi"
 
+import ThongKeCard from "@/components/admin/ThongKeCard"
+
 const formatDate = (date: Date) => {
   return date.toISOString().split("T")[0]
 }
@@ -144,48 +146,53 @@ const ThongKePage = () => {
                 "
               >
 
-                <Card
+                <ThongKeCard
                   title="Tổng phản ánh"
                   value={
                     data?.tong_quan.tong_phan_anh || 0
                   }
+                  color="text-purple-500"
                 />
 
-                <Card
+                <ThongKeCard
                   title="Chưa xử lý"
                   value={
                     data?.tong_quan.chua_xu_ly || 0
                   }
+                  color="text-yellow-600"
                 />
 
-                <Card
+                <ThongKeCard
                   title="Đang xử lý"
                   value={
                     data?.tong_quan.dang_xu_ly || 0
                   }
+                  color="text-blue-600"
                 />
 
-                <Card
+                <ThongKeCard
                   title="Đã hoàn thành"
                   value={
                     data?.tong_quan.da_hoan_thanh || 0
                   }
+                  color="text-green-600"
                 />
 
-                <Card
+                <ThongKeCard
                   title="Quá hạn"
                   value={
                     data?.tong_quan.qua_han || 0
                   }
+                  color="text-red-600"
                 />
 
-                <Card
+                <ThongKeCard
                   title="Kịp hạn"
                   value={
                     data?.tong_quan.kip_han || 0
                   }
+                  color="text-emerald-600"
                 />
-
               </div>
 
               <div
@@ -345,38 +352,4 @@ const ThongKePage = () => {
     </div>
   )
 }
-
-interface CardProps {
-  title: string
-  value: number
-}
-
-const Card = ({
-  title,
-  value
-}: CardProps) => {
-
-  return (
-    <div
-      className="
-        bg-white
-        border
-        rounded-xl
-        shadow-sm
-        p-4
-      "
-    >
-
-      <div className="text-sm text-gray-500 mb-2">
-        {title}
-      </div>
-
-      <div className="text-3xl font-bold">
-        {value}
-      </div>
-
-    </div>
-  )
-}
-
 export default ThongKePage

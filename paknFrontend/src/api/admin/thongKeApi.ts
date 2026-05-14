@@ -18,5 +18,13 @@ export const getThongKeTongQuan = async (
 
   return response.data
 }
+export const getThongKeDashboard =
+  async (): Promise<TongQuanResponse> => {
 
+    const response = await api.get(
+      "admin/thongke/dashboard"
+    )
+
+    return response.data
+  }
 export type { TongQuanResponse } from "@/types/thongKe"
