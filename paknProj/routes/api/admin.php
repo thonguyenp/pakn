@@ -55,7 +55,7 @@ Route::middleware(['auth:api'])
                 Route::post('/permissions/{id}',
                     [NguoiDungController::class, 'updatePermissions']
                 )->middleware('permission:QuanLyQuyen');
-
+                Route::post('/import', [NguoiDungController::class, 'importExcel']);
             });
         Route::prefix('smtp')->group(function () {
             Route::post('/save', [SmtpController::class, 'save']);

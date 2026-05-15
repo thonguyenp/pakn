@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Imports\NguoiDungImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class NguoiDungController extends Controller
 {
@@ -145,6 +147,19 @@ class NguoiDungController extends Controller
         return response()->json([
             'message' => 'Cập nhật người dùng thành công',
             'user' => $user,
+        ]);
+    }
+
+    public function importExcel(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        Excel::import(new NguoiDungImport, $request->file('file'));
+
+        return response()->json([
+            'message' => 'Import người dùng thành công',
         ]);
     }
 }
