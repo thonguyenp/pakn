@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LichSuXuLy;
 use App\Models\NguoiDung;
 use App\Notifications\VerifyEmailQueued;
 use App\Services\LichSuXuLyService;
@@ -75,7 +74,7 @@ class AuthController extends Controller
             DB::commit();   // Commit trước khi dispatch notification
 
             // Gửi email sau khi commit thành công
-            $user->notify((new VerifyEmailQueued($token))->afterCommit());
+            $user->notify((new VerifyEmailQueued($token, $user->IdNguoiDung))->afterCommit());
 
             $jwtToken = JWTAuth::fromUser($user);
 
@@ -100,14 +99,41 @@ class AuthController extends Controller
 
         $user = NguoiDung::where('Email', $request->Email)->first();
 
+        $verification = DB::table('email_verifications')
+            ->where('user_id', $user->IdNguoiDung)
+            ->first();
+
+        if (! $verification) {
+            return response()->json([
+                'message' => 'Không tìm thấy yêu cầu xác thực',
+            ], 404);
+        }
+
+        // Cooldown 60 giây
+        $lastSent = \Carbon\Carbon::parse($verification->created_at);
+
+        if ($lastSent->diffInSeconds(now()) < 60) {
+
+            $remaining = 60 - $lastSent->diffInSeconds(now());
+
+            return response()->json([
+                'message' => "Vui lòng đợi {$remaining}s để gửi lại email",
+            ], 429);
+        }
+
         $token = Str::random(60);
 
         DB::table('email_verifications')->updateOrInsert(
             ['user_id' => $user->IdNguoiDung],
-            ['token' => $token, 'created_at' => now()]
+            [
+                'token' => $token,
+                'created_at' => now(),
+            ]
         );
 
-        $user->notify(new VerifyEmailQueued($token));
+        $user->notify(
+            new VerifyEmailQueued($token, $user->IdNguoiDung)
+        );
 
         return response()->json([
             'message' => 'Đã gửi lại email xác thực',
@@ -191,7 +217,7 @@ class AuthController extends Controller
         // ghi lại lịch sử đăng nhập
         LichSuXuLyService::ghi(
             hanhDong : 'Đăng nhập',
-            ghiChu : $user->HoTen . ' đăng nhập vào hệ thống',
+            ghiChu : $user->HoTen.' đăng nhập vào hệ thống',
             idNguoiDung : $user->IdNguoiDung,
             loai : 'AUTH',
         );
@@ -212,7 +238,7 @@ class AuthController extends Controller
             // ghi lịch sử
             LichSuXuLyService::ghi(
                 hanhDong: 'Đăng xuất',
-                ghiChu: $user->HoTen . ' đăng xuất hệ thống',
+                ghiChu: $user->HoTen.' đăng xuất hệ thống',
                 idNguoiDung: $user->IdNguoiDung,
                 loai: 'AUTH'
             );

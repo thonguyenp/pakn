@@ -13,13 +13,16 @@ class VerifyEmailQueued extends Notification implements ShouldQueue
     use Queueable;
 
     protected $token;
+    protected $userId;
 
-    public function __construct($token)
+    public function __construct($token, $userId)
     {
         $this->token = $token;
-        $this->onConnection('redis');     // Ép dùng redis
-        $this->onQueue('emails');         // Ép vào queue 'emails'
-        $this->afterCommit();             // Đảm bảo sau transaction
+        $this->userId = $userId;
+
+        $this->onConnection('redis');
+        $this->onQueue('emails');
+        $this->afterCommit();
     }
 
     public function via($notifiable)
