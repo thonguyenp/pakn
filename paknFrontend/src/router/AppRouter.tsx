@@ -41,6 +41,7 @@ import LichSuPhanAnh from "@/modules/admin/PhanAnh/LichSuPhanAnh";
 import PhanHoiListPage from "@/modules/admin/PhanAnh/PhanHoiListPage";
 import ThongKePage from "@/modules/admin/thongKe/ThongKePage";
 import LichSuPage from "@/modules/admin/lichsu/LichSuPage";
+import ImportNguoiDung from "@/modules/admin/users/ImportNguoiDung";
 
 export default function AppRouter() {
   return (
@@ -206,6 +207,14 @@ export default function AppRouter() {
                 element={
                   <PermissionGuard permission="QuanLyQuyen">
                     <UserPermissions />
+                  </PermissionGuard>
+                }
+              />
+              <Route
+                path="import"
+                element={
+                  <PermissionGuard permission="QuanLyNguoiDung">
+                    <ImportNguoiDung />
                   </PermissionGuard>
                 }
               />
