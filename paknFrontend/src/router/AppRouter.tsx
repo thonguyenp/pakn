@@ -40,6 +40,7 @@ import TimKiemPage from "@/modules/pages/PhanAnh/TimKiemPage";
 import LichSuPhanAnh from "@/modules/admin/PhanAnh/LichSuPhanAnh";
 import PhanHoiListPage from "@/modules/admin/PhanAnh/PhanHoiListPage";
 import ThongKePage from "@/modules/admin/thongKe/ThongKePage";
+import LichSuPage from "@/modules/admin/lichsu/LichSuPage";
 
 export default function AppRouter() {
   return (
@@ -216,6 +217,12 @@ export default function AppRouter() {
                   <ThongKePage />
               }
             />
+            <Route
+              path="lichsu"
+              element={
+                  <LichSuPage />
+              }
+             />
           </Route>
 
         </Route>

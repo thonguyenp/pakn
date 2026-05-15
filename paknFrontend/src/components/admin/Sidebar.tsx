@@ -8,6 +8,8 @@ import {
   Menu,
   ChevronLeft,
   Bolt,
+  History,
+  AreaChart,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -97,6 +99,29 @@ export default function Sidebar() {
             >
               <ScrollText size={18} />
               {!collapsed && "Quản lý phản ánh"}
+            </li>
+            {/* Thống kê phản ánh */}
+            <li
+              onClick={() => navigate("/admin/thongke")}
+              className={`
+              flex items-center gap-3 px-3 py-2 rounded cursor-pointer
+              ${isActive("/admin/thongke") ? "bg-blue-800" : "hover:bg-slate-800"}
+              `}
+            >
+              <AreaChart size={18} />
+              {!collapsed && "Thống kê phản ánh"}
+            </li>
+
+            {/* Quản lý lịch sử xử lý */}
+            <li
+              onClick={() => navigate("/admin/lichsu")}
+              className={`
+              flex items-center gap-3 px-3 py-2 rounded cursor-pointer
+              ${isActive("/admin/lichsu") ? "bg-blue-800" : "hover:bg-slate-800"}
+              `}
+            >
+              <History size={18} />
+              {!collapsed && "Quản lý lịch sử xử lý"}
             </li>
             {/* Quản lý cấu hình SMTP */}
             <li

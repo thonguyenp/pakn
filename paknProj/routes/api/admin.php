@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\admin\DonViController;
 use App\Http\Controllers\admin\FileDinhKemController;
-use App\Http\Controllers\admin\LichSuController;
+use App\Http\Controllers\admin\LichSuXuLyController;
 use App\Http\Controllers\admin\NguoiDungController;
 use App\Http\Controllers\admin\PhanAnhController;
 use App\Http\Controllers\admin\SmtpController;
@@ -62,4 +62,7 @@ Route::middleware(['auth:api'])
             Route::get('/', [SmtpController::class, 'get']);
             Route::post('/test', [SmtpController::class, 'sendTest']);
         })->middleware('permission:QuanLyHeThong');
+        Route::prefix('lichsu')->group(function () {
+            Route::get('/', [LichSuXuLyController::class, 'index']);
+        });
 });

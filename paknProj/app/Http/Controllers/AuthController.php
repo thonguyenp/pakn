@@ -191,7 +191,7 @@ class AuthController extends Controller
         // ghi lại lịch sử đăng nhập
         LichSuXuLyService::ghi(
             hanhDong : 'Đăng nhập',
-            ghiChu : 'User đăng nhập vào hệ thống',
+            ghiChu : $user->HoTen . ' đăng nhập vào hệ thống',
             idNguoiDung : $user->IdNguoiDung,
             loai : 'AUTH',
         );
@@ -212,7 +212,7 @@ class AuthController extends Controller
             // ghi lịch sử
             LichSuXuLyService::ghi(
                 hanhDong: 'Đăng xuất',
-                ghiChu: 'Người dùng đăng xuất hệ thống',
+                ghiChu: $user->HoTen . ' đăng xuất hệ thống',
                 idNguoiDung: $user->IdNguoiDung,
                 loai: 'AUTH'
             );

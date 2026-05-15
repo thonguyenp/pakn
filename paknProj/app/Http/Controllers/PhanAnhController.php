@@ -12,6 +12,7 @@ use App\Services\PhanAnhService;
 use App\Services\ThongBaoService;
 use App\States\PhanAnh\BoSungThongTinUserState;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
@@ -116,7 +117,7 @@ class PhanAnhController extends Controller
         }
         LichSuXuLyService::ghi(
             hanhDong : 'Tạo phản ánh',
-            ghiChu : 'Nguời dùng tạo phản ánh',
+            ghiChu : 'Nguời dùng ' . Auth::user()->HoTen . ' tạo phản ánh',
             idPhanAnh : $phanAnh->IdPhanAnh,
             idNguoiDung : $phanAnh->IdNguoiDung ?? null,
             loai : 'PHAN_ANH',
