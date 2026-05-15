@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LichSuXuLy;
 use App\Models\NguoiDung;
 use App\Notifications\VerifyEmailQueued;
+use App\Services\LichSuXuLyService;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -185,12 +188,49 @@ class AuthController extends Controller
         // LẤY QUYỀN CỦA USER
         $permissions = $user->quyens()
             ->pluck('TenQuyen');
+        // ghi lại lịch sử đăng nhập
+        LichSuXuLyService::ghi(
+            hanhDong : 'Đăng nhập',
+            ghiChu : 'User đăng nhập vào hệ thống',
+            idNguoiDung : $user->IdNguoiDung,
+            loai : 'AUTH',
+        );
 
         return response()->json([
             'token' => $token,
             'user' => $user,
             'permissions' => $permissions,
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        try {
+
+            $user = Auth::user();
+
+            // ghi lịch sử
+            LichSuXuLyService::ghi(
+                hanhDong: 'Đăng xuất',
+                ghiChu: 'Người dùng đăng xuất hệ thống',
+                idNguoiDung: $user->IdNguoiDung,
+                loai: 'AUTH'
+            );
+
+            // invalidate token
+            Auth::logout();
+
+            return response()->json([
+                'message' => 'Đăng xuất thành công',
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'message' => 'Logout thất bại',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function sendResetLinkEmail(Request $request)

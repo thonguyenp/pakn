@@ -34,16 +34,6 @@ class ThongKeController extends Controller
 
         return response()->json($data);
     }
-    // API filter from-to
-    public function thongKeNguoiDung(Request $request)
-    {
-        $data = $this->thongKeService->thongKeNguoiDung(
-            $request->from,
-            $request->to
-        );
-
-        return response()->json($data);
-    }
 
     // Dashboard
     public function dashboardNguoiDung()

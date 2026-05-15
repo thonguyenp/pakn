@@ -3,8 +3,8 @@ import { api } from '../api';
 import { jwtDecode } from "jwt-decode";
 
 export const guestLogin = async () => {
-    const res = await api.post<AuthResponse>("/login/guest");
-    return res.data;
+  const res = await api.post<AuthResponse>("/login/guest");
+  return res.data;
 };
 
 export const login = async (data: LoginPayload): Promise<AuthResponse> => {
@@ -23,7 +23,12 @@ export const verifyEmail = async (token: string) => {
   });
   return res.data;
 };
+export const logoutApi = async () => {
 
+  const response = await api.post("/logout")
+
+  return response.data
+}
 export const setAuthToken = (token: string | null) => {
   if (token) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -51,19 +56,19 @@ export const resetPassword = async (data: {
 
 
 export const parseUserFromToken = (token: string) => {
-    try {
-        const decoded: any = jwtDecode(token);
+  try {
+    const decoded: any = jwtDecode(token);
 
-        if (decoded.type === "guest") {
-            return {
-                HoTen: "Khách"
-            };
-        }
-
-        return {
-            HoTen: decoded.name || "User"
-        };
-    } catch {
-        return null;
+    if (decoded.type === "guest") {
+      return {
+        HoTen: "Khách"
+      };
     }
+
+    return {
+      HoTen: decoded.name || "User"
+    };
+  } catch {
+    return null;
+  }
 };

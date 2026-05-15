@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { setAuthToken, guestLogin as guestLoginApi } from "@/api/user/authApi";
+import { setAuthToken, guestLogin as guestLoginApi, logoutApi } from "@/api/user/authApi";
 import type { User } from "@/types/user";
 
 type AuthContextType = {
@@ -15,7 +15,7 @@ type AuthContextType = {
     }) => void;
 
     guestLogin: () => Promise<void>;
-    logout: () => void;
+    logout: () => Promise<void>;
 };
 type GuestUser = {
     HoTen: string;
@@ -120,16 +120,33 @@ export const AuthProvider = ({ children }: any) => {
     };    // =========================
     // 🚪 LOGOUT
     // =========================
-    const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        localStorage.removeItem("permissions");
+    const logout = async () => {
 
-        setToken(null);
-        setUser(null);
-        setPermissions([]);
+        try {
 
-        setAuthToken(null);
+            // gọi backend logout
+            await logoutApi()
+
+        } catch (error) {
+
+            console.error("Logout API failed:", error)
+
+        } finally {
+
+            // luôn clear local
+            localStorage.removeItem("token")
+            localStorage.removeItem("user")
+            localStorage.removeItem("permissions")
+
+            setToken(null)
+            setUser(null)
+            setPermissions([])
+
+            setAuthToken(null)
+
+            // redirect
+            window.location.href = "/login"
+        }
     };
 
     return (

@@ -6,6 +6,7 @@ use App\Jobs\UploadFilePhanHoiJob;
 use App\Models\LichSuXuLy;
 use App\Models\PhanAnh;
 use App\Models\PhanHoi;
+use App\Services\LichSuXuLyService;
 use App\Services\ThongBaoService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -59,13 +60,13 @@ class BoSungThongTinUserState extends BasePhanAnhState
             ]);
 
             // log lịch sử
-            LichSuXuLy::create([
-                'HanhDong' => 'Bổ sung thông tin',
-                'GhiChu' => $data['NoiDung'],
-                'ThoiGian' => now(),
-                'IdPhanAnh' => $phanAnh->IdPhanAnh,
-                'IdNguoiDung' => $phanAnh->IdNguoiDung ?? null,
-            ]);
+            LichSuXuLyService::ghi(
+                hanhDong : 'Bổ sung thông tin',
+                ghiChu : $data['NoiDung'],
+                idPhanAnh : $phanAnh->IdPhanAnh,
+                idNguoiDung : $phanAnh->IdNguoiDung ?? null,
+                loai : 'PHAN_ANH',
+            );
 
             return $phanHoi;
         });

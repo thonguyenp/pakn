@@ -7,6 +7,7 @@ use App\Models\LichSuXuLy;
 use App\Models\NguoiDung;
 use App\Models\PhanAnh;
 use App\Notifications\PhanAnhCreatedNotification;
+use App\Services\LichSuXuLyService;
 use App\Services\PhanAnhService;
 use App\Services\ThongBaoService;
 use App\States\PhanAnh\BoSungThongTinUserState;
@@ -113,13 +114,13 @@ class PhanAnhController extends Controller
                 ],
             ]);
         }
-        LichSuXuLy::create([
-            'HanhDong' => 'Tạo phản ánh',
-            'GhiChu' => 'Nguời dùng tạo phản ánh',
-            'ThoiGian' => now(),
-            'IdPhanAnh' => $phanAnh->IdPhanAnh,
-            'IdNguoiDung' => $phanAnh->IdNguoiDung ?? null,
-        ]);
+        LichSuXuLyService::ghi(
+            hanhDong : 'Tạo phản ánh',
+            ghiChu : 'Nguời dùng tạo phản ánh',
+            idPhanAnh : $phanAnh->IdPhanAnh,
+            idNguoiDung : $phanAnh->IdNguoiDung ?? null,
+            loai : 'PHAN_ANH',
+        );
 
         DB::commit();
 

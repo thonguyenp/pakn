@@ -6,6 +6,7 @@ use App\Jobs\UploadFilePhanHoiJob;
 use App\Models\LichSuXuLy;
 use App\Models\PhanAnh;
 use App\Models\PhanHoi;
+use App\Services\LichSuXuLyService;
 use App\Services\ThongBaoService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -43,13 +44,13 @@ class XuLyState extends BasePhanAnhState
                 'NgayCapNhat' => now(),
             ]);
 
-            LichSuXuLy::create([
-                'HanhDong' => 'Xử lý phản ánh',
-                'GhiChu' => $data['NoiDung'],
-                'ThoiGian' => now(),
-                'IdPhanAnh' => $phanAnh->IdPhanAnh,
-                'IdNguoiDung' => Auth::id(),
-            ]);
+            LichSuXuLyService::ghi(
+                hanhDong : 'Xử lý phản ánh',
+                ghiChu : $data['NoiDung'],
+                idPhanAnh : $phanAnh->IdPhanAnh,
+                idNguoiDung : Auth::id(),
+                loai : 'PHAN_ANH',
+            );
 
             return $phanHoi;
         });

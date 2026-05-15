@@ -12,6 +12,7 @@ import {
 import ChangePassword from "@/components/homepage/profile/ChangePassword";
 import MainProfile from "@/components/homepage/profile/MainProfile";
 import NotificationTab from "@/components/homepage/profile/NotificationTab";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface User {
     userId: number;
@@ -64,13 +65,7 @@ export default function Profile() {
         });
     };
 
-    const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        localStorage.removeItem("permissions");
-
-        window.location.href = "/login";
-    };
+    const { logout } = useAuth();
 
     const fetchProfile = async () => {
         try {

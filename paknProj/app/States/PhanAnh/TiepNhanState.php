@@ -5,6 +5,7 @@ namespace App\States\PhanAnh;
 use App\Models\LichSuXuLy;
 use App\Models\NguoiDung;
 use App\Models\PhanAnh;
+use App\Services\LichSuXuLyService;
 use App\Services\ThongBaoService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -37,13 +38,13 @@ class TiepNhanState extends BasePhanAnhState
             ]);
 
             // lưu lịch sử xử lý
-            LichSuXuLy::create([
-                'HanhDong' => 'Tiếp nhận phản ánh',
-                'GhiChu' => 'Phản ánh đã được tiếp nhận',
-                'ThoiGian' => now(),
-                'IdPhanAnh' => $phanAnh->IdPhanAnh,
-                'IdNguoiDung' => Auth::id(),
-            ]);
+            LichSuXuLyService::ghi(
+                hanhDong : 'Tiếp nhận phản ánh',
+                ghiChu : 'Phản ánh đã được tiếp nhận',
+                idPhanAnh : $phanAnh->IdPhanAnh,
+                idNguoiDung : Auth::id(),
+                loai : 'PHAN_ANH',
+            );
 
             return $phanAnh;
         });

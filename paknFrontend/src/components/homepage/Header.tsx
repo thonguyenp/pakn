@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import NotificationDropdown from './NotificationDropdown';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Header() {
 
@@ -13,12 +14,7 @@ export default function Header() {
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [keyword, setKeyword] = useState("");
     const navigate = useNavigate();
-    const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        localStorage.removeItem("permissions");
-        window.location.href = "/login";
-    };
+    const { logout } = useAuth();
 
     const isAdmin = permissions.includes("QuanLyHeThong");
 

@@ -7,6 +7,7 @@ use App\Models\LichSuXuLy;
 use App\Models\PhanAnh;
 use App\Models\PhanHoi;
 use App\Models\ThongBao;
+use App\Services\LichSuXuLyService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -36,13 +37,13 @@ class BoSungThongTinState extends BasePhanAnhState
                 'NgayCapNhat' => now(),
             ]);
 
-            LichSuXuLy::create([
-                'HanhDong' => 'Bổ sung thông tin phản ánh',
-                'GhiChu' => $data['NoiDung'],
-                'ThoiGian' => now(),
-                'IdPhanAnh' => $phanAnh->IdPhanAnh,
-                'IdNguoiDung' => Auth::id(),
-            ]);
+            LichSuXuLyService::ghi(
+                hanhDong : 'Bổ sung thông tin phản ánh',
+                ghiChu : $data['NoiDung'],
+                idPhanAnh : $phanAnh->IdPhanAnh,
+                idNguoiDung : Auth::id(),
+                loai : 'PHAN_ANH',
+            );
 
             ThongBao::create([
                 'TieuDe' => 'Phản ánh của bạn cần bổ sung thông tin',

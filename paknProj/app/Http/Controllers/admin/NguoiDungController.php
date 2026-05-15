@@ -5,7 +5,9 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\NguoiDung;
 use App\Models\Quyen;
+use App\Services\LichSuXuLyService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -53,6 +55,12 @@ class NguoiDungController extends Controller
         $user->TrangThai = 0;
 
         $user->save();
+        LichSuXuLyService::ghi(
+            hanhDong : 'Xóa người dùng',
+            ghiChu : 'Người dùng '.$user->HoTen.' đã bị xóa',
+            idNguoiDung : Auth::id(),
+            loai : 'NGUOI_DUNG',
+        );
 
         return response()->json([
             'message' => 'User deleted',
@@ -63,11 +71,14 @@ class NguoiDungController extends Controller
     {
         $permissions = $request->permissions;
 
+        $targetUser = NguoiDung::findOrFail($id);
+
         DB::table('NguoiDungQuyen')
             ->where('IdNguoiDung', $id)
             ->update(['TrangThai' => 0]);
 
         foreach ($permissions as $permissionId) {
+
             DB::table('NguoiDungQuyen')->updateOrInsert(
                 [
                     'IdNguoiDung' => $id,
@@ -79,6 +90,25 @@ class NguoiDungController extends Controller
                 ]
             );
         }
+
+        // lấy tên quyền
+        $permissionNames = Quyen::whereIn('IdQuyen', $permissions)
+            ->pluck('TenQuyen')
+            ->toArray();
+
+        // ghi log
+        LichSuXuLyService::ghi(
+            hanhDong: 'Cập nhật quyền',
+            ghiChu: 'Người dùng '
+                .Auth::user()->HoTen
+                .' đã cập nhật quyền cho '
+                .$targetUser->HoTen
+                .' | Quyền: '
+                .implode(', ', $permissionNames),
+
+            idNguoiDung: Auth::id(),
+            loai: 'NGUOI_DUNG',
+        );
 
         return response()->json([
             'message' => 'Cập nhật quyền thành công',

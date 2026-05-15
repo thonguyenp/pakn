@@ -18,6 +18,7 @@ class LichSuXuLy extends Model
         'ThoiGian',
         'IdPhanAnh',
         'IdNguoiDung',
+        'Loai'
     ];
 
     protected $casts = [

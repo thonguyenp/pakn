@@ -58,7 +58,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/phananh/xem', [PhanAnhController::class, 'getByNguoiDung'])->middleware('permission:XemPhanAnhCuaMinh');  // checked
 
     Route::get('/phananh/donvi', [PhanAnhController::class, 'getByDonVi'])->middleware('permission:XemPhanAnhPhong');  // checked
-    Route::get('/phananh/{maTheoDoi}', [PhanAnhController::class, 'show']); //luôn đặt bên dưới getByDonVi vì getByDonVi phải load nhiều route này
+    Route::get('/phananh/{maTheoDoi}', [PhanAnhController::class, 'show']); // luôn đặt bên dưới getByDonVi vì getByDonVi phải load nhiều route này
 
     Route::get('/profile', [ProfileController::class, 'getProfile']);   // checked
 
@@ -67,11 +67,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/doi-mat-khau', [ProfileController::class, 'changePassword']);  // checked
 
     // Đăng xuất
-    Route::post('/logout', function () {
-        auth('api')->logout();
-
-        return response()->json(['message' => 'Đăng xuất thành công']);
-    });
+    Route::post('/logout', [AuthController::class, 'logout']);
 
 });
 

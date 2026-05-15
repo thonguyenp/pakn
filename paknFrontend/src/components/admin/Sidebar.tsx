@@ -9,6 +9,7 @@ import {
   ChevronLeft,
   Bolt,
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Sidebar() {
 
@@ -20,10 +21,7 @@ export default function Sidebar() {
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  const handleLogout = () => {
-    localStorage.clear();
-    window.location.href = "/login";
-  };
+  const { logout } = useAuth();
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -114,7 +112,7 @@ export default function Sidebar() {
 
             {/* Logout */}
             <li
-              onClick={handleLogout}
+              onClick={logout}
               className="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-800 cursor-pointer text-red-400"
             >
               <LogOut size={18} />
