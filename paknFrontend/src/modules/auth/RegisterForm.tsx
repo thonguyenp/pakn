@@ -4,7 +4,7 @@ import { type RegisterPayload } from '@/types/auth';
 import PasswordInput from '@/components/shared/PasswordInput';
 
 interface Props {
-  onSuccess: (token: string) => void;
+  onSuccess: (email: string) => void;
 }
 
 export default function RegisterForm({ onSuccess }: Props) {
@@ -17,6 +17,7 @@ export default function RegisterForm({ onSuccess }: Props) {
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
+
     e.preventDefault();
 
     if (form.MatKhau !== confirmPassword) {
@@ -25,10 +26,17 @@ export default function RegisterForm({ onSuccess }: Props) {
     }
 
     try {
-      const { token } = await register(form);
-      onSuccess(token);
+
+      await register(form);
+
+      onSuccess(form.Email);
+
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Đăng ký thất bại');
+
+      setError(
+        err.response?.data?.error || 'Đăng ký thất bại'
+      );
+
     }
   };
 
@@ -54,7 +62,7 @@ export default function RegisterForm({ onSuccess }: Props) {
 
       <div className="relative">
         <i className="fa-solid fa-phone absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-        <input type="tel" placeholder="Số điện thoại" value={form.SoDienThoai || ''} onChange={e => setForm({ ...form, SoDienThoai: e.target.value || undefined })} className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required/>
+        <input type="tel" placeholder="Số điện thoại" value={form.SoDienThoai || ''} onChange={e => setForm({ ...form, SoDienThoai: e.target.value || undefined })} className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required />
         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500">*</span>
       </div>
 

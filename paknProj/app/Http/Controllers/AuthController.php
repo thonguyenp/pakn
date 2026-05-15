@@ -110,14 +110,15 @@ class AuthController extends Controller
         }
 
         // Cooldown 60 giây
-        $lastSent = \Carbon\Carbon::parse($verification->created_at);
+        $lastSent = Carbon::parse($verification->created_at);
 
         if ($lastSent->diffInSeconds(now()) < 60) {
 
             $remaining = 60 - $lastSent->diffInSeconds(now());
 
             return response()->json([
-                'message' => "Vui lòng đợi {$remaining}s để gửi lại email",
+                'message' => 'Vui lòng đợi để gửi lại email',
+                'remaining' => $remaining,
             ], 429);
         }
 

@@ -28,7 +28,18 @@ export const logoutApi = async () => {
   const response = await api.post("/logout")
 
   return response.data
-}
+};
+export const resendVerifyEmail = async (
+  Email: string
+): Promise<{ message: string }> => {
+
+  const response = await api.post<{ message: string }>(
+    "/resend-verify-email",
+    { Email }
+  )
+
+  return response.data
+};
 export const setAuthToken = (token: string | null) => {
   if (token) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
