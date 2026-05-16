@@ -3,8 +3,9 @@
 namespace App\Imports;
 
 use App\Models\NguoiDung;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
 class NguoiDungImport implements ToCollection
@@ -23,7 +24,7 @@ class NguoiDungImport implements ToCollection
                 continue;
             }
 
-            NguoiDung::create([
+            $user = NguoiDung::create([
                 'HoTen' => $row[0],
                 'Email' => $row[1],
                 'SoDienThoai' => $row[2],
@@ -32,6 +33,22 @@ class NguoiDungImport implements ToCollection
                 'TrangThai' => 1,
                 'NgayTao' => now(),
                 'IdDonVi' => $row[4],
+            ]);
+
+            // gán quyền mặc định
+            DB::table('NguoiDungQuyen')->insert([
+                [
+                    'IdNguoiDung' => $user->IdNguoiDung,
+                    'IdQuyen' => 2,
+                    'TrangThai' => 1,
+                    'NgayGanQuyen' => now(),
+                ],
+                [
+                    'IdNguoiDung' => $user->IdNguoiDung,
+                    'IdQuyen' => 3,
+                    'TrangThai' => 1,
+                    'NgayGanQuyen' => now(),
+                ],
             ]);
         }
     }

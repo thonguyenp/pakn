@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { importNguoiDungExcel } from "@/api/admin/userApi"
+import FileDropzone from "@/components/shared/FileDropzone"
+import { useNavigate } from "react-router-dom"
 
 export default function ImportNguoiDung() {
 
@@ -10,9 +12,8 @@ export default function ImportNguoiDung() {
   const [message, setMessage] = useState("")
 
   const [error, setError] = useState("")
-
+  const navigate = useNavigate()
   const handleImport = async () => {
-
     if (!file) {
       setError("Vui lòng chọn file Excel")
       return
@@ -27,7 +28,7 @@ export default function ImportNguoiDung() {
       const response = await importNguoiDungExcel(file)
 
       setMessage(response.message)
-
+      navigate("/admin/nguoidung")
     } catch (err: any) {
 
       console.error(err)
@@ -51,33 +52,22 @@ export default function ImportNguoiDung() {
 
       <div className="bg-white shadow rounded-xl p-6 max-w-xl">
 
-        <input
-          type="file"
-          accept=".xlsx,.xls,.csv"
-          onChange={(e) => {
-
-            const selectedFile = e.target.files?.[0]
+        <FileDropzone
+          files={file ? [file] : []}
+          setFiles={(files) => {
+            const selectedFile = files[0]
 
             if (selectedFile) {
               setFile(selectedFile)
             }
-
           }}
-          className="mb-4 block w-full border rounded-lg p-2"
         />
-
-        {
-          file && (
-            <div className="mb-4 text-sm text-gray-600">
-              File: {file.name}
-            </div>
-          )
-        }
+        
 
         <button
           onClick={handleImport}
           disabled={loading}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg mt-4"
         >
           {
             loading
