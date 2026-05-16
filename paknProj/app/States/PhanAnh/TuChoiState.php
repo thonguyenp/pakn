@@ -45,7 +45,7 @@ class TuChoiState extends BasePhanAnhState
             ]);
 
             LichSuXuLyService::ghi(
-                hanhDong : 'Từ chối phản ánh',
+                hanhDong : 'Từ chối phản ánh ' . $phanAnh->MaTheoDoi,
                 ghiChu : $data['NoiDung'],
                 idPhanAnh : $phanAnh->IdPhanAnh,
                 idNguoiDung : Auth::id(),

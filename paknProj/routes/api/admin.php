@@ -5,6 +5,7 @@ use App\Http\Controllers\admin\FileDinhKemController;
 use App\Http\Controllers\admin\LichSuXuLyController;
 use App\Http\Controllers\admin\NguoiDungController;
 use App\Http\Controllers\admin\PhanAnhController;
+use App\Http\Controllers\admin\SliderController;
 use App\Http\Controllers\admin\SmtpController;
 use App\Http\Controllers\admin\ThongKeController;
 use Illuminate\Support\Facades\Route;
@@ -65,4 +66,12 @@ Route::middleware(['auth:api'])
         Route::prefix('lichsu')->group(function () {
             Route::get('/', [LichSuXuLyController::class, 'index']);
         });
+        Route::prefix('slider')
+            ->middleware('permission:QuanLyHeThong')
+            ->group(function () {
+                Route::get('/', [SliderController::class, 'index']);
+                Route::post('/', [SliderController::class, 'store']);
+                Route::put('/{id}', [SliderController::class, 'update']);
+                Route::delete('/{id}', [SliderController::class, 'destroy']);
+            });
 });

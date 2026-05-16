@@ -38,7 +38,7 @@ class BoSungThongTinState extends BasePhanAnhState
             ]);
 
             LichSuXuLyService::ghi(
-                hanhDong : 'Bổ sung thông tin phản ánh',
+                hanhDong : 'Bổ sung thông tin phản ánh' . $phanAnh->MaTheoDoi,
                 ghiChu : $data['NoiDung'],
                 idPhanAnh : $phanAnh->IdPhanAnh,
                 idNguoiDung : Auth::id(),

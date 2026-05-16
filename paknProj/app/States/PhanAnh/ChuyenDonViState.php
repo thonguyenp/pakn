@@ -46,7 +46,7 @@ class ChuyenDonViState extends BasePhanAnhState
             ]);
 
             LichSuXuLyService::ghi(
-                hanhDong : 'Chuyển đơn vị',
+                hanhDong : 'Chuyển đơn vị' . $phanAnh->MaTheoDoi,
                 ghiChu : $data['NoiDung'],
                 idPhanAnh : $phanAnh->IdPhanAnh,
                 idNguoiDung : Auth::id(),

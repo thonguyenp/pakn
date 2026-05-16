@@ -40,7 +40,7 @@ class TiepNhanState extends BasePhanAnhState
             // lưu lịch sử xử lý
             LichSuXuLyService::ghi(
                 hanhDong : 'Tiếp nhận phản ánh',
-                ghiChu : 'Phản ánh đã được tiếp nhận',
+                ghiChu : 'Phản ánh ' . $phanAnh->MaTheoDoi . ' đã được tiếp nhận',
                 idPhanAnh : $phanAnh->IdPhanAnh,
                 idNguoiDung : Auth::id(),
                 loai : 'PHAN_ANH',

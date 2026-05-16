@@ -61,7 +61,7 @@ class BoSungThongTinUserState extends BasePhanAnhState
 
             // log lịch sử
             LichSuXuLyService::ghi(
-                hanhDong : 'Bổ sung thông tin',
+                hanhDong : 'Bổ sung thông tin cho phản ánh' . $phanAnh->MaTheoDoi,
                 ghiChu : $data['NoiDung'],
                 idPhanAnh : $phanAnh->IdPhanAnh,
                 idNguoiDung : $phanAnh->IdNguoiDung ?? null,

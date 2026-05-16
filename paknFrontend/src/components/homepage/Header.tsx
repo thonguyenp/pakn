@@ -76,31 +76,33 @@ export default function Header() {
                         {isGuest && (
                             <div className="relative" ref={dropdownRef}>
 
-                                    <button
-                                        onClick={() => setOpen(!open)}
-                                        className="font-medium flex items-center gap-1"
-                                    >
-                                        {user.HoTen}
-                                        <span className="text-xs">▼</span>
-                                    </button>
+                                <button
+                                    onClick={() => setOpen(!open)}
+                                    className="font-medium flex items-center gap-1"
+                                >
+                                    {user.HoTen}
+                                    <span className="text-xs">▼</span>
+                                </button>
 
-                                    {open && (
-                                        <div className="absolute right-0 top-full mt-2 w-56 bg-white shadow-lg rounded-md border z-50">
-                                            <button
-                                                onClick={logout}
-                                                className="w-full text-left px-4 py-2 hover:bg-gray-100"
-                                            >
-                                                Đăng xuất
-                                            </button>
+                                {open && (
+                                    <div className="absolute right-0 top-full mt-2 w-56 bg-white shadow-lg rounded-md border z-50">
+                                        <button
+                                            onClick={logout}
+                                            className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                                        >
+                                            Đăng xuất
+                                        </button>
 
-                                        </div>
-                                    )}
-                                </div>
+                                    </div>
+                                )}
+                            </div>
                         )}
 
                         {user && !isGuest && (
                             <>
-                                <NotificationDropdown />
+                                <div className="relative" ref={dropdownRef}>
+                                    <NotificationDropdown />
+                                </div>
 
                                 <div className="relative" ref={dropdownRef}>
 
@@ -208,7 +210,8 @@ export default function Header() {
                             >
                                 <i className="fa-solid fa-search"></i>
                             </button>
-                        </div>                    </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -283,7 +286,6 @@ export default function Header() {
                             <i className="fa-solid fa-search absolute right-3 top-3 text-gray-500"></i>
 
                         </div>
-                        {/* <SearchInput placeholder="Tìm phản ánh..." /> */}
                     </div>
 
                 </div>

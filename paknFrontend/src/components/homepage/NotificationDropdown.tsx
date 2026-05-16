@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { useNotification } from "@/contexts/NotificationContext";
 import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 
 const NotificationDropdown = () => {
     const {
@@ -11,6 +11,25 @@ const NotificationDropdown = () => {
     } = useNotification();
 
     const [open, setOpen] = useState(false);
+
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target as Node)
+            ) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     const latestNotifications = notifications.slice(0, 5);
 
@@ -41,7 +60,7 @@ const NotificationDropdown = () => {
     };
 
     return (
-        <div className="relative">
+        <div ref={dropdownRef} className="relative">
             <button
                 onClick={() => setOpen(!open)}
                 className="relative"

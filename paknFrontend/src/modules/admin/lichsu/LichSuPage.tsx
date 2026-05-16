@@ -14,6 +14,7 @@ type LichSuItem = {
     nguoi_dung?: {
         IdNguoiDung: number
         HoTen: string
+        MaSo: string
     }
 
     phan_anh?: {
@@ -197,6 +198,9 @@ export default function LichSuPage() {
                                 </th>
 
                                 <th className="p-3 w-[220px]">
+                                    Mã số người thực hiện
+                                </th>
+                                <th className="p-3 w-[220px]">
                                     Thời gian
                                 </th>
                             </tr>
@@ -262,7 +266,9 @@ export default function LichSuPage() {
                                         <td className="p-3 whitespace-nowrap">
                                             {item.nguoi_dung?.HoTen || "N/A"}
                                         </td>
-
+                                        <td className="p-3 whitespace-nowrap">
+                                            {item.nguoi_dung?.MaSo || "N/A"}
+                                        </td>
                                         <td className="p-3 whitespace-nowrap">
                                             {new Date(
                                                 item.ThoiGian
