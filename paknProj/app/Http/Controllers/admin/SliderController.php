@@ -15,6 +15,17 @@ class SliderController extends Controller
      */
     public function index()
     {
+        $sliders = Slider::orderByDesc('IdSlider')
+            ->get();
+
+        return response()->json([
+            'message' => 'Lấy danh sách slider thành công',
+            'data' => $sliders,
+        ]);
+    }
+
+    public function publicIndex()
+    {
         $now = Carbon::now();
 
         $sliders = Slider::where('TrangThai', 1)
@@ -34,7 +45,7 @@ class SliderController extends Controller
 
         return response()->json([
             'message' => 'Lấy slider thành công',
-            'data' => $sliders
+            'data' => $sliders,
         ]);
     }
 
@@ -65,7 +76,7 @@ class SliderController extends Controller
             'MoTa' => $request->MoTa,
 
             // lưu path
-            'Anh' => '/storage/' . $path,
+            'Anh' => '/storage/'.$path,
 
             'Link' => $request->Link,
             'ThuTu' => $request->ThuTu ?? 0,
@@ -76,7 +87,7 @@ class SliderController extends Controller
 
         return response()->json([
             'message' => 'Tạo slider thành công',
-            'data' => $slider
+            'data' => $slider,
         ], 201);
     }
 
@@ -118,7 +129,7 @@ class SliderController extends Controller
             $newPath = $request->file('Anh')
                 ->store('sliders', 'public');
 
-            $imagePath = '/storage/' . $newPath;
+            $imagePath = '/storage/'.$newPath;
         }
 
         $slider->update([
@@ -134,7 +145,7 @@ class SliderController extends Controller
 
         return response()->json([
             'message' => 'Cập nhật slider thành công',
-            'data' => $slider
+            'data' => $slider,
         ]);
     }
 
@@ -146,11 +157,11 @@ class SliderController extends Controller
         $slider = Slider::findOrFail($id);
 
         $slider->update([
-            'TrangThai' => 0
+            'TrangThai' => 0,
         ]);
 
         return response()->json([
-            'message' => 'Ẩn slider thành công'
+            'message' => 'Ẩn slider thành công',
         ]);
     }
 }

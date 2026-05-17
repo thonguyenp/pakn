@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\SliderController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DanhGiaPhanHoiController;
 use App\Http\Controllers\HomeController;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/meta', [MetaController::class, 'index']);
 // Home page
 Route::get('/home', [HomeController::class, 'index']);
+// Lấy slider
+Route::get('/sliders', [SliderController::class, 'publicIndex']);
 // Thống kê
 Route::get('/thongke/trang-thai', [ThongKeController::class, 'thongKeTrangThai']);
 Route::get('/thongke/muc-do-hai-long', [ThongKeController::class, 'thongKeMucDoHaiLong']);

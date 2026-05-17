@@ -73,5 +73,5 @@ Route::middleware(['auth:api'])
                 Route::post('/', [SliderController::class, 'store']);
                 Route::put('/{id}', [SliderController::class, 'update']);
                 Route::delete('/{id}', [SliderController::class, 'destroy']);
-            });
+        });
 });

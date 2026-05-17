@@ -42,6 +42,9 @@ import PhanHoiListPage from "@/modules/admin/PhanAnh/PhanHoiListPage";
 import ThongKePage from "@/modules/admin/thongKe/ThongKePage";
 import LichSuPage from "@/modules/admin/lichsu/LichSuPage";
 import ImportNguoiDung from "@/modules/admin/users/ImportNguoiDung";
+import SliderPage from "@/modules/admin/slider/SliderPage";
+import SliderCreate from "@/modules/admin/slider/SliderCreate";
+import SliderEdit from "@/modules/admin/slider/SliderEdit";
 
 export default function AppRouter() {
   return (
@@ -223,15 +226,45 @@ export default function AppRouter() {
             <Route
               path="thongke"
               element={
+                <PermissionGuard permission="QuanLyNguoiDung">
                   <ThongKePage />
+                </PermissionGuard>
               }
             />
             <Route
               path="lichsu"
               element={
+                <PermissionGuard permission="QuanLyNguoiDung">
                   <LichSuPage />
+                </PermissionGuard>
               }
-             />
+            />
+            <Route path="slider">
+              <Route
+                index
+                element={
+                  <PermissionGuard permission="QuanLyHeThong">
+                    <SliderPage />
+                  </PermissionGuard>
+                }
+              />
+              <Route
+                path="create"
+                element={
+                  <PermissionGuard permission="QuanLyHeThong">
+                    <SliderCreate />
+                  </PermissionGuard>
+                }
+              />
+              <Route
+                path="edit/:id"
+                element={
+                  <PermissionGuard permission="QuanLyHeThong">
+                    <SliderEdit />
+                  </PermissionGuard>
+                }
+              />
+            </Route>
           </Route>
 
         </Route>
