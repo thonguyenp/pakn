@@ -150,7 +150,27 @@ export default function PhanAnhDonVi() {
           }}
           label="Ẩn danh"
         />
+        <ToggleSwitch
+          checked={filter.near_deadline === true}
+          onChange={(checked) => {
 
+            if (checked) {
+
+              setFilter({
+                ...filter,
+                near_deadline: true
+              })
+
+            } else {
+
+              const { near_deadline, ...rest } = filter
+              setFilter(rest)
+
+            }
+
+          }}
+          label="Sát deadline"
+        />
       </div>
 
       <div className="space-y-4 mb-6">

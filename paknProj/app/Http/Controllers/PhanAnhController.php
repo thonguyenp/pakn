@@ -133,17 +133,49 @@ class PhanAnhController extends Controller
     private function buildQuery(Request $request, $field, $value)
     {
         return PhanAnh::where($field, $value)
-            ->when($request->IdMucDoKhanCap, function ($query) use ($request) {
-                $query->where('IdMucDoKhanCap', $request->IdMucDoKhanCap);
+
+            ->when($request->IdMucDoKhanCap, fn ($q) => $q->where('IdMucDoKhanCap', $request->IdMucDoKhanCap)
+            )
+
+            ->when($request->IdTrangThaiPhanAnh, fn ($q) => $q->where('IdTrangThaiPhanAnh', $request->IdTrangThaiPhanAnh)
+            )
+
+            ->when($request->AnDanh !== null, fn ($q) => $q->where('AnDanh', $request->AnDanh)
+            )
+
+            ->when($request->near_deadline, function ($q) {
+
+                $q->join('thoihanxuly_linhvuc as thxlv', function ($join) {
+                    $join->on('phananh.IdLinhVuc', '=', 'thxlv.IdLinhVuc')
+                        ->on('phananh.IdMucDoKhanCap', '=', 'thxlv.IdMucDoKhanCap');
+                })
+                    ->addSelect([
+                        'phananh.*',
+                        DB::raw('
+                    DATE_ADD(
+                        phananh.NgayGui,
+                        INTERVAL thxlv.SoGioXuLy HOUR
+                    ) as deadline
+                '),
+                    ])
+
+                // Chưa quá hạn
+                    ->whereRaw('
+                DATE_ADD(
+                    phananh.NgayGui,
+                    INTERVAL thxlv.SoGioXuLy HOUR
+                ) > NOW()
+            ')
+
+                // Deadline gần nhất lên đầu
+                    ->orderBy('deadline', 'asc');
             })
-            ->when($request->IdTrangThaiPhanAnh, function ($query) use ($request) {
-                $query->where('IdTrangThaiPhanAnh', $request->IdTrangThaiPhanAnh);
-            })
-            ->when($request->AnDanh !== null, function ($query) use ($request) {
-                $query->where('AnDanh', $request->AnDanh);
-            })
+
             ->with('files')
-            ->orderBy('NgayGui', 'desc');
+
+            // Nếu không lọc deadline thì sort mặc định
+            ->when(! $request->near_deadline, fn ($q) => $q->orderByDesc('NgayGui')
+            );
     }
 
     public function getByNguoiDung(Request $request)

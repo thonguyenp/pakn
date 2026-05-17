@@ -8,6 +8,7 @@ export interface PhanAnhFilter {
   MucDoKhanCap?: number
   IdTrangThaiPhanAnh?: number
   AnDanh?: number
+  near_deadline?: boolean
 }
 
 export const guiPhanAnh = async (formData: FormData) => {
