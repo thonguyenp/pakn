@@ -47,6 +47,7 @@ const PhanAnhPublicPage = () => {
   if (loading) return <div className="p-6">Đang tải...</div>
   if (error) return <div className="p-6 text-red-500">{error}</div>
   if (!data) return null
+  const isAnonymous = data.AnDanh === 1;
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -99,13 +100,33 @@ const PhanAnhPublicPage = () => {
             ? new Date(data.deadline).toLocaleString("vi-VN")
             : "Không có"}
         </div>
+        {/* Thông tin người gửi */}
+        {!isAnonymous && (
+          <div className=" space-y-2">
+            <h2 className="font-semibold">Thông tin người gửi</h2>
 
+            <p>
+              <span className="font-medium">Họ tên:</span>{" "}
+              {data.nguoi_dung?.HoTen}
+            </p>
+
+            <p>
+              <span className="font-medium">Email:</span>{" "}
+              {data.nguoi_dung?.Email}
+            </p>
+
+            <p>
+              <span className="font-medium">MSSV:</span>{" "}
+              {data.nguoi_dung?.MaSo}
+            </p>
+          </div>
+        )}
         {/* Nội dung */}
         <div>
           <h2 className="font-semibold mb-2">Nội dung</h2>
           <p className="text-gray-700 whitespace-pre-line"
             dangerouslySetInnerHTML={{ __html: data.NoiDung }}
-          >  
+          >
           </p>
         </div>
 
@@ -176,7 +197,7 @@ const PhanAnhPublicPage = () => {
       </div>
       {/* PHẢN HỒI */}
       <div>
-        <h2 className="font-semibold mb-3">Phản hồi</h2>
+        <h2 className="font-semibold mb-3 mt-3">Phản hồi</h2>
         <PhanHoiList
           danhSach={data?.phan_hoi || []}
           phanAnh={data}

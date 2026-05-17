@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\UploadFilePhanAnhJob;
-use App\Models\LichSuXuLy;
-use App\Models\NguoiDung;
 use App\Models\PhanAnh;
 use App\Notifications\PhanAnhCreatedNotification;
 use App\Services\LichSuXuLyService;
@@ -117,7 +115,7 @@ class PhanAnhController extends Controller
         }
         LichSuXuLyService::ghi(
             hanhDong : 'Tạo phản ánh',
-            ghiChu : 'Nguời dùng ' . Auth::user()->HoTen . ' tạo phản ánh',
+            ghiChu : 'Nguời dùng '.Auth::user()->HoTen.' tạo phản ánh',
             idPhanAnh : $phanAnh->IdPhanAnh,
             idNguoiDung : $phanAnh->IdNguoiDung ?? null,
             loai : 'PHAN_ANH',
@@ -305,7 +303,7 @@ class PhanAnhController extends Controller
         // Chỉ lấy phản ánh nếu user là người tạo hoặc thuộc đơn vị được giao
         $user = JWTAuth::parseToken()->authenticate();
 
-        $phanAnh = PhanAnh::with(['files', 'linhVuc', 'donVi', 'trangThaiPhanAnh',
+        $phanAnh = PhanAnh::with(['files', 'linhVuc', 'donVi', 'nguoiDung', 'trangThaiPhanAnh',
             'phanHoi.files', 'phanHoi.nguoiDung', 'phanHoi.nguoiDung.donVi'])
             ->where('MaTheoDoi', $maTheoDoi)
             ->where(function ($query) use ($user) {
@@ -320,7 +318,9 @@ class PhanAnhController extends Controller
                 'message' => 'Không tìm thấy phản ánh',
             ], 404);
         }
-
+        if ($phanAnh->AnDanh) {
+            $phanAnh->setRelation('nguoiDung', null);
+        }
         foreach ($phanAnh->files as $file) {
             $file->url = asset('storage/'.$file->DuongDan);
         }
@@ -343,6 +343,7 @@ class PhanAnhController extends Controller
             'files',
             'linhVuc',
             'donVi',
+            'nguoiDung',
             'trangThaiPhanAnh',
             'phanHoi.files',
             'phanHoi.nguoiDung',
@@ -362,7 +363,9 @@ class PhanAnhController extends Controller
                 'message' => 'Không tìm thấy phản ánh',
             ], 404);
         }
-
+        if ($phanAnh->AnDanh) {
+            $phanAnh->setRelation('nguoiDung', null);
+        }
         // Map file URL
         foreach ($phanAnh->files as $file) {
             $file->url = asset('storage/'.$file->DuongDan);

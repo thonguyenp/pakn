@@ -1,11 +1,18 @@
-import ToggleSwitch from "@/components/shared/ToogleSwitch";
+import ToggleSwitch from "@/components/shared/ToogleSwitch"
 import { usePhanAnhCuaToi } from "@/hooks/usePhanAnh"
-import { useNavigate } from "react-router-dom"
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+import { getMeta } from "@/api/meta/metaService";
+
+import type { TrangThaiPhanAnh } from "@/types/trangThaiPhanAnh";
+import type { MucDoKhanCap } from "@/types/mucDoKhanCap";
 
 export default function PhanAnhCuaToi() {
 
   const navigate = useNavigate();
+
   const {
     data,
     loading,
@@ -16,6 +23,30 @@ export default function PhanAnhCuaToi() {
     setFilter
   } = usePhanAnhCuaToi()
 
+  const [mucDoList, setMucDoList] = useState<MucDoKhanCap[]>([])
+  const [trangThaiList, setTrangThaiList] = useState<TrangThaiPhanAnh[]>([])
+
+  useEffect(() => {
+
+    const fetchMeta = async () => {
+
+      try {
+
+        const res = await getMeta("mucdokhancap,trangthai")
+
+        setMucDoList(res.mucdokhancap || [])
+        setTrangThaiList(res.trangthai || [])
+
+      } catch (error) {
+        console.error(error)
+      }
+
+    }
+
+    fetchMeta()
+
+  }, [])
+
   if (loading) {
     return <div>Loading...</div>
   }
@@ -23,52 +54,111 @@ export default function PhanAnhCuaToi() {
   return (
 
     <div>
+
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Phản ánh của tôi</h1>
 
+        <h1 className="text-2xl font-bold">
+          Phản ánh của tôi
+        </h1>
 
+        {/* MỨC ĐỘ KHẨN CẤP */}
         <select
           className="border p-2 rounded"
-          onChange={e => setFilter({ ...filter, MucDoKhanCap: parseInt(e.target.value) })}
+          value={filter.MucDoKhanCap || ""}
+          onChange={(e) => {
+
+            const value = e.target.value
+
+            setFilter({
+              ...filter,
+              MucDoKhanCap: value ? parseInt(value) : undefined
+            })
+
+          }}
         >
-          <option value="">Mức độ</option>
-          <option value="THAP">Thấp</option>
-          <option value="TRUNG_BINH">Trung bình</option>
-          <option value="CAO">Cao</option>
-          <option value="KHAN_CAP">Khẩn cấp</option>
+
+          <option value="">
+            Mức độ
+          </option>
+
+          {mucDoList.map((item) => (
+
+            <option
+              key={item.IdMucDoKhanCap}
+              value={item.IdMucDoKhanCap}
+            >
+              {item.TenMucDo}
+            </option>
+
+          ))}
+
         </select>
 
+        {/* TRẠNG THÁI */}
         <select
           className="border p-2 rounded"
-          onChange={e => setFilter({ ...filter, IdTrangThaiPhanAnh: parseInt(e.target.value) })}
+          value={filter.IdTrangThaiPhanAnh || ""}
+          onChange={(e) => {
+
+            const value = e.target.value
+
+            setFilter({
+              ...filter,
+              IdTrangThaiPhanAnh: value
+                ? parseInt(value)
+                : undefined
+            })
+
+          }}
         >
-          <option value="">Trạng thái</option>
-          <option value="1">Đã gửi</option>
-          <option value="2">Đang xử lý</option>
-          <option value="3">Đã xử lý</option>
+
+          <option value="">
+            Trạng thái
+          </option>
+
+          {trangThaiList.map((item) => (
+
+            <option
+              key={item.IdTrangThaiPhanAnh}
+              value={item.IdTrangThaiPhanAnh}
+            >
+              {item.TenTrangThai}
+            </option>
+
+          ))}
+
         </select>
 
         <ToggleSwitch
           checked={filter.AnDanh === 1}
           onChange={(checked) => {
+
             if (checked) {
-              setFilter({ ...filter, AnDanh: 1 })
+
+              setFilter({
+                ...filter,
+                AnDanh: 1
+              })
+
             } else {
+
               const { AnDanh, ...rest } = filter
               setFilter(rest)
+
             }
+
           }}
           label="Ẩn danh"
         />
-      </div>
 
+      </div>
 
       <div className="space-y-4 mb-6">
 
         {data.map(pa => (
 
           <div
-            key={pa.MaTheoDoi}
+            key={pa.IdPhanAnh}
             className="border rounded-lg p-4 hover:shadow"
           >
 
@@ -84,17 +174,20 @@ export default function PhanAnhCuaToi() {
 
             </div>
 
-            <p className="text-gray-700"
-              dangerouslySetInnerHTML={{ __html: pa.NoiDung }}>
-            </p>
-            {/* ACTION */}
+            <p
+              className="text-gray-700"
+              dangerouslySetInnerHTML={{ __html: pa.NoiDung }}
+            />
+
             <div className="flex justify-end">
+
               <button
                 onClick={() => navigate(`/phan-anh/${pa.MaTheoDoi}`)}
                 className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
               >
                 Xem chi tiết
               </button>
+
             </div>
 
           </div>
@@ -102,7 +195,6 @@ export default function PhanAnhCuaToi() {
         ))}
 
       </div>
-
 
       <div className="flex gap-2">
 

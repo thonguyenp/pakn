@@ -22,7 +22,9 @@ const PhanHoiItem = ({ phanHoi, phanAnh }: Props) => {
             {/* Nội dung */}
             <div
                 className="whitespace-pre-line"
-                dangerouslySetInnerHTML={{ __html: phanHoi.NoiDung }}
+                dangerouslySetInnerHTML={{
+                    __html: `<strong>Nội dung:</strong> ${phanHoi.NoiDung}`
+                }}
             />
             {/* FILE ĐÍNH KÈM */}
             {phanHoi.files && phanHoi.files.length > 0 && (

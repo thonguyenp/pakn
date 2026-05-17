@@ -31,4 +31,10 @@ export interface PhanAnh {
     IdTrangThaiPhanAnh: number
     TenTrangThai: string
   }
+  nguoi_dung?: {
+    IdNguoiDung: number
+    HoTen: string
+    Email: string
+    MaSo?: string
+  }
 }

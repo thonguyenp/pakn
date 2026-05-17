@@ -72,6 +72,7 @@ const PhanAnhDetail = () => {
 
   if (!data) return <div className="p-6 text-red-500">Không tìm thấy dữ liệu</div>;
   const [label, color] = getUrgency(data.IdMucDoKhanCap);
+  const isAnonymous = data.AnDanh === 1;
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white shadow rounded-2xl p-6 space-y-6">
@@ -85,21 +86,64 @@ const PhanAnhDetail = () => {
         </div>
 
         {/* Trạng thái + mức độ */}
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-3">
+
+          {/* Trạng thái */}
           <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-sm">
             {data.trang_thai_phan_anh?.TenTrangThai}
           </span>
 
+          {/* Mức độ khẩn cấp */}
           <span className={`px-3 py-1 rounded-full text-sm ${color}`}>
             {label}
           </span>
+
+          {/* Ẩn danh */}
           {data.AnDanh === 1 && (
             <span className="px-3 py-1 rounded-full bg-gray-200 text-gray-600 text-sm">
               Ẩn danh
             </span>
           )}
-        </div>
 
+          {/* Trễ hạn / Kịp hạn */}
+          {data.qua_han ? (
+            <span className="px-3 py-1 rounded-full bg-red-100 text-red-600 text-sm font-medium">
+              ⏰ Trễ hạn
+            </span>
+          ) : (
+            <span className="px-3 py-1 rounded-full bg-green-100 text-green-600 text-sm font-medium">
+              ✔ Kịp hạn
+            </span>
+          )}
+        </div>
+        {/* DEADLINE */}
+        <div className="text-sm text-gray-500">
+          Deadline xử lý:{" "}
+          {data.deadline
+            ? new Date(data.deadline).toLocaleString("vi-VN")
+            : "Không có"}
+        </div>
+        {/* Thông tin người gửi */}
+        {!isAnonymous && (
+          <div className=" space-y-2">
+            <h2 className="font-semibold">Thông tin người gửi</h2>
+
+            <p>
+              <span className="font-medium">Họ tên:</span>{" "}
+              {data.nguoi_dung?.HoTen}
+            </p>
+
+            <p>
+              <span className="font-medium">Email:</span>{" "}
+              {data.nguoi_dung?.Email}
+            </p>
+
+            <p>
+              <span className="font-medium">MSSV:</span>{" "}
+              {data.nguoi_dung?.MaSo}
+            </p>
+          </div>
+        )}
         {/* Nội dung */}
         <div>
           <h2 className="font-semibold mb-2">Nội dung</h2>
@@ -153,7 +197,6 @@ const PhanAnhDetail = () => {
           </div>
         )}
         {/* Các hành động */}
-        {/* Cần check lại nếu các trạng thái như nào thì hiển thị các btn ra sao */}
         {/* Phía người dùng */}
         {data.IdTrangThaiPhanAnh === 4 && (
           <button
@@ -191,7 +234,7 @@ const PhanAnhDetail = () => {
 
       {/* PHẢN HỒI */}
       <div>
-        <h2 className="font-semibold mb-3">Phản hồi</h2>
+        <h2 className="font-semibold mb-3 mt-3">Phản hồi</h2>
         <PhanHoiList
           danhSach={data?.phan_hoi || []}
           phanAnh={data}

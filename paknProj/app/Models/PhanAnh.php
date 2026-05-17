@@ -78,7 +78,10 @@ class PhanAnh extends Model
     {
         return $this->belongsTo(TrangThaiPhanAnh::class, 'IdTrangThaiPhanAnh');
     }
-
+    public function nguoiDung()
+    {
+        return $this->belongsTo(NguoiDung::class, 'IdNguoiDung');
+    }
     public function thoiHanXuLy()
     {
         return $this->hasOne(
